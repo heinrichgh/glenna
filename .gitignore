@@ -5,6 +5,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+config.js
+
+.idea
+.idea/*
+
 # Runtime data
 pids
 *.pid
@@ -59,3 +64,6 @@ typings/
 
 # next.js build output
 .next
+
+# vuepress build output
+.vuepress/dist
