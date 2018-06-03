@@ -1,3 +1,4 @@
+// copy to config.js
 module.exports = {
   "token": "", // Discord bot token
   "prefix": "!",
