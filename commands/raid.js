@@ -279,6 +279,31 @@ class RaidSetup {
 
         this.message.reply("Your raid is ready for publishing, here is a summary! Reply with 'done' to publish.");
 
+        await this.sendSummary(raid, this.message.channel);
+
+        const filter = m => m.member === this.message.member;
+        let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
+
+        if (!collected.size) {
+            this.message.reply("No response received, please use the raid command to continue setting up when you are ready");
+            return;
+        }
+
+        let message = collected.first().content.trim().toLowerCase();
+
+        if (message === "done") {
+            await sql.execute(`UPDATE raid 
+                    SET 
+                        status = ? 
+                    WHERE
+                        id = ?`, [STATUS.COMPLETED, raid.id]);
+            this.message.reply("Published!");
+        } else {
+            this.message.reply("Invalid response.");
+        }
+    }
+
+    async sendSummary(raid, channel) {
         let [clearTypeRows] = await
             sql.execute(`
             SELECT
@@ -313,7 +338,7 @@ class RaidSetup {
             });
         }
 
-        this.message.channel.send({embed: {
+        channel.send({embed: {
                 color: 3447003,
                 author: {
                     name: this.client.user.username,
@@ -406,7 +431,7 @@ class RaidSetup {
             });
         }
 
-        this.message.channel.send({embed: {
+        channel.send({embed: {
                 color: 3447003,
                 author: {
                     name: this.client.user.username,
@@ -421,27 +446,6 @@ class RaidSetup {
                 }
             }
         });
-
-        const filter = m => m.member === this.message.member;
-        let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
-
-        if (!collected.size) {
-            this.message.reply("No response received, please use the raid command to continue setting up when you are ready");
-            return;
-        }
-
-        let message = collected.first().content.trim().toLowerCase();
-
-        if (message === "done") {
-            await sql.execute(`UPDATE raid 
-                    SET 
-                        status = ? 
-                    WHERE
-                        id = ?`, [STATUS.COMPLETED, raid.id]);
-            this.message.reply("Published!");
-        } else {
-            this.message.reply("Invalid response.");
-        }
     }
 
     async run() {
