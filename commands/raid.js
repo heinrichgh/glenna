@@ -279,7 +279,7 @@ class RaidSetup {
 
         this.message.reply("Your raid is ready for publishing, here is a summary! Reply with 'done' to publish.");
 
-        await this.sendSummary(raid, this.message.channel);
+        await this.sendSummary(raid, this.message.guild.channels.find('id', config.raidChannelId));
 
         const filter = m => m.member === this.message.member;
         let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
