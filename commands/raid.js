@@ -5,6 +5,7 @@ const STATUS = {
     AWAITING_DATE: 1,
     AWAITING_CLEAR_TYPE: 2,
     AWAITING_TEMPLATE: 3,
+    AWAITING_PUBLISH: 4,
     COMPLETED: 10
 };
 
@@ -70,6 +71,9 @@ class RaidSetup {
                 break;
             case STATUS.AWAITING_TEMPLATE:
                 await this.roleTemplateSetup(raid);
+                break;
+            case STATUS.AWAITING_PUBLISH:
+                await this.raidPublish(raid);
                 break;
         }
     }
@@ -218,11 +222,113 @@ class RaidSetup {
     }
 
     async roleTemplateSetup(raid) {
-        this.message.reply("Do you have a squad composition in mind?\nTo Be Implemented");
+
+        let [rows] = await
+            sql.execute('SELECT * FROM raid_template');
+
+        let validResponses = rows.map(row => row.id);
+        let templates = rows.map(row => `${row.id}: ${row.name}`);
+        templates.push("0: My Way - To Be Implemented");
+
+        this.message.reply("Do you have a squad composition in mind?\n" + templates.join("\n"));
+
+        const filter = m => m.member === this.message.member;
+        let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
+
+        if (!collected.size) {
+            this.message.reply("No response received, please use the raid command to continue setting up when you are ready");
+            return;
+        }
+
+        let message = collected.first();
+
+        let choice = Number(message.content);
+
+        if (validResponses.indexOf(choice) === -1) {
+            this.message.reply("That is not a valid response. Please run the raid command to continue setting up.");
+            return;
+        }
+
+        await
+            sql.execute(`
+            INSERT INTO raid_squad_restriction (raid_squad_id, raid_role_id, profession_id)
+            SELECT
+              rs.id,
+              rtr.raid_role_id,
+              rtr.profession_id
+            FROM
+              raid_template_restriction rtr
+              INNER JOIN raid_squad rs ON rtr.spot = rs.spot
+            WHERE
+              rtr.raid_template_id = ?
+              AND rs.raid_id = ?`, [choice, raid.id]);
+
+
+
+        await sql.execute(`UPDATE raid 
+                    SET 
+                        status = ? 
+                    WHERE
+                        id = ?`, [STATUS.AWAITING_PUBLISH, raid.id]);
+
+        raid = await this.getRaid(this.message.member.id);
+        await this.setupRaid(raid);
     }
 
-    // POC function
-    async getRaidDetails(raidId) {
+    async raidPublish(raid) {
+
+        this.message.reply("Your raid is ready for publishing, here is a summary! Reply with 'done' to publish.");
+
+        let [clearTypeRows] = await
+            sql.execute(`
+            SELECT
+              rw.name as 'WingName',
+              rb.name as 'BossName'
+            FROM
+              raid_clear_setup rcs
+              INNER JOIN raid_boss rb on rcs.raid_boss_id = rb.id
+              INNER JOIN raid_wing rw on rb.raid_wing_id = rw.id
+            WHERE
+              rcs.raid_id = ?
+            ORDER BY
+              rw.id,
+              rb.number`, [raid.id]);
+
+
+        let groupedClearTypes = {};
+        for (let clearType of clearTypeRows) {
+            if (!groupedClearTypes[clearType.WingName]) {
+                groupedClearTypes[clearType.WingName] = {wing: clearType.WingName, data: []}
+            }
+            groupedClearTypes[clearType.WingName].data.push(clearType.BossName);
+
+        }
+
+        let clearFields = [];
+        for (let index in groupedClearTypes) {
+            let groupedClearType = groupedClearTypes[index];
+            clearFields.push({
+                name: `${groupedClearType.wing}:`,
+                value: groupedClearType.data.join("\n")
+            });
+        }
+
+        this.message.channel.send({embed: {
+                color: 3447003,
+                author: {
+                    name: this.client.user.username,
+                    icon_url: this.client.user.avatarURL
+                },
+                title: "Clear Summary",
+                fields: clearFields,
+                timestamp: new Date(),
+                footer: {
+                    icon_url: this.client.user.avatarURL,
+                    text: "Wings and Bosses"
+                }
+            }
+        });
+
         let [raidSquadRows] = await
             sql.execute(
                 `SELECT
@@ -232,9 +338,7 @@ class RaidSetup {
         WHERE
           raid_id = ?
         ORDER BY
-           spot`, [raidId]);
-
-        let squadIds = raidSquadRows.map(row => row.id);
+           spot`, [raid.id]);
 
         let [restrictionRows] = await
             sql.execute(
@@ -244,12 +348,16 @@ class RaidSetup {
           , p.icon as profession_icon
           , r.title as role
           , r.icon as role_icon
+          , squad.spot
         FROM
           raid_squad_restriction rsr
+          INNER JOIN raid_squad squad on rsr.raid_squad_id = squad.id
           LEFT JOIN profession p on rsr.profession_id = p.id
           LEFT JOIN raid_role r on rsr.raid_role_id = r.id
         WHERE
-          raid_squad_id IN (${squadIds.join(",")})`);
+          squad.raid_id = ${raid.id}
+        ORDER BY
+            squad.spot`);
 
         let groupedRestrictionRows = {};
         for (let index in restrictionRows) {
@@ -265,7 +373,75 @@ class RaidSetup {
             row.restrictions = groupedRestrictionRows[row.id];
         }
 
-        return raidSquadRows;
+        let fields = [];
+
+        for (let index in raidSquadRows) {
+            let detail = raidSquadRows[index];
+            let value = "Fill";
+            if (detail.restrictions) {
+                value = detail.restrictions.map(
+                    restriction =>
+                    {
+                        let value = "";
+                        if (restriction.profession)
+                        {
+                            value += `${restriction.profession} ${restriction.profession_icon}`;
+                            if (restriction.role) {
+                                value += ` as ${restriction.role} ${restriction.role_icon || ""}`;
+                            }
+                        } else {
+                            if (restriction.role) {
+                                value += `${restriction.role} ${restriction.role_icon || ""}`;
+                            }
+                        }
+
+                        return value;
+                    }
+                ).join("\n");
+            }
+
+            fields.push({
+                name: `Slot ${detail.spot}:`,
+                value: value
+            });
+        }
+
+        this.message.channel.send({embed: {
+                color: 3447003,
+                author: {
+                    name: this.client.user.username,
+                    icon_url: this.client.user.avatarURL
+                },
+                title: "Squad Slots Summary",
+                fields: fields,
+                timestamp: new Date(),
+                footer: {
+                    icon_url: this.client.user.avatarURL,
+                    text: "Slots"
+                }
+            }
+        });
+
+        const filter = m => m.member === this.message.member;
+        let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
+
+        if (!collected.size) {
+            this.message.reply("No response received, please use the raid command to continue setting up when you are ready");
+            return;
+        }
+
+        let message = collected.first().content.trim().toLowerCase();
+
+        if (message === "done") {
+            await sql.execute(`UPDATE raid 
+                    SET 
+                        status = ? 
+                    WHERE
+                        id = ?`, [STATUS.COMPLETED, raid.id]);
+            this.message.reply("Published!");
+        } else {
+            this.message.reply("Invalid response.");
+        }
     }
 
     async run() {
@@ -281,65 +457,6 @@ class RaidSetup {
             this.message.reply(`Raid ID: ${raid.id}`);
 
             await this.setupRaid(raid);
-
-
-            /*let raidDetails = await getRaidDetails(raidId);
-            console.dir(raidDetails);
-
-            let fields = [];
-            for (let index in raidDetails) {
-                let detail = raidDetails[index];
-
-                let value = "Fill";
-                if (detail.restrictions) {
-                    value = detail.restrictions.map(
-                        restriction =>
-                        {
-                            let value = "";
-                            if (restriction.profession)
-                            {
-                                value += `${restriction.profession} ${restriction.profession_icon}`;
-                                if (restriction.role) {
-                                    value += ` as ${restriction.role} ${restriction.role_icon || ""}`;
-                                }
-                            } else {
-                                if (restriction.role) {
-                                    value += `${restriction.role} ${restriction.role_icon || ""}`;
-                                }
-                            }
-
-                            console.log(value);
-
-                            return value;
-                        }
-                    ).join("\n");
-                }
-
-                fields.push({
-                    name: `Slot ${detail.spot}:`,
-                    value: value
-                });
-            }
-
-            message.channel.send({embed: {
-                    color: 3447003,
-                    author: {
-                        name: client.user.username,
-                        icon_url: client.user.avatarURL
-                    },
-                    title: "Raid " + raidId,
-                    description: "This is a test embed to showcase what they look like and what they can do.",
-                    fields: fields,
-                    timestamp: new Date(),
-                    footer: {
-                        icon_url: client.user.avatarURL,
-                        text: "© Example"
-                    }
-                }
-            });*/
-
-
-            // Continue with setup or create new
         } catch (e) {
             console.error(e);
         }
