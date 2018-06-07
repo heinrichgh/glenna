@@ -1,6 +1,6 @@
 const moment = require("moment");
 const sql = require("../util/sql");
-const config = require("./config.js");
+const config = require("../config.js");
 
 const STATUS = {
     AWAITING_DATE: 1,
