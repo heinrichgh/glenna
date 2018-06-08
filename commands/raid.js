@@ -460,7 +460,7 @@ class RaidSetup {
                     var regex = /<:[a-z]*:([0-9]*)>/g;
                     var emojiarray = regex.exec(reactions[i]);
                     console.log(`Regex output: ${emojiarray}`);
-                    let emoji = message.guild.emojis.get(emojiarray[0] || '448601060681187338');
+                    let emoji = message.guild.emojis.get(emojiarray[1] || '448601060681187338');
                     message.react(emoji);
                 }
             }
