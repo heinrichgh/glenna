@@ -456,10 +456,10 @@ class RaidSetup {
         .then(function (message) {
             if (reactions.length >0) {
                 for (var i = reactions.length - 1; i >= 0; i--) {
-                    console.log(reactions[i]);
+                    console.log(`Loop ${i}: ${reactions[i]}`);
                     var regex = /<:[a-z]*:([0-9]*)>/g;
                     var emojiarray = regex.exec(reactions[i]);
-                    console.log(emojiarray);
+                    console.log(`Regex output: ${emojiarray}`);
                     let emoji = message.guild.emojis.get(emojiarray[0] || '448601060681187338');
                     message.react(emoji);
                 }
