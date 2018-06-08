@@ -309,7 +309,7 @@ class RaidSetup {
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
-        
+
         let [clearTypeRows] = await
             sql.execute(`
             SELECT
@@ -417,6 +417,7 @@ class RaidSetup {
                         let value = "";
                         if (restriction.profession)
                         {
+                            reactions.push(`${restriction.profession_icon}`);
                             value += `${restriction.profession} ${restriction.profession_icon}`;
                             if (restriction.role) {
                                 value += ` as ${restriction.role} ${restriction.role_icon || ""}`;
@@ -426,7 +427,6 @@ class RaidSetup {
                                 value += `${restriction.role} ${restriction.role_icon || ""}`;
                             }
                         }
-                        reactions.push(restriction.profession_icon);
                         return value;
                     }
                 ).join("\n");
@@ -454,6 +454,7 @@ class RaidSetup {
             }
         })
         .then(function (message) {
+            console.log(reactions);
             if (reactions.length >0) {
                 for (var i = reactions.length - 1; i >= 0; i--) {
                     var regex = /<:[a-z]*:([0-9]*)>/g;
