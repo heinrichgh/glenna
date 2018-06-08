@@ -421,7 +421,7 @@ class RaidSetup {
                                 value += `${restriction.role} ${restriction.role_icon || ""}`;
                             }
                         }
-                        reactions.push(restriction.role_icon);
+                        reactions.push(restriction.profession_icon);
                         return value;
                     }
                 ).join("\n");
@@ -451,7 +451,8 @@ class RaidSetup {
         .then(function (message) {
             if (reactions.length >0) {
                 for (var i = reactions.length - 1; i >= 0; i--) {
-                    message.react(reactions[i])
+                    console.log(reactions[i])
+                    message.react(this.client.emojis.find(reactions[i]))
                 }
             }
         });
