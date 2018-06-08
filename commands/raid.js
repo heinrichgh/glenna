@@ -280,8 +280,6 @@ class RaidSetup {
 
         this.message.reply("Your raid is ready for publishing, here is a summary! Reply with 'done' to publish.");
 
-        await this.sendSummary(raid, this.message.guild.channels.find('id', config.raidChannelId));
-
         const filter = m => m.member === this.message.member;
         let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
 
@@ -293,6 +291,8 @@ class RaidSetup {
         let message = collected.first().content.trim().toLowerCase();
 
         if (message === "done") {
+
+            await this.sendSummary(raid, this.message.guild.channels.find('id', config.raidChannelId));
             await sql.execute(`UPDATE raid 
                     SET 
                         status = ? 
@@ -400,6 +400,7 @@ class RaidSetup {
         }
 
         let fields = [];
+        let reactions = [];
 
         for (let index in raidSquadRows) {
             let detail = raidSquadRows[index];
@@ -420,7 +421,7 @@ class RaidSetup {
                                 value += `${restriction.role} ${restriction.role_icon || ""}`;
                             }
                         }
-
+                        reactions.push(restriction.role_icon);
                         return value;
                     }
                 ).join("\n");
@@ -444,6 +445,13 @@ class RaidSetup {
                 footer: {
                     icon_url: this.client.user.avatarURL,
                     text: "Slots"
+                }
+            }
+        })
+        .then(function (message) {
+            if (reactions.length >0) {
+                for (var i = reactions.length - 1; i >= 0; i--) {
+                    message.react(reactions[i])
                 }
             }
         });
