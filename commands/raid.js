@@ -451,8 +451,9 @@ class RaidSetup {
         .then(function (message) {
             if (reactions.length >0) {
                 for (var i = reactions.length - 1; i >= 0; i--) {
-                    console.log(reactions[i]);
-                    let emoji = message.guild.emojis.get(reactions[i] || '448601060681187338');
+                    var regex /<:[a-z]*:([0-9]*)>/i;
+                    var emojiarray = reactions[i].match(regex);
+                    let emoji = message.guild.emojis.get(emojiarray[0] || '448601060681187338');
                     message.react(emoji);
                 }
             }
