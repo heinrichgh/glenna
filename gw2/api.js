@@ -33,6 +33,6 @@ class gw2_api {
     }
 }
 
-exports = gw2_api;
+module.exports = gw2_api;
 
 

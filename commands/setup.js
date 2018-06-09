@@ -55,31 +55,32 @@ class GuildSetup {
 
             let gw2_api = new gwAPI(this.args);
             let account = gw2_api.account_lookup();
-            var msg = "";
-
-            for (var i = account.guild_leader.length - 1; i >= 0; i--) {
-                var guild_info = gw2_api.guild_lookup(account.guild_leader[i]);
-                msg += `${i} - ${guild_info.name} [${guild_info.tag}]\n`;
-            }
-
-            if (guilds.length > 0) {
-
-                this.message.reply(msg)   
-                const filter = m => m.member === this.message.member;
-                let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
-
-                if (!collected.size) {
-                    this.message.reply(`please respond with 1-${guilds.length}`);
-                    return;
-                }
-
-                let num = collected.first().content.trim();
-                if (num > 0 && num <=(guilds.length) ) {
-                    this.message.reply(getGuild(account, guilds[num]));
-                } 
-                else { this.message.reply(`please respond with 1-${guilds.length}`); }
-            }
-            else { this.message.reply("not a leader"); }
+            console.log(account)
+            // var msg = "";
+            //
+            // for (var i = account.guild_leader.length - 1; i >= 0; i--) {
+            //     var guild_info = gw2_api.guild_lookup(account.guild_leader[i]);
+            //     msg += `${i} - ${guild_info.name} [${guild_info.tag}]\n`;
+            // }
+            //
+            // if (guilds.length > 0) {
+            //
+            //     this.message.reply(msg)
+            //     const filter = m => m.member === this.message.member;
+            //     let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
+            //
+            //     if (!collected.size) {
+            //         this.message.reply(`please respond with 1-${guilds.length}`);
+            //         return;
+            //     }
+            //
+            //     let num = collected.first().content.trim();
+            //     if (num > 0 && num <=(guilds.length) ) {
+            //         this.message.reply(getGuild(account, guilds[num]));
+            //     }
+            //     else { this.message.reply(`please respond with 1-${guilds.length}`); }
+            // }
+            // else { this.message.reply("not a leader"); }
         } catch (e) {
             console.error(e);
         }
@@ -88,10 +89,10 @@ class GuildSetup {
 }
 
 exports.run = (client, message, args) => {
-    var pattern = /[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*/g;
-    message.reply("Not Implemented! Demo Only")
-    // let guildSetup = new GuildSetup(client, message, args);
-    // guildSetup.run().catch(console.error);
+    // var pattern = /[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*/g;
+    // message.reply("Not Implemented! Demo Only")
+    let guildSetup = new GuildSetup(client, message, args);
+    guildSetup.run().catch(console.error);
 };
 
 
