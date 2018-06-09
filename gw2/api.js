@@ -1,5 +1,4 @@
 const axios = require('axios');
-
 const apiUrl = 'https://api.guildwars2.com/v2';
 
 async function api_query(url) {
@@ -21,8 +20,12 @@ class gw2_api {
         return await api_query(apiUrl + `/account?access_token=${this.account_token}`);
     }
 
-    async guild_lookup(guild_leader) {
-        return await api_query(apiUrl + `/guild/${guild_leader}?access_token=${this.account_token}`);
+    async guild_lookup(guild_id) {
+        return await api_query(apiUrl + `/guild/${guild_id}?access_token=${this.account_token}`);
+    }
+
+    async guild_ranks_lookup(guild_id) {
+        return await api_query(apiUrl + `/guild/${guild_id}/ranks?access_token=${this.account_token}`);
     }
 
     async guild_members_lookup(guild_id) {

@@ -492,24 +492,3 @@ exports.run = (client, message, args) => {
     raidSetup.run().catch(console.error);
 };
 
-
-/*
-	Command: create
-
-	Choose raid type:
-		1. Fullclear of W1-5
-		2. Choose a wing to clear
-		3. Choose a boss to kill
-		4. Custom selection of bosses
-	Select Squad Composition
-		1. Generic Comp: 2x Chrono, 2x Druid, 1x BS, 2x {Power DPS}, 3x {any DPS}
-		2. Power Comp: 2x Chrono, 2x Druid, 1x BS, 5x {Power DPS}
-		3. Condi Comp: 2x Chrono, 1x Druid, 1x {Healer}, 1x BS, 5x {Condi DPS}
-		4. Custom
-	Select raid date
-	Include non member?
-	->[Insert raid into databse]
-	->[posts message under raid-schedule]
-	->[add reactions to message for role options]
-*/
-
