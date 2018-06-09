@@ -5,14 +5,21 @@ module.exports = {
     execute: async function(query, params) {
         const connection = await mysql.createConnection(config.db);
         if (params) {
-            return await connection.execute(query, params);
+            let result = await connection.execute(query, params);
+            await connection.end();
+            return result;
+
         } else {
-            return await connection.execute(query);
+            let result = await connection.execute(query);
+            await connection.end();
+            return result;        
         }
     },
 
     query: async function(query) {
         const connection = await mysql.createConnection(config.db);
-            return await connection.query(query);
+            let result = await connection.query(query);
+            await connection.end();
+            return result; 
     },
 };
