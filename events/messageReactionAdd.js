@@ -1,5 +1,9 @@
+const config = require("../config.js");
+
 exports.run = async (client, messageReaction, user) => {
 	if (user.bot) return;
-	if (messageReaction.message.channel.id == 448592213203615744 || messageReaction.message.channel.id == 448943451707408414)
+
+	// Handle raid channel
+	if (messageReaction.message.channel.id == config.raidChannelId)
 		messageReaction.message.channel.send(`User <@${user.id}> signed up as ${messageReaction.emoji}`).catch(console.error);	
 }

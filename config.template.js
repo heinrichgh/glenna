@@ -4,6 +4,8 @@ module.exports = {
   "prefix": "!",
   "raidChannelId": "",
   "testChannelId": "",
+  "defaultChannel": "",
+  "welcomeMsg": "",
     // mysql db
   "db": {
     "host": "127.0.0.1",
