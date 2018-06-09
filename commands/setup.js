@@ -56,7 +56,9 @@ class GuildSetup {
         let gw2_api = new gwAPI(this.args);
         let ranks = await gw2_api.guild_ranks_lookup(guild.id);
         for (var i = ranks.length - 1; i >= 0; i--) {
-            let sql_result_ranks = await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, guild_id) VALUES (?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, sql_result_guild[0].insertId]);
+            let startingRole = 0;
+            if (ranks[i].permissions[0] == "StartingRole") { startingRole = 1}
+            let sql_result_ranks = await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].insertId]);
         }
         
         // insett members
