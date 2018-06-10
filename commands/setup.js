@@ -12,14 +12,9 @@ class GuildSetup {
     }
 
     hasPermission() {
-        const leaderRole = this.message.guild.roles.find("name", "Leaders");
-        if (!leaderRole) {
-            console.log("The Leader role does not exist");
-            return false;
-        }
-
-        if (!this.message.guild.roles.has(leaderRole.id)) {
-            console.log("You can't use this command.");
+        const owner = this.message.guild.owner;
+        if (owner.user.id !== this.message.author.id) {
+            console.log("Only the owner of this server can execute this command!");
             return false;
         }
 
