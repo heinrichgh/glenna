@@ -46,8 +46,6 @@ class GuildSetup {
     async createRanks(guild)
     {
         let [rows] = await sql.execute('SELECT rank, is_starting FROM `guild_rank` WHERE guild_rank.guild_id = (SELECT id FROM guild WHERE guild.guild_api_id = ?) ORDER BY `rank_order` ASC',[guild.id]);
-        console.log(rows);
-
         for (var i = rows.length - 1; i >= 0; i--) {
             let role = this.message.guild.roles.find("name", rows[i].rank);
             if (!role) {
@@ -79,7 +77,7 @@ class GuildSetup {
             if (members[i].rank.trim() != "invited")
             {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
-                let sql_result_member = await sql.execute('INSERT INTO guild_member (id, guild_id, guild_member_name, discord_member_name, rank_id) VALUES (?, ?, ?, ?, ?)',[null, sql_result_guild[0].insertId, members[i].name, "", rows[0].id]);
+                let sql_result_member = await sql.execute('INSERT INTO guild_member (id, guild_id, guild_member_name, discord_id, rank_id) VALUES (?, ?, ?, ?, ?)',[null, sql_result_guild[0].insertId, members[i].name, "", rows[0].id]);
             }
         }
     }
