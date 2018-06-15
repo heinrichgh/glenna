@@ -135,7 +135,7 @@ class GuildSetup {
 exports.run = (client, message, args) => {
     var pattern = /[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*\-[A-Z0-9]*/g;
     if (pattern.test(args)) {
-        this.message.delete();
+        message.delete();
         let guildSetup = new GuildSetup(client, message, args);
         guildSetup.run().catch(console.error);    
     }
