@@ -22,9 +22,7 @@ class AccountSetup {
             const role = this.message.guild.roles.find("name", guild[0][0].rank);
             if (role) {
                 await sql.execute('UPDATE `guild_member` SET `discord_id` = ? WHERE `guild_member`.`guild_member_name` = ?',[this.message.author.id, guild[0][0].guild_member_name]);
-                this.message.member.addRole(role)
-                    .then(console.log)
-                    .catch(console.error);
+                this.message.member.addRole(role);
                 this.message.reply(`Hi ${guild[0][0].guild_member_name} your rank has been set to '${guild[0][0].rank}'`);
             }
             else {
