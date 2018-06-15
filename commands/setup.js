@@ -49,11 +49,14 @@ class GuildSetup {
         console.log(rows);
 
         for (var i = rows.length - 1; i >= 0; i--) {
-            this.message.guild.createRole({
-                name: rows[i].rank
-            })
-            .then(role => console.log(`Created new role with name ${role.name}.`))
-            .catch(console.error)
+            let role = this.message.guild.roles.find("name", rows[i].rank);
+            if (!role) {
+                this.message.guild.createRole({
+                    name: rows[i].rank
+                })
+                .then(role => console.log(`Created new role with name ${role.name}.`))
+                .catch(console.error)
+            }
         }
     }
 
