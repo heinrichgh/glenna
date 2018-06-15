@@ -13,7 +13,6 @@ class AccountSetup {
 
     async run() {
         try {
-
             this.message.delete();
             let gw2_api = new gwAPI(this.args);
             let account = await gw2_api.account_lookup();
@@ -62,7 +61,8 @@ exports.run = (client, message, args) => {
         let accountSetup = new AccountSetup(client, message, args);
         accountSetup.run().catch(console.error);    
     }
-    
+    else
+        message.reply("Usage:```!join [api-key]```");
 };
 
 

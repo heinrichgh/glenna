@@ -17,7 +17,6 @@ class GuildSetup {
             console.log("Only the owner of this server can execute this command!");
             return false;
         }
-
         return true;
     }
 
@@ -139,6 +138,8 @@ exports.run = (client, message, args) => {
         let guildSetup = new GuildSetup(client, message, args);
         guildSetup.run().catch(console.error);    
     }
+    else
+        message.reply("Usage:```!setup [api-key]```");
     
 };
 
