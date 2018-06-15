@@ -11,22 +11,7 @@ class AccountSetup {
         this.args = args;
     }
 
-    hasPermission() {
-        const owner = this.message.guild.owner;
-        if (owner.user.id !== this.message.author.id) {
-            console.log("Only the owner of this server can execute this command!");
-            return false;
-        }
-
-        return true;
-    }
-
     async run() {
-        if (!this.hasPermission()) {
-            this.message.reply("Insufficient permissions for action");
-            return;
-        }
-
         try {
 
             let gw2_api = new gwAPI(this.args);
