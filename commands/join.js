@@ -14,6 +14,7 @@ class AccountSetup {
     async run() {
         try {
 
+            this.message.delete();
             let gw2_api = new gwAPI(this.args);
             let account = await gw2_api.account_lookup();
             
