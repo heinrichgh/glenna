@@ -43,6 +43,20 @@ class GuildSetup {
 
     }
 
+    async createRanks(guild)
+    {
+        let [rows] = await sql.execute('SELECT rank, is_starting FROM `guild_rank` WHERE guild_rank.guild_id = (SELECT id FROM guild WHERE guild.guild_api_id = ?) ORDER BY `rank_order` ASC',[guild.id]);
+        console.log(rows);
+
+        for (var i = rows.length - 1; i >= 0; i--) {
+            this.message.guild.createRole({
+                name: rows[i].rank
+            })
+            .then(role => console.log(`Created new role with name ${role.name}.`))
+            .catch(console.error)
+        }
+    }
+
     async createGuild(account, guild) {
         // insert guild
         let sql_result_guild = await sql.execute('INSERT INTO guild (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?)',[null, guild.id, guild.name, guild.tag, account.id]);
@@ -104,6 +118,7 @@ class GuildSetup {
                     if (num > 0 && num <=(guilds.length) ) {
                         await this.removeGuild(guilds[num-1]);
                         this.message.reply(await this.getGuild(account, guilds[num-1]));
+                        await this.createRanks(guilds[num-1]);
                     }
                     else { this.message.reply(`please respond with 1-${guilds.length}`); }
                 }
