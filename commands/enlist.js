@@ -174,10 +174,10 @@ class Enlist {
             const filter = (reaction, user) => user.id === this.message.member.id;
             const collector = message.createReactionCollector(filter, { time: 15000 });
             collector.on('collect', (r) => {
-                console.log(r.emoji);
-                message.delete();
+                console.log(r.emoji.name);
+                
             });
-            collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+            collector.on('end', collected => message.delete());
         }).catch(function() {
               //Something
              });
