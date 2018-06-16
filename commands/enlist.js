@@ -2,6 +2,16 @@ const moment = require("moment");
 const sql = require("../util/sql");
 const config = require("../config.js");
 
+const STATUS = {
+    AWAITING_DATE: 1,
+    AWAITING_CLEAR_TYPE: 2,
+    AWAITING_TEMPLATE: 3,
+    AWAITING_PUBLISH: 4,
+    PUBLISHED: 5,
+    FULL: 6,
+    COMPLETED: 10
+};
+
 class Enlist {
 
     constructor(client, message, args) {
@@ -25,12 +35,7 @@ class Enlist {
         return true;
     }
 
-    async sendSummary(raid, channel) {
-
-        // temporary cleanup of old messages.
-        const fetched = await channel.fetchMessages({limit: 99});
-        channel.bulkDelete(fetched);
-
+   async sendSummary(raid, channel) {
         let [clearTypeRows] = await
             sql.execute(`
             SELECT
@@ -188,6 +193,8 @@ class Enlist {
              });
     }
 
+
+
     async run() {
         if (!this.hasPermission()) {
             this.message.reply("Insufficient permissions for action");
@@ -195,20 +202,26 @@ class Enlist {
         }
 
         try {
-            // print all available raids
-            // if no response given, delete the message
-                
+            let [raid] = await sql.execute('SELECT * FROM `raid` WHERE status = ? LIMIT 1',[STATUS.PUBLISHED]);
+            console.log(raid[0].id);
+            if (raid.length) {
+                //await this.sendSummary(raid[0], this.message.channel);    
+            }
+            const emojiList = message.guild.emojis.map(e=>e.toString()).join(" ");
+            console.log(emojiList);
+            this.message.channel.send(emojiList);
+
+
         } catch (e) {
             console.error(e);
         }
-
     }
 }
 
 exports.run = (client, message, args) => {
     message.reply("Not Implemented! Demo Only");
-    // let enlistment = new Enlist(client, message, args);
-    // enlistment.run().catch(console.error);
+    let enlistment = new Enlist(client, message, args);
+    enlistment.run().catch(console.error);
 };
 
 

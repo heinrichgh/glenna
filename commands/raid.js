@@ -7,6 +7,8 @@ const STATUS = {
     AWAITING_CLEAR_TYPE: 2,
     AWAITING_TEMPLATE: 3,
     AWAITING_PUBLISH: 4,
+    PUBLISHED: 5,
+    FULL: 6,
     COMPLETED: 10
 };
 
@@ -43,7 +45,6 @@ class RaidSetup {
         if (rows.length) {
             return rows[0];
         }
-
         return this.createRaid(userId)
     }
 
@@ -297,7 +298,7 @@ class RaidSetup {
                     SET 
                         status = ? 
                     WHERE
-                        id = ?`, [STATUS.COMPLETED, raid.id]);
+                        id = ?`, [STATUS.PUBLISHED, raid.id]);
             this.message.reply("Published!");
         } else {
             this.message.reply("Invalid response.");
