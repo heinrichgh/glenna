@@ -168,6 +168,14 @@ class Enlist {
                     let emoji = message.guild.emojis.get(emojiarray[1]);
                     message.react(emoji);
                 }
+                // wait for response
+                const filter = m => m.member === this.message.member;
+                let collected = this.message.awaitReactions(filter, { time: 15000 })
+                .then(function (collected){
+                    console.log(collected);
+                    message.delete();
+                    })
+                .catch(console.error);
             }
         }).catch(function() {
               //Something
