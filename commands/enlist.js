@@ -203,11 +203,6 @@ class Enlist {
             if (raid.length) {
                 await this.sendSummary(raid[0], this.message.channel);    
             }
-            const emojiList = this.message.guild.emojis.map(e=>e.toString()).join(" ");
-            console.log(emojiList);
-            this.message.channel.send(emojiList);
-
-
         } catch (e) {
             console.error(e);
         }
