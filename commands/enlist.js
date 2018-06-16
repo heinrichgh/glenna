@@ -174,8 +174,9 @@ class Enlist {
             const filter = (reaction, user) => user.id === this.message.member.id;
             const collector = message.createReactionCollector(filter, { time: 15000 });
             collector.on('collect', (r) => {
-                
-                let [roles] = await this.sql.execute(`
+                const sql = require("../util/sql");
+
+                let [roles] = await sql.execute(`
                     SELECT raid_role.title 
                     FROM raid_role 
                     JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
