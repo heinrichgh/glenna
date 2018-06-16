@@ -75,7 +75,7 @@ class GuildSetup {
             if (members[i].rank.trim() != "invited")
             {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
-                let sql_result_member = await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (NULL, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].insertId, members[i].name, "", rows[0].id, null]);
+                let sql_result_member = await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].insertId, members[i].name, "", rows[0].id, null]);
             }
         }
     }
