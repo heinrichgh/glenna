@@ -21,7 +21,7 @@ class Enlist {
     }
 
     hasPermission() {
-        const leaderRole = this.message.guild.roles.find("name", "Leaders");
+        const leaderRole = this.message.guild.roles.find("name", "Leader");
         if (!leaderRole) {
             console.log("The Leader role does not exist");
             return false;
