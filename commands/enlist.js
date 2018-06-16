@@ -40,7 +40,7 @@ class Enlist {
             sql.execute(`
             SELECT
               rw.name as 'WingName',
-              rb.name as 'BossName'
+              rb.icon as 'BossIcon'
             FROM
               raid_clear_setup rcs
               INNER JOIN raid_boss rb on rcs.raid_boss_id = rb.id
@@ -57,7 +57,7 @@ class Enlist {
             if (!groupedClearTypes[clearType.WingName]) {
                 groupedClearTypes[clearType.WingName] = {wing: clearType.WingName, data: []}
             }
-            groupedClearTypes[clearType.WingName].data.push(clearType.BossName);
+            groupedClearTypes[clearType.WingName].data.push(clearType.BossIcon);
 
         }
 
@@ -66,7 +66,7 @@ class Enlist {
             let groupedClearType = groupedClearTypes[index];
             clearFields.push({
                 name: `${groupedClearType.wing}:`,
-                value: groupedClearType.data.join("\n")
+                value: groupedClearType.data.join(" ")
             });
         }
 
@@ -144,18 +144,14 @@ class Enlist {
                         if (restriction.profession)
                         {
                             reactions.push(`${restriction.profession_icon}`);
-                            value += `${restriction.profession} ${restriction.profession_icon}`;
+                            value += `${restriction.profession_icon}`;
                             if (restriction.role) {
-                                value += ` as ${restriction.role} ${restriction.role_icon || ""}`;
-                            }
-                        } else {
-                            if (restriction.role) {
-                                value += `${restriction.role} ${restriction.role_icon || ""}`;
+                                value += `${restriction.role_icon || ""}`;
                             }
                         }
                         return value;
                     }
-                ).join("\n");
+                ).join(" ");
             }
 
             fields.push({
@@ -205,7 +201,7 @@ class Enlist {
             let [raid] = await sql.execute('SELECT * FROM `raid` WHERE status = ? LIMIT 1',[STATUS.PUBLISHED]);
             console.log(raid[0].id);
             if (raid.length) {
-                //await this.sendSummary(raid[0], this.message.channel);    
+                await this.sendSummary(raid[0], this.message.channel);    
             }
             const emojiList = this.message.guild.emojis.map(e=>e.toString()).join(" ");
             console.log(emojiList);
