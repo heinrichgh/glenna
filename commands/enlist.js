@@ -161,7 +161,7 @@ class Enlist {
             }
         })
         .then((message) => {
-            console.log("test");
+            
             if (reactions.length >0) {
                 for (var i = reactions.length - 1; i >= 0; i--) {
                     var regex = /<:[a-z]*:([0-9]*)>/g;
@@ -173,7 +173,10 @@ class Enlist {
             // wait for response
             const filter = (reaction, user) => user.id === this.message.member.id;
             const collector = message.createReactionCollector(filter, { time: 15000 });
-            collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
+            collector.on('collect', (r) => {
+                console.log(r.emoji);
+                message.delete();
+            });
             collector.on('end', collected => console.log(`Collected ${collected.size} items`));
         }).catch(function() {
               //Something
