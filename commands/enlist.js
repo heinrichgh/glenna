@@ -171,7 +171,7 @@ class Enlist {
                 }
                 // wait for response
                 const filter = (user) => user.id === this.message.guild.owner
-                const collector = message.createReactionCollector(filter, { time: 15000 });
+                const collector = this.message.createReactionCollector(filter, { time: 15000 });
                 collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
                 collector.on('end', collected => console.log(`Collected ${collected.size} items`));
 
