@@ -175,7 +175,8 @@ class Enlist {
             const collector = message.createReactionCollector(filter, { time: 15000 });
             collector.on('collect', (r) => {
                 console.log(r.emoji.name);
-                
+                this.message.reply(`Enlisted as ${r.emoji.name}`);
+                message.delete();
             });
             collector.on('end', collected => message.delete());
         }).catch(function() {
