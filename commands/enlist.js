@@ -169,13 +169,12 @@ class Enlist {
                     let emoji = message.guild.emojis.get(emojiarray[1]);
                     message.react(emoji);
                 }
-                // wait for response
-                const filter = (user) => user.id === this.message.guild.owner
-                const collector = this.message.createReactionCollector(filter, { time: 15000 });
-                collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
-                collector.on('end', collected => console.log(`Collected ${collected.size} items`));
-
             }
+            // wait for response
+            const filter = (user) => user.id === this.message.guild.owner
+            const collector = this.message.createReactionCollector(filter, { time: 15000 });
+            collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
+            collector.on('end', collected => console.log(`Collected ${collected.size} items`));
         }).catch(function() {
               //Something
              });
