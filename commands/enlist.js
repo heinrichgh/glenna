@@ -175,7 +175,14 @@ class Enlist {
             const collector = message.createReactionCollector(filter, { time: 15000 });
             collector.on('collect', (r) => {
                 
-                let [roles] = await sql.execute('SELECT raid_role.title FROM raid_role JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id JOIN profession ON raid_squad_restriction.profession_id = profession.id WHERE raid_squad.raid_id = ? AND profession.title LIKE ?',[raid.id, r.emoji.name]);
+                let [roles] = await sql.execute(`
+                    SELECT raid_role.title 
+                    FROM raid_role 
+                    JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
+                    JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
+                    JOIN profession ON raid_squad_restriction.profession_id = profession.id 
+                    WHERE raid_squad.raid_id = ${raid.id} 
+                    AND profession.title LIKE ${r.emoji.name}`);
                 
                 console.log(roles);
                 //let spot = await sql.execute('SELECT raid_squad.spot, profession.title FROM `raid_squad` LEFT JOIN raid_squad_restriction on raid_squad.id = raid_squad_restriction.raid_squad_id JOIN profession ON raid_squad_restriction.profession_id = profession.id WHERE raid_squad.raid_id = ? AND profession.title LIKE ?',[raid.id, r.emoji.name]);
