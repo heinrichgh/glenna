@@ -39,7 +39,6 @@ class GuildSetup {
             await sql.execute('DELETE FROM guild_rank WHERE guild_id = ?', [rows[i].id]);
             await sql.execute('DELETE FROM guild_member WHERE guild_id = ?', [rows[i].id]);
         }
-
     }
 
     async createRanks(guild)
@@ -122,12 +121,11 @@ class GuildSetup {
                     }
                     else { this.message.reply(`please respond with 1-${guilds.length}`); }
                 }
-                else { this.message.reply("not a leader"); }
+                else { this.message.reply("You need lead at least one guild to use this command."); }
             }
         } catch (e) {
             console.error(e);
         }
-
     }
 }
 
@@ -140,7 +138,6 @@ exports.run = (client, message, args) => {
     }
     else
         message.reply("Usage:```!setup [api-key]```");
-    
 };
 
 
