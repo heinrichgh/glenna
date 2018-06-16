@@ -70,22 +70,6 @@ class Enlist {
             });
         }
 
-        channel.send({embed: {
-                color: 3447003,
-                author: {
-                    name: this.client.user.username,
-                    icon_url: this.client.user.avatarURL
-                },
-                title: "Clear Summary",
-                fields: clearFields,
-                timestamp: new Date(),
-                footer: {
-                    icon_url: this.client.user.avatarURL,
-                    text: "Wings and Bosses"
-                }
-            }
-        });
-
         let [raidSquadRows] = await
             sql.execute(
                 `SELECT
@@ -160,18 +144,19 @@ class Enlist {
             });
         }
 
+
         channel.send({embed: {
                 color: 3447003,
                 author: {
                     name: this.client.user.username,
                     icon_url: this.client.user.avatarURL
                 },
-                title: "Squad Slots Summary",
-                fields: fields,
+                title: "Clear Summary",
+                fields: clearFields,
                 timestamp: new Date(),
                 footer: {
                     icon_url: this.client.user.avatarURL,
-                    text: "Slots"
+                    text: "Wings and Bosses"
                 }
             }
         })
@@ -199,7 +184,6 @@ class Enlist {
 
         try {
             let [raid] = await sql.execute('SELECT * FROM `raid` WHERE status = ? LIMIT 1',[STATUS.PUBLISHED]);
-            console.log(raid[0].id);
             if (raid.length) {
                 await this.sendSummary(raid[0], this.message.channel);    
             }
