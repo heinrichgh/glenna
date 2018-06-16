@@ -170,7 +170,7 @@ class Enlist {
                     message.react(emoji);
                 }
                 // wait for response
-                const filter = (reaction, user) => reaction.emoji.name === '👌' && user.id === this.message.author
+                const filter = (user) => user.id === this.message.author
                 const collector = message.createReactionCollector(filter, { time: 15000 });
                 collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
                 collector.on('end', collected => console.log(`Collected ${collected.size} items`));
