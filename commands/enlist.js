@@ -160,19 +160,19 @@ class Enlist {
                 }
             }
         })
-        .then(function (message) {
+        .then((message) => {
             console.log("test");
             if (reactions.length >0) {
                 for (var i = reactions.length - 1; i >= 0; i--) {
                     var regex = /<:[a-z]*:([0-9]*)>/g;
                     var emojiarray = regex.exec(reactions[i]);
-                    let emoji = message.guild.emojis.get(emojiarray[1]);
+                    let emoji = message.guild.emojis.get("454714177408335873"/*emojiarray[1]*/);
                     message.react(emoji);
                 }
             }
             // wait for response
-            const filter = (user) => user.id === this.message.guild.owner
-            const collector = this.message.createReactionCollector(filter, { time: 15000 });
+            const filter = (reaction, user) => user.id === this.message.member.id;
+            const collector = message.createReactionCollector(filter, { time: 15000 });
             collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
             collector.on('end', collected => console.log(`Collected ${collected.size} items`));
         }).catch(function() {
