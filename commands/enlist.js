@@ -189,7 +189,7 @@ class Enlist {
                     count = roles.length;
                     for (var i = 0; roles.length-1 >= i; i++) {
                         response += `${i+1} - ${roles[i].title}\n`;
-                        role.push({roles[i].title})
+                        role.push(roles[i].title);
                     }
                 })()
 
