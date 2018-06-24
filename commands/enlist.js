@@ -36,7 +36,7 @@ class Enlist {
         //insert tole
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
-
+        await this.updateSchedule(raidId, this.message.guild.channels.find('id', config.raidChannelId));
         // UPDATE `raid_squad` SET `user_id` = '@95234483317379072' WHERE `raid_squad`.`id` = 482;
     }
 
@@ -278,6 +278,157 @@ class Enlist {
         }).catch(function() {
               //Something
              });
+    }
+
+    async updateSchedule(raid, channel) {
+
+        // temporary cleanup of old messages.
+        const fetched = await channel.fetchMessages({limit: 99});
+        channel.bulkDelete(fetched);
+
+        let [clearTypeRows] = await
+            sql.execute(`
+            SELECT
+              rw.name as 'WingName',
+              rb.name as 'BossName'
+            FROM
+              raid_clear_setup rcs
+              INNER JOIN raid_boss rb on rcs.raid_boss_id = rb.id
+              INNER JOIN raid_wing rw on rb.raid_wing_id = rw.id
+            WHERE
+              rcs.raid_id = ?
+            ORDER BY
+              rw.id,
+              rb.number`, [raid.id]);
+
+
+        let groupedClearTypes = {};
+        for (let clearType of clearTypeRows) {
+            if (!groupedClearTypes[clearType.WingName]) {
+                groupedClearTypes[clearType.WingName] = {wing: clearType.WingName, data: []}
+            }
+            groupedClearTypes[clearType.WingName].data.push(clearType.BossName);
+
+        }
+
+        let clearFields = [];
+        for (let index in groupedClearTypes) {
+            let groupedClearType = groupedClearTypes[index];
+            clearFields.push({
+                name: `${groupedClearType.wing}:`,
+                value: groupedClearType.data.join("\n")
+            });
+        }
+
+        channel.send({embed: {
+                color: 3447003,
+                author: {
+                    name: this.client.user.username,
+                    icon_url: this.client.user.avatarURL
+                },
+                title: "Clear Summary",
+                fields: clearFields,
+                timestamp: new Date(),
+                footer: {
+                    icon_url: this.client.user.avatarURL,
+                    text: "Wings and Bosses"
+                }
+            }
+        });
+
+        let [raidSquadRows] = await
+            sql.execute(
+                `SELECT
+          *
+        FROM
+          raid_squad
+        WHERE
+          raid_id = ?
+        ORDER BY
+           spot`, [raid.id]);
+
+        let [restrictionRows] = await
+            sql.execute(
+                `SELECT
+          rsr.*
+          , p.title as profession
+          , p.icon as profession_icon
+          , r.title as role
+          , r.icon as role_icon
+          , squad.spot
+        FROM
+          raid_squad_restriction rsr
+          INNER JOIN raid_squad squad on rsr.raid_squad_id = squad.id
+          LEFT JOIN profession p on rsr.profession_id = p.id
+          LEFT JOIN raid_role r on rsr.raid_role_id = r.id
+        WHERE
+          squad.raid_id = ${raid.id}
+        ORDER BY
+            squad.spot`);
+
+        let groupedRestrictionRows = {};
+        for (let index in restrictionRows) {
+            let row = restrictionRows[index];
+            if (!groupedRestrictionRows[row.raid_squad_id]) {
+                groupedRestrictionRows[row.raid_squad_id] = [];
+            }
+            groupedRestrictionRows[row.raid_squad_id].push(row);
+        }
+
+        for (let index in raidSquadRows) {
+            let row = raidSquadRows[index];
+            row.restrictions = groupedRestrictionRows[row.id];
+        }
+
+        let fields = [];
+        let reactions = [];
+
+        for (let index in raidSquadRows) {
+            let detail = raidSquadRows[index];
+            let value = "Fill";
+            if (detail.restrictions) {
+                value = detail.restrictions.map(
+                    restriction =>
+                    {
+                        let value = "";
+                        if (restriction.profession)
+                        {
+                            reactions.push(`${restriction.profession_icon}`);
+                            value += `${restriction.profession} ${restriction.profession_icon}`;
+                            if (restriction.role) {
+                                value += ` as ${restriction.role} ${restriction.role_icon || ""}`;
+                            }
+                        } else {
+                            if (restriction.role) {
+                                value += `${restriction.role} ${restriction.role_icon || ""}`;
+                            }
+                        }
+                        return value;
+                    }
+                ).join("\n");
+            }
+
+            fields.push({
+                name: `Slot ${detail.spot}:`,
+                value: value
+            });
+        }
+
+        channel.send({embed: {
+                color: 3447003,
+                author: {
+                    name: this.client.user.username,
+                    icon_url: this.client.user.avatarURL
+                },
+                title: "Squad Slots Summary",
+                fields: fields,
+                timestamp: new Date(),
+                footer: {
+                    icon_url: this.client.user.avatarURL,
+                    text: "Slots"
+                }
+            }
+        });
     }
 
     async run() {
