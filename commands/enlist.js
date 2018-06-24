@@ -210,12 +210,44 @@ class Enlist {
                             (async function (){
                                 switch (rr.emoji.name)
                                 {
-                                    case '2⃣':
+                                    case '1️⃣':
                                         console.log(role[0]);
                                         break;
 
-                                    case reaction_numbers[3]:
+                                    case '2⃣':
+                                        console.log(role[1]);
+                                        break;
+
+                                    case '3️⃣':
                                         console.log(role[2]);
+                                        break;
+
+                                    case '4️⃣':
+                                        console.log(role[2]);
+                                        break;
+
+                                    case '5️⃣':
+                                        console.log(role[3]);
+                                        break;
+
+                                    case '6️⃣':
+                                        console.log(role[4]);
+                                        break;
+
+                                    case '7️⃣':
+                                        console.log(role[5]);
+                                        break;
+
+                                    case '8️⃣':
+                                        console.log(role[6]);
+                                        break;
+
+                                    case '9️⃣':
+                                        console.log(role[7]);
+                                        break;
+
+                                    case '🔟':
+                                        console.log(role[8]);
                                         break;
                                 }
                             })()
