@@ -210,7 +210,7 @@ class Enlist {
                             (async function (){
                                 switch (rr.emoji.name)
                                 {
-                                    case 2⃣:
+                                    case '2⃣':
                                         console.log(role[0]);
                                         break;
 
