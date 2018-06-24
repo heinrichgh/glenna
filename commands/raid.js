@@ -297,7 +297,7 @@ class RaidSetup {
 
         if (message === "done") {
 
-            await this.sendSummary(raid, this.message.guild.channels.find('id', config.raidChannelId));
+            await this.updateSchedule(raid, this.message.guild.channels.find('id', config.raidChannelId));
             await sql.execute(`UPDATE raid 
                     SET 
                         status = ? 
@@ -309,7 +309,7 @@ class RaidSetup {
         }
     }
 
-    async sendSummary(raid, channel) {
+    async updateSchedule(raid, channel) {
 
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
@@ -385,6 +385,7 @@ class RaidSetup {
           , r.title as role
           , r.icon as role_icon
           , squad.spot
+          , squad.user_id
         FROM
           raid_squad_restriction rsr
           INNER JOIN raid_squad squad on rsr.raid_squad_id = squad.id
@@ -432,13 +433,14 @@ class RaidSetup {
                                 value += `${restriction.role} ${restriction.role_icon || ""}`;
                             }
                         }
+
                         return value;
                     }
                 ).join("\n");
             }
 
             fields.push({
-                name: `Slot ${detail.spot}:`,
+                name: `Slot ${detail.spot} ${detail.user_id}:`,
                 value: value
             });
         }
