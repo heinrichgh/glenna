@@ -188,12 +188,12 @@ class Enlist {
                         response += `${i+1} - ${roles[i].title}\n`
                     }
                     this.message.reply(response)
-                    .then((message) => {
+                    .then((msg) => {
                         for (var i = 1; roles.length >= i; i++) {
-                            message.react(reaction_numbers[i]);
+                            msg.react(reaction_numbers[i]);
                         }
-                        const filter = (reaction, user) => user.id === this.message.member.id;
-                        const collector = message.createReactionCollector(filter, { time: 15000 });
+                        const filter = (reaction, user) => user.id === this.msg.member.id;
+                        const collector = msg.createReactionCollector(filter, { time: 15000 });
                         collector.on('collect', (r) => {
                             console.log(r);
                             // const sql = require("../util/sql");
@@ -205,10 +205,10 @@ class Enlist {
                             //     // }
                             // })()
 
-                            // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
-                            // message.delete();
+                            // this.msg.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
+                            // msg.delete();
                         });
-                        collector.on('end', collected => message.delete());
+                        collector.on('end', collected => msg.delete());
                     }).catch(function() {
                       //Something
                      });
