@@ -216,52 +216,52 @@ class Enlist {
                                 {
                                     case '1⃣':
                                         console.log(role[0]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[0]]);
+console.log                      this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[0]]);
                                         break;
 
                                     case '2⃣':
                                         console.log(role[1]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[1]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[1]]);
                                         break;
 
                                     case '3⃣':
                                         console.log(role[2]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[2]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[2]]);
                                         break;
 
                                     case '4⃣':
                                         console.log(role[3]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[3]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[3]]);
                                         break;
 
                                     case '5⃣':
                                         console.log(role[4]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[4]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[4]]);
                                         break;
 
                                     case '6️⃣':
                                         console.log(role[5]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[5]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[5]]);
                                         break;
 
                                     case '7️⃣':
                                         console.log(role[6]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[6]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[6]]);
                                         break;
 
                                     case '8️⃣':
                                         console.log(role[7]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[7]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[7]]);
                                         break;
 
                                     case '9️⃣':
                                         console.log(role[8]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[8]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[8]]);
                                         break;
 
                                     case '🔟':
                                         console.log(role[9]);
-                                        this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[9]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[9]]);
                                         break;
                                 }
                             })()
@@ -273,7 +273,7 @@ class Enlist {
                     }).catch(function() {
                       //Something
                      });
-                message.delete();
+                // message.delete();
             });
         }).catch(function() {
               //Something
