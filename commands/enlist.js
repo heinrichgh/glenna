@@ -174,6 +174,14 @@ class Enlist {
                 const sql = require("../util/sql");
 
                 (async function (){
+                    console.log(`
+                        SELECT raid_role.title 
+                        FROM raid_role 
+                        JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
+                        JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
+                        JOIN profession ON raid_squad_restriction.profession_id = profession.id 
+                        WHERE raid_squad.raid_id = ${raid.id} 
+                        AND profession.title LIKE ${r.emoji.name}`);
                     let [roles] = await sql.execute(`
                         SELECT raid_role.title 
                         FROM raid_role 
@@ -186,7 +194,7 @@ class Enlist {
                     console.log(roles);    
                 })()
 
-                this.message.reply(`Enlisted as ${r.emoji.name}`);
+                this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
                 message.delete();
             });
             collector.on('end', collected => message.delete());
