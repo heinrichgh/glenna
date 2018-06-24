@@ -41,7 +41,7 @@ class Enlist {
     }
 
     async sendSummary(raid, channel) {
-        console.log(raid);
+        console.log(raid.id);
         let [clearTypeRows] = await
             sql.execute(`
             SELECT
