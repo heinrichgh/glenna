@@ -34,6 +34,7 @@ class Enlist {
 
     async setRole(raidId, user, role) {
         //insert tole
+        console.log(`Set ${user} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set ${user} role to ${role} for raid ${raidId}`);
     }
 
@@ -212,7 +213,6 @@ class Enlist {
                         collector.on('collect', (rr) => {
                             const sql = require("../util/sql");
                             (async function (){
-                                console.log(rr.emoji.name);
                                 switch (rr.emoji.name)
                                 {
                                     case '1⃣':
