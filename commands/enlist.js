@@ -171,6 +171,7 @@ class Enlist {
             const filter = (reaction, user) => user.id === this.message.member.id;
             const collector = message.createReactionCollector(filter, { time: 15000 });
             let response = "Please select a role:\n";
+            let count = 0;
             collector.on('collect', (r) => {
                 const sql = require("../util/sql");
 
@@ -184,42 +185,41 @@ class Enlist {
                         WHERE raid_squad.raid_id = ${raid.id} 
                         AND profession.title LIKE '${r.emoji.name}'`);
                     
+                    count = roles.length;
                     for (var i = 0; roles.length-1 >= i; i++) {
                         response += `${i+1} - ${roles[i].title}\n`
                     }
-                    console.log(response);
-                    
-                    // .then((msg) => {
-                    //     for (var i = 1; roles.length >= i; i++) {
-                    //         msg.react(reaction_numbers[i]);
-                    //     }
-                    //     const filter = (reaction, user) => user.id === this.msg.member.id;
-                    //     const collector = msg.createReactionCollector(filter, { time: 15000 });
-                    //     collector.on('collect', (rr) => {
-                    //         console.log(rr);
-                    //         // const sql = require("../util/sql");
-
-                    //         // (async function (){
-                    //         //     // switch (rr.emoji.id)
-                    //         //     // {
-                    //             // insert some shit
-                    //         //     // }
-                    //         // })()
-
-                    //         // this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
-                    //         // msg.delete();
-                    //     });
-                    //     //collector.on('end', collected => msg.delete());
-                    // }).catch(function() {
-                    //   //Something
-                    //  });
                 })()
 
                 // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
                 // message.delete();
             });
             collector.on('end', collected => {
-                this.message.reply(response);
+                this.message.reply(response)
+                .then((msg) => {
+                        for (var i = 1; count >= i; i++) {
+                            msg.react(reaction_numbers[i]);
+                        }
+                        const filter = (reaction, user) => user.id === this.msg.member.id;
+                        const collector = msg.createReactionCollector(filter, { time: 15000 });
+                        collector.on('collect', (rr) => {
+                            console.log(rr);
+                            // const sql = require("../util/sql");
+
+                            // (async function (){
+                            //     // switch (rr.emoji.id)
+                            //     // {
+                                // insert some shit
+                            //     // }
+                            // })()
+
+                            // this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
+                            // msg.delete();
+                        });
+                        //collector.on('end', collected => msg.delete());
+                    }).catch(function() {
+                      //Something
+                     });
                 message.delete();
             });
         }).catch(function() {
