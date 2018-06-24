@@ -172,6 +172,7 @@ class Enlist {
             const collector = message.createReactionCollector(filter, { time: 15000 });
             let response = "Please select a role:\n";
             let count = 0;
+            let role = [];
             collector.on('collect', (r) => {
                 const sql = require("../util/sql");
 
@@ -187,7 +188,8 @@ class Enlist {
                     
                     count = roles.length;
                     for (var i = 0; roles.length-1 >= i; i++) {
-                        response += `${i+1} - ${roles[i].title}\n`
+                        response += `${i+1} - ${roles[i].title}\n`;
+                        role.push({roles[i].title})
                     }
                 })()
 
@@ -197,26 +199,35 @@ class Enlist {
             collector.on('end', collected => {
                 this.message.reply(response)
                 .then((msg) => {
-                        for (var i = 0; count >= i; i++) {
+                        for (var i = 1; count >= i; i++) {
                             msg.react(reaction_numbers[i]);
                         }
                         const filter = (reaction, user) => user.id === this.message.member.id;
                         const collector = msg.createReactionCollector(filter, { time: 15000 });
                         collector.on('collect', (rr) => {
-                            console.log(rr);
-                            // const sql = require("../util/sql");
+                            const sql = require("../util/sql");
 
-                            // (async function (){
-                            //     // switch (rr.emoji.id)
-                            //     // {
-                                // insert some shit
-                            //     // }
-                            // })()
+                            (async function (){
+                                switch (rr.emoji.id)
+                                {
+                                    case reaction_numbers[1]:
+                                        console.log(role[0]);
+                                        break;
 
-                            // this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
-                            // msg.delete();
+                                    case reaction_numbers[2]:
+                                        console.log(role[1]);
+                                        break;
+
+                                    case reaction_numbers[3]:
+                                        console.log(role[2]);
+                                        break;
+                                }
+                            })()
+
+                            //this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
+                            msg.delete();
                         });
-                        //collector.on('end', collected => msg.delete());
+                        collector.on('end', collected => msg.delete());
                     }).catch(function() {
                       //Something
                      });
