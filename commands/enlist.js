@@ -208,14 +208,10 @@ class Enlist {
                             const sql = require("../util/sql");
                             console.log(rr.emoji);
                             (async function (){
-                                switch (rr.emoji.id)
+                                switch (rr.emoji.name)
                                 {
-                                    case reaction_numbers[1]:
+                                    case 2⃣:
                                         console.log(role[0]);
-                                        break;
-
-                                    case reaction_numbers[2]:
-                                        console.log(role[1]);
                                         break;
 
                                     case reaction_numbers[3]:
