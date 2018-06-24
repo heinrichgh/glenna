@@ -1,7 +1,7 @@
 const moment = require("moment");
 const sql = require("../util/sql");
 const config = require("../config.js");
-
+const reaction_numbers = ["\u0030\u20E3","\u0031\u20E3","\u0032\u20E3","\u0033\u20E3","\u0034\u20E3","\u0035\u20E3", "\u0036\u20E3","\u0037\u20E3","\u0038\u20E3","\u0039\u20E3"];
 const STATUS = {
     AWAITING_DATE: 1,
     AWAITING_CLEAR_TYPE: 2,
@@ -183,13 +183,39 @@ class Enlist {
                         WHERE raid_squad.raid_id = ${raid.id} 
                         AND profession.title LIKE '${r.emoji.name}'`);
                     
+                    let response = "Please select a role:\n";
                     for (var i = 0; roles.length-1 >= i; i++) {
-                        console.log(roles[i]);
+                        response += `${i+1} - ${roles[i].title}\n`
                     }
+                    this.message.reply(response)
+                    .then((message) => {
+                        for (var i = 1; roles.length >= i; i++) {
+                            message.react(reaction_numbers[i]);
+                        }
+                        const filter = (reaction, user) => user.id === this.message.member.id;
+                        const collector = message.createReactionCollector(filter, { time: 15000 });
+                        collector.on('collect', (r) => {
+                            console.log(r);
+                            // const sql = require("../util/sql");
+
+                            // (async function (){
+                            //     // switch (r.emoji.id)
+                            //     // {
+                                // insert some shit
+                            //     // }
+                            // })()
+
+                            // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
+                            // message.delete();
+                        });
+                        collector.on('end', collected => message.delete());
+                    }).catch(function() {
+                      //Something
+                     });
                 })()
 
-                this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
-                message.delete();
+                // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
+                // message.delete();
             });
             collector.on('end', collected => message.delete());
         }).catch(function() {
