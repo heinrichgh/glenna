@@ -41,7 +41,6 @@ class Enlist {
     }
 
     async sendSummary(raid, channel) {
-        console.log(raid.id);
         let [clearTypeRows] = await
             sql.execute(`
             SELECT
@@ -52,7 +51,7 @@ class Enlist {
               INNER JOIN raid_boss rb on rcs.raid_boss_id = rb.id
               INNER JOIN raid_wing rw on rb.raid_wing_id = rw.id
             WHERE
-              rcs.raid_id = ${[raid]}
+              rcs.raid_id = ${raid.id}
             ORDER BY
               rw.id,
               rb.number`);
@@ -83,7 +82,7 @@ class Enlist {
         FROM
           raid_squad
         WHERE
-          raid_id = ${[raid]}
+          raid_id = ${raid.id}
         ORDER BY
            spot`);
 
@@ -300,7 +299,7 @@ class Enlist {
               rcs.raid_id = ?
             ORDER BY
               rw.id,
-              rb.number`, [raid.id]);
+              rb.number`, raid);
 
 
         let groupedClearTypes = {};
@@ -346,7 +345,7 @@ class Enlist {
         WHERE
           raid_id = ?
         ORDER BY
-           spot`, [raid.id]);
+           spot`, raid);
 
         let [restrictionRows] = await
             sql.execute(
@@ -363,7 +362,7 @@ class Enlist {
           LEFT JOIN profession p on rsr.profession_id = p.id
           LEFT JOIN raid_role r on rsr.raid_role_id = r.id
         WHERE
-          squad.raid_id = ${raid.id}
+          squad.raid_id = ${raid}
         ORDER BY
             squad.spot`);
 
