@@ -207,6 +207,7 @@ class Enlist {
                         collector.on('collect', (rr) => {
                             const sql = require("../util/sql");
                             (async function (){
+                                console.log(rr.emoji.name);
                                 switch (rr.emoji.name)
                                 {
                                     case '1️⃣':
