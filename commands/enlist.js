@@ -36,6 +36,8 @@ class Enlist {
         //insert tole
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
+
+        // UPDATE `raid_squad` SET `user_id` = '@95234483317379072' WHERE `raid_squad`.`id` = 482;
     }
 
     async sendSummary(raid, channel) {

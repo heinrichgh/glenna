@@ -64,6 +64,7 @@ class RaidSetup {
     }
 
     async setupRaid(raid) {
+        console.log(raid.status);
         switch (raid.status) {
             case STATUS.AWAITING_DATE:
                 await this.dateSetup(raid);
@@ -77,6 +78,12 @@ class RaidSetup {
             case STATUS.AWAITING_PUBLISH:
                 await this.raidPublish(raid);
                 break;
+            case STATUS.PUBLISHED:
+                await this.raidPublish(raid);
+                break;
+
+    async raidPublish(raid) {
+
         }
     }
 
@@ -276,6 +283,11 @@ class RaidSetup {
         raid = await this.getRaid(this.message.member.id);
         await this.setupRaid(raid);
     }
+
+    async raidPublish(raid) {
+case STATUS.AWAITING_PUBLISH:
+                await this.raidPublish(raid);
+                break;
 
     async raidPublish(raid) {
 
