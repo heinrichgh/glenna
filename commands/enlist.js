@@ -187,6 +187,7 @@ class Enlist {
                     for (var i = 0; roles.length-1 >= i; i++) {
                         response += `${i+1} - ${roles[i].title}\n`
                     }
+                    console.log(response);
                     this.message.reply(response)
                     .then((msg) => {
                         for (var i = 1; roles.length >= i; i++) {
