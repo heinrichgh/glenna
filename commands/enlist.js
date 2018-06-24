@@ -192,7 +192,7 @@ class Enlist {
                 })()
 
                 // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
-                // message.delete();
+                message.delete();
             });
             collector.on('end', collected => {
                 this.message.reply(response)
@@ -200,7 +200,7 @@ class Enlist {
                         for (var i = 0; count >= i; i++) {
                             msg.react(reaction_numbers[i]);
                         }
-                        const filter = (reaction, user) => user.id === this.msg.member.id;
+                        const filter = (reaction, user) => user.id === this.message.member.id;
                         const collector = msg.createReactionCollector(filter, { time: 15000 });
                         collector.on('collect', (rr) => {
                             console.log(rr);
