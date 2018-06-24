@@ -183,8 +183,7 @@ class Enlist {
                         WHERE raid_squad.raid_id = ${raid.id} 
                         AND profession.title LIKE '${r.emoji.name}'`);
                     
-                       
-                    for (var i = roles.length - 1; i >= 0; i--) {
+                    for (var i = 0; roles.length-1 >= i; i++) {
                         console.log(roles[i]);
                     }
                 })()
@@ -197,8 +196,6 @@ class Enlist {
               //Something
              });
     }
-
-
 
     async run() {
         if (!this.hasRole()) {
