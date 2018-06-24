@@ -194,18 +194,18 @@ class Enlist {
                         }
                         const filter = (reaction, user) => user.id === this.msg.member.id;
                         const collector = msg.createReactionCollector(filter, { time: 15000 });
-                        collector.on('collect', (r) => {
-                            console.log(r);
+                        collector.on('collect', (rr) => {
+                            console.log(rr);
                             // const sql = require("../util/sql");
 
                             // (async function (){
-                            //     // switch (r.emoji.id)
+                            //     // switch (rr.emoji.id)
                             //     // {
                                 // insert some shit
                             //     // }
                             // })()
 
-                            // this.msg.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
+                            // this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
                             // msg.delete();
                         });
                         //collector.on('end', collected => msg.delete());
@@ -217,7 +217,7 @@ class Enlist {
                 // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
                 // message.delete();
             });
-            //collector.on('end', collected => message.delete());
+            collector.on('end', collected => message.delete());
         }).catch(function() {
               //Something
              });
