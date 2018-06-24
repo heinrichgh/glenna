@@ -32,7 +32,12 @@ class Enlist {
         return true;
     }
 
-   async sendSummary(raid, channel) {
+    async setRole(raidId, user, role) {
+        //insert tole
+        this.message.reply(`Set ${user} role to ${role} for raid ${raidId}`);
+    }
+
+    async sendSummary(raid, channel) {
         let [clearTypeRows] = await
             sql.execute(`
             SELECT
@@ -169,7 +174,7 @@ class Enlist {
             }
             // wait for response
             const filter = (reaction, user) => user.id === this.message.member.id;
-            const collector = message.createReactionCollector(filter, { time: 15000 });
+            const collector = message.createReactionCollector(filter, { time: 5000 });
             let response = "Please select a role:\n";
             let count = 0;
             let role = [];
@@ -203,51 +208,61 @@ class Enlist {
                             msg.react(reaction_numbers[i]);
                         }
                         const filter = (reaction, user) => user.id === this.message.member.id;
-                        const collector = msg.createReactionCollector(filter, { time: 15000 });
+                        const collector = msg.createReactionCollector(filter, { time: 5000 });
                         collector.on('collect', (rr) => {
                             const sql = require("../util/sql");
                             (async function (){
                                 console.log(rr.emoji.name);
                                 switch (rr.emoji.name)
                                 {
-                                    case '1️⃣':
+                                    case '1⃣':
                                         console.log(role[0]);
+                                        this.setRole(raid.id, this.message.member.id, role[0]);
                                         break;
 
                                     case '2⃣':
                                         console.log(role[1]);
+                                        this.setRole(raid.id, this.message.member.id, role[1]);
                                         break;
 
-                                    case '3️⃣':
+                                    case '3⃣':
                                         console.log(role[2]);
+                                        this.setRole(raid.id, this.message.member.id, role[2]);
                                         break;
 
-                                    case '4️⃣':
-                                        console.log(role[2]);
-                                        break;
-
-                                    case '5️⃣':
+                                    case '4⃣':
                                         console.log(role[3]);
+                                        this.setRole(raid.id, this.message.member.id, role[3]);
+                                        break;
+
+                                    case '5⃣':
+                                        console.log(role[4]);
+                                        this.setRole(raid.id, this.message.member.id, role[4]);
                                         break;
 
                                     case '6️⃣':
-                                        console.log(role[4]);
+                                        console.log(role[5]);
+                                        this.setRole(raid.id, this.message.member.id, role[5]);
                                         break;
 
                                     case '7️⃣':
-                                        console.log(role[5]);
+                                        console.log(role[6]);
+                                        this.setRole(raid.id, this.message.member.id, role[6]);
                                         break;
 
                                     case '8️⃣':
-                                        console.log(role[6]);
+                                        console.log(role[7]);
+                                        this.setRole(raid.id, this.message.member.id, role[7]);
                                         break;
 
                                     case '9️⃣':
-                                        console.log(role[7]);
+                                        console.log(role[8]);
+                                        this.setRole(raid.id, this.message.member.id, role[8]);
                                         break;
 
                                     case '🔟':
-                                        console.log(role[8]);
+                                        console.log(role[9]);
+                                        this.setRole(raid.id, this.message.member.id, role[9]);
                                         break;
                                 }
                             })()
