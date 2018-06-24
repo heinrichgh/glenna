@@ -41,6 +41,7 @@ class Enlist {
     }
 
     async sendSummary(raid, channel) {
+        console.log(raid);
         let [clearTypeRows] = await
             sql.execute(`
             SELECT
@@ -51,7 +52,7 @@ class Enlist {
               INNER JOIN raid_boss rb on rcs.raid_boss_id = rb.id
               INNER JOIN raid_wing rw on rb.raid_wing_id = rw.id
             WHERE
-              rcs.raid_id = ${raid}
+              rcs.raid_id = ${[raid]}
             ORDER BY
               rw.id,
               rb.number`);
@@ -82,7 +83,7 @@ class Enlist {
         FROM
           raid_squad
         WHERE
-          raid_id = ${raid}
+          raid_id = ${[raid]}
         ORDER BY
            spot`);
 
