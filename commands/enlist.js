@@ -183,7 +183,10 @@ class Enlist {
                         WHERE raid_squad.raid_id = ${raid.id} 
                         AND profession.title LIKE '${r.emoji.name}'`);
                     
-                    console.log(roles);    
+                       
+                    for (var i = roles.length - 1; i >= 0; i--) {
+                        console.log(roles[i]);
+                    }
                 })()
 
                 this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
