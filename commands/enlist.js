@@ -54,7 +54,7 @@ class Enlist {
               rcs.raid_id = ?
             ORDER BY
               rw.id,
-              rb.number`, [raid.id]);
+              rb.number`, [raid]);
 
 
         let groupedClearTypes = {};
@@ -84,7 +84,7 @@ class Enlist {
         WHERE
           raid_id = ?
         ORDER BY
-           spot`, [raid.id]);
+           spot`, [raid]);
 
         let [restrictionRows] = await
             sql.execute(
