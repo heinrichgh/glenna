@@ -170,6 +170,7 @@ class Enlist {
             // wait for response
             const filter = (reaction, user) => user.id === this.message.member.id;
             const collector = message.createReactionCollector(filter, { time: 15000 });
+            let response = "Please select a role:\n";
             collector.on('collect', (r) => {
                 const sql = require("../util/sql");
 
@@ -183,12 +184,11 @@ class Enlist {
                         WHERE raid_squad.raid_id = ${raid.id} 
                         AND profession.title LIKE '${r.emoji.name}'`);
                     
-                    let response = "Please select a role:\n";
                     for (var i = 0; roles.length-1 >= i; i++) {
                         response += `${i+1} - ${roles[i].title}\n`
                     }
                     console.log(response);
-                    this.message.reply(response);
+                    
                     // .then((msg) => {
                     //     for (var i = 1; roles.length >= i; i++) {
                     //         msg.react(reaction_numbers[i]);
@@ -218,7 +218,10 @@ class Enlist {
                 // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
                 // message.delete();
             });
-            collector.on('end', collected => message.delete());
+            collector.on('end', collected => {
+                this.message.reply(response);
+                message.delete();
+            });
         }).catch(function() {
               //Something
              });
