@@ -35,7 +35,7 @@ class Enlist {
     async setRole(raidId, role) {
         //insert tole
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
-        this.message.reply(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
+        this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
         await this.updateSchedule(raidId, this.message.guild.channels.find('id', config.raidChannelId));
         // UPDATE `raid_squad` SET `user_id` = '@95234483317379072' WHERE `raid_squad`.`id` = 482;
     }
@@ -281,7 +281,7 @@ class Enlist {
     }
 
     async updateSchedule(raid, channel) {
-
+        console.log(channel);
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
