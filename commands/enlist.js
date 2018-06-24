@@ -211,7 +211,6 @@ class Enlist {
                         const filter = (reaction, user) => user.id === this.message.member.id;
                         const collector = msg.createReactionCollector(filter, { time: 10000 });
                         collector.on('collect', (rr) => {
-                            (async function (){
                                 switch (rr.emoji.name)
                                 {
                                     case '1⃣':
@@ -264,7 +263,6 @@ class Enlist {
                                         this.setRole(raid.id, role[9]);
                                         break;
                                 }
-                            })()
 
                             //this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
                             msg.delete();
