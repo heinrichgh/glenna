@@ -205,7 +205,7 @@ class Enlist {
             collector.on('end', collected => {
                 this.message.reply(response)
                 .then((msg) => {
-                        for (var i = 0; count > i; i++) {
+                        for (var i = 1; count > i; i++) {
                             msg.react(reaction_numbers[i]);
                         }
                         const filter = (reaction, user) => user.id === this.message.member.id;
@@ -216,7 +216,7 @@ class Enlist {
                                 {
                                     case '1⃣':
                                         console.log(role[0]);
-console.log                      this.message.reply('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[0]]);
+                                        console.log('Raid: ?, User: ?, Role: ?',[raid.id, this.message.member.id, role[0]]);
                                         break;
 
                                     case '2⃣':
