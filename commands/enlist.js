@@ -208,7 +208,7 @@ class Enlist {
                             // this.msg.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
                             // msg.delete();
                         });
-                        collector.on('end', collected => msg.delete());
+                        //collector.on('end', collected => msg.delete());
                     }).catch(function() {
                       //Something
                      });
@@ -217,7 +217,7 @@ class Enlist {
                 // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
                 // message.delete();
             });
-            collector.on('end', collected => message.delete());
+            //collector.on('end', collected => message.delete());
         }).catch(function() {
               //Something
              });
