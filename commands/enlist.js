@@ -205,11 +205,11 @@ class Enlist {
             collector.on('end', collected => {
                 this.message.reply(response)
                 .then((msg) => {
-                        for (var i = 1; count >= i; i++) {
+                        for (var i = 0; count > i; i++) {
                             msg.react(reaction_numbers[i]);
                         }
                         const filter = (reaction, user) => user.id === this.message.member.id;
-                        const collector = msg.createReactionCollector(filter, { time: 5000 });
+                        const collector = msg.createReactionCollector(filter, { time: 10000 });
                         collector.on('collect', (rr) => {
                             (async function (){
                                 switch (rr.emoji.name)
