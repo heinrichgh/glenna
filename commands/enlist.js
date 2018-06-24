@@ -206,7 +206,7 @@ class Enlist {
                         const collector = msg.createReactionCollector(filter, { time: 15000 });
                         collector.on('collect', (rr) => {
                             const sql = require("../util/sql");
-
+                            console.log(rr);
                             (async function (){
                                 switch (rr.emoji.id)
                                 {
