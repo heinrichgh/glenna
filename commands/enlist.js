@@ -175,12 +175,12 @@ class Enlist {
             }
             // wait for response
             const filter = (reaction, user) => user.id === this.message.member.id;
-            const collector = message.createReactionCollector(filter, { time: 5000 });
+            const collector = message.createReactionCollector(filter, { time: 10000 });
             let response = "Please select a role:\n";
             let count = 0;
             let role = [];
             collector.on('collect', (r) => {
-                const sql = require("../util/sql");
+                //const sql = require("../util/sql");
 
                 (async function (){
                     let [roles] = await sql.execute(`
@@ -211,7 +211,6 @@ class Enlist {
                         const filter = (reaction, user) => user.id === this.message.member.id;
                         const collector = msg.createReactionCollector(filter, { time: 5000 });
                         collector.on('collect', (rr) => {
-                            const sql = require("../util/sql");
                             (async function (){
                                 switch (rr.emoji.name)
                                 {
