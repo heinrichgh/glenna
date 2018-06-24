@@ -188,31 +188,31 @@ class Enlist {
                         response += `${i+1} - ${roles[i].title}\n`
                     }
                     console.log(response);
-                    this.message.reply(response)
-                    .then((msg) => {
-                        for (var i = 1; roles.length >= i; i++) {
-                            msg.react(reaction_numbers[i]);
-                        }
-                        const filter = (reaction, user) => user.id === this.msg.member.id;
-                        const collector = msg.createReactionCollector(filter, { time: 15000 });
-                        collector.on('collect', (rr) => {
-                            console.log(rr);
-                            // const sql = require("../util/sql");
+                    this.message.reply(response);
+                    // .then((msg) => {
+                    //     for (var i = 1; roles.length >= i; i++) {
+                    //         msg.react(reaction_numbers[i]);
+                    //     }
+                    //     const filter = (reaction, user) => user.id === this.msg.member.id;
+                    //     const collector = msg.createReactionCollector(filter, { time: 15000 });
+                    //     collector.on('collect', (rr) => {
+                    //         console.log(rr);
+                    //         // const sql = require("../util/sql");
 
-                            // (async function (){
-                            //     // switch (rr.emoji.id)
-                            //     // {
-                                // insert some shit
-                            //     // }
-                            // })()
+                    //         // (async function (){
+                    //         //     // switch (rr.emoji.id)
+                    //         //     // {
+                    //             // insert some shit
+                    //         //     // }
+                    //         // })()
 
-                            // this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
-                            // msg.delete();
-                        });
-                        //collector.on('end', collected => msg.delete());
-                    }).catch(function() {
-                      //Something
-                     });
+                    //         // this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
+                    //         // msg.delete();
+                    //     });
+                    //     //collector.on('end', collected => msg.delete());
+                    // }).catch(function() {
+                    //   //Something
+                    //  });
                 })()
 
                 // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
