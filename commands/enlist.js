@@ -20,17 +20,14 @@ class Enlist {
         this.args = args;
     }
 
-    hasPermission() {
-        const leaderRole = this.message.guild.roles.find("name", "Leader");
-        if (!leaderRole) {
-            console.log("The Leader role does not exist");
-            return false;
-        }
+    hasRole() {
+        // const guildRole = this.message.guild.roles.map(m=>m.name);
 
-        if (!this.message.guild.roles.has(leaderRole.id)) {
-            console.log("You can't use this command.");
-            return false;
-        }
+        // console.log('printing roles..');
+        // for (var i = guildRole.length - 1; i >= 0; i--) {
+            
+        //     console.log(guildRole[i]);
+        // }
 
         return true;
     }
@@ -176,22 +173,19 @@ class Enlist {
             collector.on('collect', (r) => {
                 const sql = require("../util/sql");
 
-                let [roles] = await sql.execute(`
-                    SELECT raid_role.title 
-                    FROM raid_role 
-                    JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
-                    JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
-                    JOIN profession ON raid_squad_restriction.profession_id = profession.id 
-                    WHERE raid_squad.raid_id = ${raid.id} 
-                    AND profession.title LIKE ${r.emoji.name}`);
-                
-                console.log(roles);
-                //let spot = await sql.execute('SELECT raid_squad.spot, profession.title FROM `raid_squad` LEFT JOIN raid_squad_restriction on raid_squad.id = raid_squad_restriction.raid_squad_id JOIN profession ON raid_squad_restriction.profession_id = profession.id WHERE raid_squad.raid_id = ? AND profession.title LIKE ?',[raid.id, r.emoji.name]);
-                // if (spot[0]) {
-                //     console.log(spot[0]);
-                //     //await sql.execute('UPDATE `raid_squad` SET `user_id` = ? WHERE `raid_squad`.`raid_id`  = ? AND `raid_squad`.`spot` = ?',[this.message.member.id, raid.id, spot]);    
-                // }
-                
+                (async function (){
+                    let [roles] = await sql.execute(`
+                        SELECT raid_role.title 
+                        FROM raid_role 
+                        JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
+                        JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
+                        JOIN profession ON raid_squad_restriction.profession_id = profession.id 
+                        WHERE raid_squad.raid_id = ${raid.id} 
+                        AND profession.title LIKE ${r.emoji.name}`);
+                    
+                    console.log(roles);    
+                })()
+
                 this.message.reply(`Enlisted as ${r.emoji.name}`);
                 message.delete();
             });
@@ -204,7 +198,7 @@ class Enlist {
 
 
     async run() {
-        if (!this.hasPermission()) {
+        if (!this.hasRole()) {
             this.message.reply("Insufficient permissions for action");
             return;
         }
