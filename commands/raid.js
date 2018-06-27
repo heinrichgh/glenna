@@ -314,7 +314,8 @@ class RaidSetup {
                             id = ?`, [STATUS.COMPLETED, raid.id]);
                 this.message.reply("Raid marked as completed!");
                 break;
-
+            default:
+                this.message.reply("Invalid response");
         }
     }
 
