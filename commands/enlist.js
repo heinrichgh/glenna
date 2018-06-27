@@ -34,10 +34,10 @@ class Enlist {
 
     async setRole(raidId, role) {
         //insert tole
+        await sql.execute(`UPDATE raid_squad SET user_id = '@${this.message.member.id}' WHERE raid_squad.id = ${raidId}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
         await this.updateSchedule(raidId, this.message.guild.channels.find('id', config.raidChannelId));
-        // UPDATE `raid_squad` SET `user_id` = '@95234483317379072' WHERE `raid_squad`.`id` = 482;
     }
 
     async sendSummary(raid, channel) {
