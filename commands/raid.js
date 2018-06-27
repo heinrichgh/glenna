@@ -295,17 +295,26 @@ class RaidSetup {
 
         let message = collected.first().content.trim().toLowerCase();
 
-        if (message === "done") {
+        switch (message)
+        {
+            case "done":
+                await this.updateSchedule(raid, this.message.guild.channels.find('id', config.raidChannelId));
+                await sql.execute(`UPDATE raid 
+                        SET 
+                            status = ? 
+                        WHERE
+                            id = ?`, [STATUS.PUBLISHED, raid.id]);
+                this.message.reply("Published!");
+                break;
+            case "remove":
+                await sql.execute(`UPDATE raid 
+                        SET 
+                            status = ? 
+                        WHERE
+                            id = ?`, [STATUS.COMPLETED, raid.id]);
+                this.message.reply("Raid marked as completed!");
+                break;
 
-            await this.updateSchedule(raid, this.message.guild.channels.find('id', config.raidChannelId));
-            await sql.execute(`UPDATE raid 
-                    SET 
-                        status = ? 
-                    WHERE
-                        id = ?`, [STATUS.PUBLISHED, raid.id]);
-            this.message.reply("Published!");
-        } else {
-            this.message.reply("Invalid response.");
         }
     }
 
