@@ -307,6 +307,9 @@ class RaidSetup {
                 this.message.reply("Published!");
                 break;
             case "remove":
+                let channel = this.message.guild.channels.find('id', config.raidChannelId);
+                const fetched = await channel.fetchMessages({limit: 99});
+                channel.bulkDelete(fetched);
                 await sql.execute(`UPDATE raid 
                         SET 
                             status = ? 
