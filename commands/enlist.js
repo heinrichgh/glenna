@@ -113,7 +113,7 @@ class Enlist {
           LEFT JOIN raid_role r on rsr.raid_role_id = r.id
           JOIN guild_rank on guild_rank.id = rsr.guild_rank_id
         WHERE squad.raid_id = ${raid.id}
-        AND raid_squad.user_id IS NULL
+        AND squad.user_id IS NULL
         AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
         ORDER BY
             squad.spot`);
