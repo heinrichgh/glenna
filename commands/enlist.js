@@ -40,7 +40,7 @@ class Enlist {
             JOIN raid_role ON raid_squad_restriction.raid_role_id = raid_role.id
             WHERE raid_squad.raid_id = ${raidId}
             AND raid_role.title LIKE '${role}'`);
-        await sql.execute(`UPDATE raid_squad SET user_id = '@${this.message.member.id}' WHERE raid_squad.id = ${raidSquadId[0].id}`);
+        await sql.execute(`UPDATE raid_squad SET user_id = '<@${this.message.member.id}>' WHERE raid_squad.id = ${raidSquadId[0].id}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
         let chan = this.message.guild.channels.find('id', config.raidChannelId);
@@ -388,8 +388,8 @@ class Enlist {
             }
 
             fields.push({
-                name: `Slot ${detail.spot} ${detail.user_id}:`,
-                value: value
+                name: `Slot ${detail.spot}:`,
+                value: `${value}: ${detail.user_id}`
             });
         }
 
