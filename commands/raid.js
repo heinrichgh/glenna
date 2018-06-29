@@ -400,8 +400,8 @@ class RaidSetup {
         let raidDescription = "";
 
         for (let index in ranks)
-            raidDescription += `<@&${this.message.guild.roles.find("name", ranks[index].rank)}> `;
-        
+            raidDescription += `${this.message.guild.roles.find("name", ranks[index].rank)} `;
+        raidDescription += `${this.message.guild.roles.find("name", "Friends of FluX")} `;
 
         let groupedRestrictionRows = {};
         for (let index in restrictionRows) {
