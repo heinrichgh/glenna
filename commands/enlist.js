@@ -129,11 +129,12 @@ class Enlist {
         let reactions = [];
 
         for (let index in raidSquadRows) {
-            console.log(index);
+            
             let detail = raidSquadRows[index];
             let value = "Fill";
+            console.log(detail);
             if (detail.restrictions) {
-                console.log(detail);
+
                 value = detail.restrictions.map(
                     restriction =>
                     {
