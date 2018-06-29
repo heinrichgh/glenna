@@ -212,10 +212,12 @@ class Enlist {
                             AND raid_squad.user_id IS NULL
                             AND profession.title LIKE '${r.emoji.name}'`);
                         count = roles.length;
-                        console.log(roles);
+                        console.log(roles.length);
                         for (var i = 0; roles.length-1 >= i; i++) {
+                            console.log(roles[i].title);
                             response += `${i+1} - ${roles[i].title}\n`;
                             role.push(roles[i].title);
+                            console.log(role);
                         }
                     })()
 
