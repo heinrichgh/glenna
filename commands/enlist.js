@@ -44,7 +44,6 @@ class Enlist {
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
         let chan = this.message.guild.channels.find('id', config.raidChannelId);
-        await chan.send("test1");
         await this.updateSchedule(raidId, chan);
     }
 
@@ -283,11 +282,10 @@ class Enlist {
     }
 
     async updateSchedule(raid, channel) {
-
+        console.log(raid);
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
-        channel.send("test2");
 
         let [clearTypeRows] = await
             sql.execute(`
