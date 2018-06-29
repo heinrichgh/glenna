@@ -421,7 +421,7 @@ class Enlist {
         WHERE
           raid_id = ?
         ORDER BY
-           spot`, raid);
+           spot`, [raid]);
 
         let [restrictionRows] = await
             sql.execute(
