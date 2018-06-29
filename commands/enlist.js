@@ -196,12 +196,9 @@ class Enlist {
                 let response = "Please select a role:\n";
                 let count = 0;
                 let role = [];
-                console.log(1);
                 collector.on('collect', (r) => {
                     //const sql = require("../util/sql");
-                    console.log(2);
                     (async function (){
-                        console.log(3);
                         let [roles] = await sql.execute(`
                             SELECT DISTINCT(raid_role.title) 
                             FROM raid_role 
@@ -213,8 +210,6 @@ class Enlist {
                             AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072) 
                             AND raid_squad.user_id IS NULL
                             AND profession.title LIKE '${r.emoji.name}'`);
-                        console.log(4);
-                        console.log(roles);
                         count = roles.length;
                         for (var i = 0; roles.length-1 >= i; i++) {
                             response += `${i+1} - ${roles[i].title}\n`;
@@ -286,7 +281,7 @@ class Enlist {
                         }).catch(function() {
                           //Something
                          });
-                    message.delete();
+                    //message.delete();
                 });
             }
             else
