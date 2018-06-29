@@ -84,14 +84,13 @@ class Enlist {
 
         let [raidSquadRows] = await
             sql.execute(
-                `SELECT
-          *
-        FROM
-          raid_squad
-        WHERE
-          raid_id = ${raid.id}
-        ORDER BY
-           spot`);
+                `SELECT *
+                FROM raid_squad
+                JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
+                JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
+                WHERE raid_squad.raid_id = ${raid.id}
+                AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
+                ORDER BY spot`);
 
         let [restrictionRows] = await
             sql.execute(
@@ -200,7 +199,7 @@ class Enlist {
                         JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
                         JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
                         JOIN profession ON raid_squad_restriction.profession_id = profession.id 
-                        WHERE raid_squad.raid_id = ${raid.id} 
+                        WHERE raid_squad.raid_id = ${raid.id}
                         AND profession.title LIKE '${r.emoji.name}'`);
                     
                     count = roles.length;
