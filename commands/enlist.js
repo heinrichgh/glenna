@@ -408,7 +408,7 @@ class Enlist {
                 title: "Clear Summary",
                 description: raidDescription,
                 fields: clearFields,
-                timestamp: new Date(),
+                timestamp: new Date(), // change to raid time
                 footer: {
                     icon_url: this.client.user.avatarURL,
                     text: "Wings and Bosses"
@@ -425,7 +425,7 @@ class Enlist {
                 title: "Squad Slots Summary",
                 description: "in order to join, please use the !enlist bot command",
                 fields: fields,
-                timestamp: new Date(),
+                timestamp: new Date(), // change to raid time
                 footer: {
                     icon_url: this.client.user.avatarURL,
                     text: "Slots"
