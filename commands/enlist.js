@@ -366,7 +366,6 @@ class Enlist {
         }
 
         let fields = [];
-        let reactions = [];
 
         for (let index in raidSquadRows) {
             let detail = raidSquadRows[index];
@@ -378,10 +377,9 @@ class Enlist {
                         let value = "";
                         if (restriction.profession)
                         {
-                            reactions.push(`${restriction.profession_icon}`);
                             value += `${restriction.profession_icon}`;
                             if (restriction.role) {
-                                value += `${restriction.role_icon || ""}`;
+                                value += `${restriction.title || ""}`;
                             }
                         }
                         return value;
