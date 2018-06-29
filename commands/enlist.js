@@ -226,7 +226,7 @@ class Enlist {
                                 switch (rr.emoji.name)
                                 {
                                     case '1⃣':
-                                        console.log(roled.id, role[0]);
+                                        this.setRole(raid.id, role[0]);
                                         break;
 
                                     case '2⃣':
