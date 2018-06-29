@@ -180,7 +180,7 @@ class Enlist {
                     let emoji = message.guild.emojis.get(emojiarray[1]);
                     (async function (){
                         await message.react(emoji);
-                    
+                    })()
                 }
             }
             // wait for response
