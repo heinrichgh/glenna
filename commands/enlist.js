@@ -194,10 +194,12 @@ class Enlist {
                 let response = "Please select a role:\n";
                 let count = 0;
                 let role = [];
+                console.log(1);
                 collector.on('collect', (r) => {
                     //const sql = require("../util/sql");
-
+                    console.log(2);
                     (async function (){
+                        console.log(3);
                         let [roles] = await sql.execute(`
                             SELECT DISTINCT(raid_role.title) 
                             FROM raid_role 
