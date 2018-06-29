@@ -391,6 +391,19 @@ class RaidSetup {
         ORDER BY
             squad.spot`);
 
+        let [ranks] = await sql.execute(`SELECT DISTINCT(guild_rank.rank)
+            FROM guild_rank
+            JOIN raid_squad_restriction ON raid_squad_restriction.guild_rank_id = guild_rank.id
+            JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id
+            WHERE raid_squad.raid_id = ${raid}`);
+
+        let (raidDescription, squadDescription) = "";
+
+        for (let index in ranks)
+        {
+            raidDescription += `<@&${this.message.guild.roles.find("name", ranks[index])}> `;
+        }
+
         let groupedRestrictionRows = {};
         for (let index in restrictionRows) {
             let row = restrictionRows[index];
@@ -440,6 +453,7 @@ class RaidSetup {
                     icon_url: this.client.user.avatarURL
                 },
                 title: "Clear Summary",
+                description: raidDescription,
                 fields: clearFields,
                 timestamp: new Date(),
                 footer: {
@@ -456,6 +470,7 @@ class RaidSetup {
                     icon_url: this.client.user.avatarURL
                 },
                 title: "Squad Slots Summary",
+                description: "in order to join, please use the !enlist bot command",
                 fields: fields,
                 timestamp: new Date(),
                 footer: {
