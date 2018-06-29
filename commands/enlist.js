@@ -216,7 +216,6 @@ class Enlist {
                         for (var i = 0; roles.length-1 >= i; i++) {
                             response += `${i+1} - ${roles[i].title}\n`;
                             role.push(roles[i].title);
-                            console.log(response);
                         }
                     })()
 
@@ -224,6 +223,7 @@ class Enlist {
                     //message.delete();
                 });
                 collector.on('end', collected => {
+                    console.log(response);
                     this.message.reply(response)
                     .then((msg) => {
                             for (var i = 1; count >= i; i++) {
