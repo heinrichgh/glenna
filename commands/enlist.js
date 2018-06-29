@@ -156,7 +156,7 @@ class Enlist {
                 value: value
             });
         }
-
+        console.log(reactions);
 
         channel.send({embed: {
                 color: 3447003,
