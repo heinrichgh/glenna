@@ -180,7 +180,6 @@ class Enlist {
             }
         })
         .then((message) => {
-            
             if (reactions.length >0) {
                 for (var i = reactions.length - 1; i >= 0; i--) {
                     var regex = /<:[a-z]*:([0-9]*)>/g;
@@ -198,7 +197,6 @@ class Enlist {
                 let count = 0;
                 let role = [];
                 collector.on('collect', (r) => {
-                    //const sql = require("../util/sql");
                     (async function (){
                         let [roles] = await sql.execute(`
                             SELECT DISTINCT(raid_role.title) 
@@ -223,7 +221,9 @@ class Enlist {
                     //message.delete();
                 });
                 collector.on('end', collected => {
-                    console.log(response);
+                    (async function (){
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    })()
                     this.message.reply(response)
                     .then((msg) => {
                             for (var i = 1; count >= i; i++) {
@@ -234,51 +234,48 @@ class Enlist {
                             const filter = (reaction, user) => user.id === this.message.member.id;
                             const collector = msg.createReactionCollector(filter, { max: 1 });
                             collector.on('collect', (rr) => {
-                                    switch (rr.emoji.name)
-                                    {
-                                        case '1⃣':
-                                            this.setRole(raid.id, role[0]);
-                                            break;
+                                switch (rr.emoji.name)
+                                {
+                                    case '1⃣':
+                                        this.setRole(raid.id, role[0]);
+                                        break;
 
-                                        case '2⃣':
-                                            this.setRole(raid.id, role[1]);
-                                            break;
+                                    case '2⃣':
+                                        this.setRole(raid.id, role[1]);
+                                        break;
 
-                                        case '3⃣':
-                                            this.setRole(raid.id, role[2]);
-                                            break;
+                                    case '3⃣':
+                                        this.setRole(raid.id, role[2]);
+                                        break;
 
-                                        case '4⃣':
-                                            this.setRole(raid.id, role[3]);
-                                            break;
+                                    case '4⃣':
+                                        this.setRole(raid.id, role[3]);
+                                        break;
 
-                                        case '5⃣':
-                                            this.setRole(raid.id, role[4]);
-                                            break;
+                                    case '5⃣':
+                                        this.setRole(raid.id, role[4]);
+                                        break;
 
-                                        case '6️⃣':
-                                            this.setRole(raid.id, role[5]);
-                                            break;
+                                    case '6️⃣':
+                                        this.setRole(raid.id, role[5]);
+                                        break;
 
-                                        case '7️⃣':
-                                            this.setRole(raid.id, role[6]);
-                                            break;
+                                    case '7️⃣':
+                                        this.setRole(raid.id, role[6]);
+                                        break;
 
-                                        case '8️⃣':
-                                            this.setRole(raid.id, role[7]);
-                                            break;
+                                    case '8️⃣':
+                                        this.setRole(raid.id, role[7]);
+                                        break;
 
-                                        case '9️⃣':
-                                            this.setRole(raid.id, role[8]);
-                                            break;
+                                    case '9️⃣':
+                                        this.setRole(raid.id, role[8]);
+                                        break;
 
-                                        case '🔟':
-                                            this.setRole(raid.id, role[9]);
-                                            break;
-                                    }
-
-                                //this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
-                                //msg.delete();
+                                    case '🔟':
+                                        this.setRole(raid.id, role[9]);
+                                        break;
+                                }
                             });
                             collector.on('end', collected => msg.delete());
                         }).catch(function() {
@@ -297,7 +294,6 @@ class Enlist {
     }
 
     async updateSchedule(raid, channel) {
-        // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
 
