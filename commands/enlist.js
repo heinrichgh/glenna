@@ -199,12 +199,14 @@ class Enlist {
 
                     (async function (){
                         let [roles] = await sql.execute(`
-                            SELECT raid_role.title 
+                            SELECT DISTINCT(raid_role.title) 
                             FROM raid_role 
                             JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
                             JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
                             JOIN profession ON raid_squad_restriction.profession_id = profession.id 
+                            JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id 
                             WHERE raid_squad.raid_id = ${raid.id}
+                            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072) 
                             AND profession.title LIKE '${r.emoji.name}'`);
                         
                         count = roles.length;
@@ -278,13 +280,12 @@ class Enlist {
                         }).catch(function() {
                           //Something
                          });
-                    // message.delete();
-
+                    message.delete();
                 });
             }
             else
             {
-                message.reply("No spots available for your rank. Maybe get better first?");
+                message.reply("No spots available for your rank. Have you set up your rank with !join?");
             }
         }).catch(function() {
               //Something
