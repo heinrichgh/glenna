@@ -189,6 +189,7 @@ class Enlist {
                 let role = [];
                 collector.on('collect', (r) => {
                     (async function (){
+                        console.log(r);
                         console.log(`
                             SELECT DISTINCT(raid_role.title) 
                             FROM raid_role 
