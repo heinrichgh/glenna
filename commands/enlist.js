@@ -38,8 +38,11 @@ class Enlist {
             FROM raid_squad 
             JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
             JOIN raid_role ON raid_squad_restriction.raid_role_id = raid_role.id
+            JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
             WHERE raid_squad.raid_id = ${raidId}
-            AND raid_role.title LIKE '${role}'`);
+            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
+            AND raid_role.title LIKE '${role}'
+            LIMIT 1`);
         await sql.execute(`UPDATE raid_squad SET user_id = '<@${this.message.member.id}>' WHERE raid_squad.id = ${raidSquadId[0].id}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
@@ -90,7 +93,7 @@ class Enlist {
                 JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
                 WHERE raid_squad.raid_id = ${raid.id}
                 AND user_id IS NULL
-                AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072)
+                AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
                 ORDER BY spot`);
 
         let [restrictionRows] = await
@@ -109,7 +112,7 @@ class Enlist {
           LEFT JOIN raid_role r on rsr.raid_role_id = r.id
           JOIN guild_rank on guild_rank.id = rsr.guild_rank_id
         WHERE squad.raid_id = ${raid.id}
-        AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072)
+        AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
         ORDER BY
             squad.spot`);
 
@@ -206,7 +209,7 @@ class Enlist {
                             JOIN profession ON raid_squad_restriction.profession_id = profession.id 
                             JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id 
                             WHERE raid_squad.raid_id = ${raid.id}
-                            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072) 
+                            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id}) 
                             AND profession.title LIKE '${r.emoji.name}'`);
                         
                         count = roles.length;
