@@ -45,7 +45,7 @@ class Enlist {
             LIMIT 1`);
         await sql.execute(`UPDATE raid_squad SET user_id = '<@${this.message.member.id}>' WHERE raid_squad.id = ${raidSquadId[0].id}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
-        this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
+        this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}:${raidSquadId[0].id}`);
         let chan = this.message.guild.channels.find('id', config.raidChannelId);
         await this.updateSchedule(raidId, chan);
     }
@@ -124,11 +124,9 @@ class Enlist {
             }
             groupedRestrictionRows[row.raid_squad_id].push(row);
         }
-        console.log(groupedRestrictionRows);
 
         for (let index in raidSquadRows) {
             let row = raidSquadRows[index];
-            console.log(row.raid_squad_id);
             raidSquadRows[index].restrictions = groupedRestrictionRows[row.raid_squad_id];
         }
         let fields = [];
@@ -162,7 +160,6 @@ class Enlist {
                 value: value
             });
         }
-        console.log(reactions);
 
         channel.send({embed: {
                 color: 3447003,
