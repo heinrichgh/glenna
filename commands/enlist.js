@@ -178,7 +178,9 @@ class Enlist {
                     var regex = /<:[a-z]*:([0-9]*)>/g;
                     var emojiarray = regex.exec(reactions[i]);
                     let emoji = message.guild.emojis.get(emojiarray[1]);
-                    await message.react(emoji);
+                    (async function (){
+                        await message.react(emoji);
+                    }
                 }
             }
             // wait for response
