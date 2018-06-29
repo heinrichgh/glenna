@@ -178,7 +178,7 @@ class Enlist {
                     var regex = /<:[a-z]*:([0-9]*)>/g;
                     var emojiarray = regex.exec(reactions[i]);
                     let emoji = message.guild.emojis.get(emojiarray[1]);
-                    message.react(emoji);
+                    await messawait age.react(emoji);
                 }
             }
             // wait for response
@@ -214,7 +214,7 @@ class Enlist {
                 this.message.reply(response)
                 .then((msg) => {
                         for (var i = 1; count >= i; i++) {
-                            msg.react(reaction_numbers[i]);
+                            await msg.react(reaction_numbers[i]);
                         }
                         const filter = (reaction, user) => user.id === this.message.member.id;
                         const collector = msg.createReactionCollector(filter, { time: 10000 });
@@ -222,52 +222,42 @@ class Enlist {
                                 switch (rr.emoji.name)
                                 {
                                     case '1⃣':
-                                        console.log(role[0]);
-                                        this.setRole(raid.id, role[0]);
+                                        console.log(roled.id, role[0]);
                                         break;
 
                                     case '2⃣':
-                                        console.log(role[1]);
                                         this.setRole(raid.id, role[1]);
                                         break;
 
                                     case '3⃣':
-                                        console.log(role[2]);
                                         this.setRole(raid.id, role[2]);
                                         break;
 
                                     case '4⃣':
-                                        console.log(role[3]);
                                         this.setRole(raid.id, role[3]);
                                         break;
 
                                     case '5⃣':
-                                        console.log(role[4]);
                                         this.setRole(raid.id, role[4]);
                                         break;
 
                                     case '6️⃣':
-                                        console.log(role[5]);
                                         this.setRole(raid.id, role[5]);
                                         break;
 
                                     case '7️⃣':
-                                        console.log(role[6]);
                                         this.setRole(raid.id, role[6]);
                                         break;
 
                                     case '8️⃣':
-                                        console.log(role[7]);
                                         this.setRole(raid.id, role[7]);
                                         break;
 
                                     case '9️⃣':
-                                        console.log(role[8]);
                                         this.setRole(raid.id, role[8]);
                                         break;
 
                                     case '🔟':
-                                        console.log(role[9]);
                                         this.setRole(raid.id, role[9]);
                                         break;
                                 }
