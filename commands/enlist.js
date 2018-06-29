@@ -200,7 +200,7 @@ class Enlist {
                             WHERE raid_squad.raid_id = ${raid.id}
                             AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${discord_id}) 
                             AND raid_squad.user_id IS NULL
-                            AND profession.title LIKE '${r.emoji.name}'`);
+                            AND profession.title LIKE '${r.emoji.name}'`); 
                         let [roles] = await sql.execute(`
                             SELECT DISTINCT(raid_role.title) 
                             FROM raid_role 
