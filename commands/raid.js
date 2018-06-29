@@ -397,6 +397,8 @@ class RaidSetup {
             JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id
             WHERE raid_squad.raid_id = ${raid}`);
 
+        console.log(ranks);
+
         let raidDescription = "";
 
         for (let index in ranks)
