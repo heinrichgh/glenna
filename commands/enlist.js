@@ -116,11 +116,12 @@ class Enlist {
         let groupedRestrictionRows = {};
         for (let index in restrictionRows) {
             let row = restrictionRows[index];
-            console.log(row);
             if (!groupedRestrictionRows[row.raid_squad_id]) {
+                console.log('no restrictions');
                 groupedRestrictionRows[row.raid_squad_id] = [];
             }
             groupedRestrictionRows[row.raid_squad_id].push(row);
+            console.log(groupedRestrictionRows);
         }
         for (let index in raidSquadRows) {
             let row = raidSquadRows[index];
