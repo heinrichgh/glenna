@@ -107,8 +107,9 @@ class Enlist {
           INNER JOIN raid_squad squad on rsr.raid_squad_id = squad.id
           LEFT JOIN profession p on rsr.profession_id = p.id
           LEFT JOIN raid_role r on rsr.raid_role_id = r.id
-        WHERE
-          squad.raid_id = ${raid.id}
+          JOIN guild_rank on guild_rank.id = rsr.guild_rank_id
+        WHERE squad.raid_id = ${raid.id}
+        AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072)
         ORDER BY
             squad.spot`);
 
@@ -280,7 +281,7 @@ class Enlist {
             }
             else
             {
-                message.reply("No spots available for your rank.");
+                message.reply("No spots available for your rank. Maybe get better first?");
             }
         }).catch(function() {
               //Something
