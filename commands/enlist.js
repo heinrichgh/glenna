@@ -390,7 +390,7 @@ class Enlist {
             }
 
             fields.push({
-                name: `Slot ${detail.spot}:`,
+                name: `Slot ${detail.spot} ${detail.user_id}:`,
                 value: value
             });
         }
@@ -412,6 +412,21 @@ class Enlist {
             }
         });
 
+        channel.send({embed: {
+                color: 3447003,
+                author: {
+                    name: this.client.user.username,
+                    icon_url: this.client.user.avatarURL
+                },
+                title: "Squad Slots Summary",
+                fields: fields,
+                timestamp: new Date(),
+                footer: {
+                    icon_url: this.client.user.avatarURL,
+                    text: "Slots"
+                }
+            }
+        });
        
     }
 

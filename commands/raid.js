@@ -322,8 +322,8 @@ class RaidSetup {
         }
     }
 
-    async updateSchedule(raid, channel) {
-
+      async updateSchedule(raid, channel) {
+        console.log(raid);
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
@@ -332,16 +332,16 @@ class RaidSetup {
             sql.execute(`
             SELECT
               rw.name as 'WingName',
-              rb.name as 'BossName'
+              rb.icon as 'BossIcon'
             FROM
               raid_clear_setup rcs
               INNER JOIN raid_boss rb on rcs.raid_boss_id = rb.id
               INNER JOIN raid_wing rw on rb.raid_wing_id = rw.id
             WHERE
-              rcs.raid_id = ?
+              rcs.raid_id = ${raid}
             ORDER BY
               rw.id,
-              rb.number`, [raid.id]);
+              rb.number`);
 
 
         let groupedClearTypes = {};
@@ -349,7 +349,7 @@ class RaidSetup {
             if (!groupedClearTypes[clearType.WingName]) {
                 groupedClearTypes[clearType.WingName] = {wing: clearType.WingName, data: []}
             }
-            groupedClearTypes[clearType.WingName].data.push(clearType.BossName);
+            groupedClearTypes[clearType.WingName].data.push(clearType.BossIcon);
 
         }
 
@@ -358,25 +358,9 @@ class RaidSetup {
             let groupedClearType = groupedClearTypes[index];
             clearFields.push({
                 name: `${groupedClearType.wing}:`,
-                value: groupedClearType.data.join("\n")
+                value: groupedClearType.data.join(" ")
             });
         }
-
-        channel.send({embed: {
-                color: 3447003,
-                author: {
-                    name: this.client.user.username,
-                    icon_url: this.client.user.avatarURL
-                },
-                title: "Clear Summary",
-                fields: clearFields,
-                timestamp: new Date(),
-                footer: {
-                    icon_url: this.client.user.avatarURL,
-                    text: "Wings and Bosses"
-                }
-            }
-        });
 
         let [raidSquadRows] = await
             sql.execute(
@@ -385,9 +369,9 @@ class RaidSetup {
         FROM
           raid_squad
         WHERE
-          raid_id = ?
+          raid_id = ${raid}
         ORDER BY
-           spot`, [raid.id]);
+           spot`);
 
         let [restrictionRows] = await
             sql.execute(
@@ -398,14 +382,13 @@ class RaidSetup {
           , r.title as role
           , r.icon as role_icon
           , squad.spot
-          , squad.user_id
         FROM
           raid_squad_restriction rsr
           INNER JOIN raid_squad squad on rsr.raid_squad_id = squad.id
           LEFT JOIN profession p on rsr.profession_id = p.id
           LEFT JOIN raid_role r on rsr.raid_role_id = r.id
         WHERE
-          squad.raid_id = ${raid.id}
+          squad.raid_id = ${raid}
         ORDER BY
             squad.spot`);
 
@@ -437,19 +420,14 @@ class RaidSetup {
                         if (restriction.profession)
                         {
                             reactions.push(`${restriction.profession_icon}`);
-                            value += `${restriction.profession} ${restriction.profession_icon}`;
+                            value += `${restriction.profession_icon}`;
                             if (restriction.role) {
-                                value += ` as ${restriction.role} ${restriction.role_icon || ""}`;
-                            }
-                        } else {
-                            if (restriction.role) {
-                                value += `${restriction.role} ${restriction.role_icon || ""}`;
+                                value += `${restriction.role_icon || ""}`;
                             }
                         }
-
                         return value;
                     }
-                ).join("\n");
+                ).join(" ");
             }
 
             fields.push({
@@ -457,6 +435,23 @@ class RaidSetup {
                 value: value
             });
         }
+
+        console.log('Sending raid Summary');
+        channel.send({embed: {
+                color: 3447003,
+                author: {
+                    name: this.client.user.username,
+                    icon_url: this.client.user.avatarURL
+                },
+                title: "Clear Summary",
+                fields: clearFields,
+                timestamp: new Date(),
+                footer: {
+                    icon_url: this.client.user.avatarURL,
+                    text: "Wings and Bosses"
+                }
+            }
+        });
 
         channel.send({embed: {
                 color: 3447003,
@@ -473,7 +468,9 @@ class RaidSetup {
                 }
             }
         });
+       
     }
+
 
     async run() {
         // Check permissions
