@@ -180,7 +180,7 @@ class Enlist {
                     let emoji = message.guild.emojis.get(emojiarray[1]);
                     (async function (){
                         await message.react(emoji);
-                    })()
+                    
                 }
             }
             // wait for response
@@ -216,7 +216,9 @@ class Enlist {
                 this.message.reply(response)
                 .then((msg) => {
                         for (var i = 1; count >= i; i++) {
-                            await msg.react(reaction_numbers[i]);
+                            (async function (){
+                                await msg.react(reaction_numbers[i]);
+                            })()
                         }
                         const filter = (reaction, user) => user.id === this.message.member.id;
                         const collector = msg.createReactionCollector(filter, { time: 10000 });
