@@ -43,7 +43,9 @@ class Enlist {
         await sql.execute(`UPDATE raid_squad SET user_id = '@${this.message.member.id}' WHERE raid_squad.id = ${raidSquadId[0].id}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
-        await this.updateSchedule(raidId, this.message.guild.channels.find('id', config.raidChannelId));
+        let chan = this.message.guild.channels.find('id', config.raidChannelId);
+        await chan.send("test1");
+        await this.updateSchedule(raidId, chan);
     }
 
     async sendSummary(raid, channel) {
@@ -285,6 +287,7 @@ class Enlist {
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
+        channel.send("test2");
 
         let [clearTypeRows] = await
             sql.execute(`
