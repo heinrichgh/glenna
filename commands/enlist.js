@@ -457,7 +457,6 @@ class Enlist {
 }
 
 exports.run = (client, message, args) => {
-    message.reply("Not Implemented! Demo Only");
     let enlistment = new Enlist(client, message, args);
     enlistment.run().catch(console.error);
 };
