@@ -275,13 +275,13 @@ class Enlist {
                                     }
 
                                 //this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
-                                msg.delete();
+                                //msg.delete();
                             });
                             collector.on('end', collected => msg.delete());
                         }).catch(function() {
                           //Something
                          });
-                    //message.delete();
+                    message.delete();
                 });
             }
             else
@@ -294,7 +294,6 @@ class Enlist {
     }
 
     async updateSchedule(raid, channel) {
-        console.log(raid);
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
@@ -405,7 +404,6 @@ class Enlist {
             });
         }
 
-        console.log('Sending raid Summary');
         channel.send({embed: {
                 color: 3447003,
                 author: {
