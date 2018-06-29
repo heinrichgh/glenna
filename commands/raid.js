@@ -257,11 +257,12 @@ class RaidSetup {
 
         await
             sql.execute(`
-            INSERT INTO raid_squad_restriction (raid_squad_id, raid_role_id, profession_id)
+            INSERT INTO raid_squad_restriction (raid_squad_id, raid_role_id, profession_id, guild_rank_id)
             SELECT
               rs.id,
               rtr.raid_role_id,
-              rtr.profession_id
+              rtr.profession_id,
+              rtr.guild_rank_id
             FROM
               raid_template_restriction rtr
               INNER JOIN raid_squad rs ON rtr.spot = rs.spot
