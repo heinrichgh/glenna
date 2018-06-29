@@ -190,7 +190,7 @@ class Enlist {
 
                 // wait for response
                 const filter = (reaction, user) => user.id === this.message.member.id;
-                const collector = message.createReactionCollector(filter, { time: 10000 });
+                const collector = message.createReactionCollector(filter, { max: 1 });
                 let response = "Please select a role:\n";
                 let count = 0;
                 let role = [];
@@ -209,6 +209,7 @@ class Enlist {
                             AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id}) 
                             AND profession.title LIKE '${r.emoji.name}'`);
                         
+                        console.log(roles);
                         count = roles.length;
                         for (var i = 0; roles.length-1 >= i; i++) {
                             response += `${i+1} - ${roles[i].title}\n`;
@@ -228,7 +229,7 @@ class Enlist {
                                 })()
                             }
                             const filter = (reaction, user) => user.id === this.message.member.id;
-                            const collector = msg.createReactionCollector(filter, { time: 10000 });
+                            const collector = msg.createReactionCollector(filter, { max: 1 });
                             collector.on('collect', (rr) => {
                                     switch (rr.emoji.name)
                                     {
