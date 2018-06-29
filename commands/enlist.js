@@ -34,7 +34,20 @@ class Enlist {
 
     async setRole(raidId, role) {
         //insert tole
-        await sql.execute(`UPDATE raid_squad SET user_id = '@${this.message.member.id}' WHERE raid_squad.id = ${raidId}`);
+        let [raidSquadId] = await sql.execute(`SELECT raid_squad.id
+            FROM raid_squad 
+            JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
+            JOIN raid_role ON raid_squad_restriction.raid_role_id = raid_role.id
+            WHERE raid_squad.raid_id = ${raidId}
+            AND raid_role.title LIKE '${role}'`);
+        console.log(`SELECT raid_squad.id
+            FROM raid_squad 
+            JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
+            JOIN raid_role ON raid_squad_restriction.raid_role_id = raid_role.id
+            WHERE raid_squad.raid_id = ${raidId}
+            AND raid_role.title LIKE '${role}'`);
+        console.log(raidSquadId);
+        await sql.execute(`UPDATE raid_squad SET user_id = '@${this.message.member.id}' WHERE raid_squad.id = ${raidSquadId.id}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
         await this.updateSchedule(raidId, this.message.guild.channels.find('id', config.raidChannelId));
