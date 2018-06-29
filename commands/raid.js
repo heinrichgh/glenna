@@ -298,7 +298,7 @@ class RaidSetup {
         switch (message)
         {
             case "done":
-                await this.updateSchedule(raid, this.message.guild.channels.find('id', config.raidChannelId));
+                await this.updateSchedule(raid.id, this.message.guild.channels.find('id', config.raidChannelId));
                 await sql.execute(`UPDATE raid 
                         SET 
                             status = ? 
