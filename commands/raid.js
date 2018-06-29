@@ -429,8 +429,8 @@ class RaidSetup {
             }
 
             fields.push({
-                name: `Slot ${detail.spot} ${detail.user_id}:`,
-                value: value
+                name: `Slot ${detail.spot}:`,
+                value: `${value}: ${detail.user_id}`
             });
         }
 
