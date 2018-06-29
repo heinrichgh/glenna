@@ -64,7 +64,6 @@ class RaidSetup {
     }
 
     async setupRaid(raid) {
-        console.log(raid.status);
         switch (raid.status) {
             case STATUS.AWAITING_DATE:
                 await this.dateSetup(raid);
@@ -324,7 +323,6 @@ class RaidSetup {
     }
 
       async updateSchedule(raid, channel) {
-        console.log(raid);
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
@@ -435,7 +433,6 @@ class RaidSetup {
             });
         }
 
-        console.log('Sending raid Summary');
         channel.send({embed: {
                 color: 3447003,
                 author: {
