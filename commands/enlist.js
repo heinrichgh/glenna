@@ -282,7 +282,7 @@ class Enlist {
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
 
-        const fetched = await channel.fetchMessages({limit: 99});
+        fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
 
         let [clearTypeRows] = await
