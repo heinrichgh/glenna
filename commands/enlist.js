@@ -21,19 +21,11 @@ class Enlist {
     }
 
     hasRole() {
-        // const guildRole = this.message.guild.roles.map(m=>m.name);
-
-        // console.log('printing roles..');
-        // for (var i = guildRole.length - 1; i >= 0; i--) {
-            
-        //     console.log(guildRole[i]);
-        // }
-
+        // Not implemented yet
         return true;
     }
 
     async setRole(raidId, role) {
-        //insert tole
         let [raidSquadId] = await sql.execute(`SELECT raid_squad.id
             FROM raid_squad 
             JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
@@ -216,9 +208,6 @@ class Enlist {
                             role.push(roles[i].title);
                         }
                     })()
-
-                    // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
-                    //message.delete();
                 });
                 collector.on('end', collected => {
                     (async function (){
@@ -278,9 +267,7 @@ class Enlist {
                                 }
                             });
                             collector.on('end', collected => msg.delete());
-                        }).catch(function() {
-                          //Something
-                         });
+                        }).catch(function() {});
                     message.delete();
                 });
             }
@@ -288,9 +275,7 @@ class Enlist {
             {
                 message.reply("No spots available for your rank. Have you set up your rank with !join?");
             }
-        }).catch(function() {
-              //Something
-             });
+        }).catch(function() {});
     }
 
     async updateSchedule(raid, channel) {
