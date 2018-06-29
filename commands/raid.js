@@ -401,6 +401,7 @@ class RaidSetup {
 
         for (let index in ranks)
         {
+            console.log(ranks[index]);
             raidDescription += `<@&${this.message.guild.roles.find("name", ranks[index])}> `;
         }
 
