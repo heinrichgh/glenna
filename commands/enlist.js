@@ -183,99 +183,105 @@ class Enlist {
                         await message.react(emoji);
                     })()
                 }
-            }
-            // wait for response
-            const filter = (reaction, user) => user.id === this.message.member.id;
-            const collector = message.createReactionCollector(filter, { time: 10000 });
-            let response = "Please select a role:\n";
-            let count = 0;
-            let role = [];
-            collector.on('collect', (r) => {
-                //const sql = require("../util/sql");
 
-                (async function (){
-                    let [roles] = await sql.execute(`
-                        SELECT raid_role.title 
-                        FROM raid_role 
-                        JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
-                        JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
-                        JOIN profession ON raid_squad_restriction.profession_id = profession.id 
-                        WHERE raid_squad.raid_id = ${raid.id}
-                        AND profession.title LIKE '${r.emoji.name}'`);
-                    
-                    count = roles.length;
-                    for (var i = 0; roles.length-1 >= i; i++) {
-                        response += `${i+1} - ${roles[i].title}\n`;
-                        role.push(roles[i].title);
-                    }
-                })()
+                // wait for response
+                const filter = (reaction, user) => user.id === this.message.member.id;
+                const collector = message.createReactionCollector(filter, { time: 10000 });
+                let response = "Please select a role:\n";
+                let count = 0;
+                let role = [];
+                collector.on('collect', (r) => {
+                    //const sql = require("../util/sql");
 
-                // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
-                message.delete();
-            });
-            collector.on('end', collected => {
-                this.message.reply(response)
-                .then((msg) => {
-                        for (var i = 1; count >= i; i++) {
-                            (async function (){
-                                await msg.react(reaction_numbers[i]);
-                            })()
+                    (async function (){
+                        let [roles] = await sql.execute(`
+                            SELECT raid_role.title 
+                            FROM raid_role 
+                            JOIN raid_squad_restriction ON raid_role.id = raid_squad_restriction.raid_role_id 
+                            JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id 
+                            JOIN profession ON raid_squad_restriction.profession_id = profession.id 
+                            WHERE raid_squad.raid_id = ${raid.id}
+                            AND profession.title LIKE '${r.emoji.name}'`);
+                        
+                        count = roles.length;
+                        for (var i = 0; roles.length-1 >= i; i++) {
+                            response += `${i+1} - ${roles[i].title}\n`;
+                            role.push(roles[i].title);
                         }
-                        const filter = (reaction, user) => user.id === this.message.member.id;
-                        const collector = msg.createReactionCollector(filter, { time: 10000 });
-                        collector.on('collect', (rr) => {
-                                switch (rr.emoji.name)
-                                {
-                                    case '1⃣':
-                                        this.setRole(raid.id, role[0]);
-                                        break;
+                    })()
 
-                                    case '2⃣':
-                                        this.setRole(raid.id, role[1]);
-                                        break;
+                    // this.message.reply(`Enlisted as ${r.emoji.name} for raid: ${raid.id}`);
+                    message.delete();
+                });
+                collector.on('end', collected => {
+                    this.message.reply(response)
+                    .then((msg) => {
+                            for (var i = 1; count >= i; i++) {
+                                (async function (){
+                                    await msg.react(reaction_numbers[i]);
+                                })()
+                            }
+                            const filter = (reaction, user) => user.id === this.message.member.id;
+                            const collector = msg.createReactionCollector(filter, { time: 10000 });
+                            collector.on('collect', (rr) => {
+                                    switch (rr.emoji.name)
+                                    {
+                                        case '1⃣':
+                                            this.setRole(raid.id, role[0]);
+                                            break;
 
-                                    case '3⃣':
-                                        this.setRole(raid.id, role[2]);
-                                        break;
+                                        case '2⃣':
+                                            this.setRole(raid.id, role[1]);
+                                            break;
 
-                                    case '4⃣':
-                                        this.setRole(raid.id, role[3]);
-                                        break;
+                                        case '3⃣':
+                                            this.setRole(raid.id, role[2]);
+                                            break;
 
-                                    case '5⃣':
-                                        this.setRole(raid.id, role[4]);
-                                        break;
+                                        case '4⃣':
+                                            this.setRole(raid.id, role[3]);
+                                            break;
 
-                                    case '6️⃣':
-                                        this.setRole(raid.id, role[5]);
-                                        break;
+                                        case '5⃣':
+                                            this.setRole(raid.id, role[4]);
+                                            break;
 
-                                    case '7️⃣':
-                                        this.setRole(raid.id, role[6]);
-                                        break;
+                                        case '6️⃣':
+                                            this.setRole(raid.id, role[5]);
+                                            break;
 
-                                    case '8️⃣':
-                                        this.setRole(raid.id, role[7]);
-                                        break;
+                                        case '7️⃣':
+                                            this.setRole(raid.id, role[6]);
+                                            break;
 
-                                    case '9️⃣':
-                                        this.setRole(raid.id, role[8]);
-                                        break;
+                                        case '8️⃣':
+                                            this.setRole(raid.id, role[7]);
+                                            break;
 
-                                    case '🔟':
-                                        this.setRole(raid.id, role[9]);
-                                        break;
-                                }
+                                        case '9️⃣':
+                                            this.setRole(raid.id, role[8]);
+                                            break;
 
-                            //this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
-                            msg.delete();
-                        });
-                        collector.on('end', collected => msg.delete());
-                    }).catch(function() {
-                      //Something
-                     });
-                // message.delete();
-            });
+                                        case '🔟':
+                                            this.setRole(raid.id, role[9]);
+                                            break;
+                                    }
+
+                                //this.msg.reply(`Enlisted as ${rr.emoji.name} for raid: ${raid.id}`);
+                                msg.delete();
+                            });
+                            collector.on('end', collected => msg.delete());
+                        }).catch(function() {
+                          //Something
+                         });
+                    // message.delete();
+
+                });
+            }
+            else
+            {
+                message.reply("No spots available for your rank.");
+            }
         }).catch(function() {
               //Something
              });
