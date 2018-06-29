@@ -415,32 +415,32 @@ class Enlist {
         let [raidSquadRows] = await
             sql.execute(
                 `SELECT
-          *
-        FROM
-          raid_squad
-        WHERE
-          raid_id = ?
-        ORDER BY
-           spot`, [raid]);
+                  *
+                FROM
+                  raid_squad
+                WHERE
+                  raid_id = ${raid}
+                ORDER BY
+                   spot`);
 
         let [restrictionRows] = await
             sql.execute(
                 `SELECT
-          rsr.*
-          , p.title as profession
-          , p.icon as profession_icon
-          , r.title as role
-          , r.icon as role_icon
-          , squad.spot
-        FROM
-          raid_squad_restriction rsr
-          INNER JOIN raid_squad squad on rsr.raid_squad_id = squad.id
-          LEFT JOIN profession p on rsr.profession_id = p.id
-          LEFT JOIN raid_role r on rsr.raid_role_id = r.id
-        WHERE
-          squad.raid_id = ${raid}
-        ORDER BY
-            squad.spot`);
+                  rsr.*
+                  , p.title as profession
+                  , p.icon as profession_icon
+                  , r.title as role
+                  , r.icon as role_icon
+                  , squad.spot
+                FROM
+                  raid_squad_restriction rsr
+                  INNER JOIN raid_squad squad on rsr.raid_squad_id = squad.id
+                  LEFT JOIN profession p on rsr.profession_id = p.id
+                  LEFT JOIN raid_role r on rsr.raid_role_id = r.id
+                WHERE
+                  squad.raid_id = ${raid}
+                ORDER BY
+                    squad.spot`);
 
         let groupedRestrictionRows = {};
         for (let index in restrictionRows) {
