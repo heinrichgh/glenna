@@ -84,7 +84,7 @@ class Enlist {
 
         let [raidSquadRows] = await
             sql.execute(
-                `SELECT *
+                `SELECT raid_squad.*, raid_squad_restriction.*
                 FROM raid_squad
                 JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
                 JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
