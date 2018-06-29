@@ -89,7 +89,8 @@ class Enlist {
                 JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
                 JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
                 WHERE raid_squad.raid_id = ${raid.id}
-                AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
+                AND user_id IS NULL
+                AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072)
                 ORDER BY spot`);
 
         let [restrictionRows] = await
