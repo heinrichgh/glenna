@@ -211,13 +211,12 @@ class Enlist {
                             AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = 95234483317379072) 
                             AND raid_squad.user_id IS NULL
                             AND profession.title LIKE '${r.emoji.name}'`);
+                        
                         count = roles.length;
-                        console.log(roles.length);
                         for (var i = 0; roles.length-1 >= i; i++) {
-                            console.log(roles[i].title);
                             response += `${i+1} - ${roles[i].title}\n`;
                             role.push(roles[i].title);
-                            console.log(role);
+                            console.log(response);
                         }
                     })()
 
