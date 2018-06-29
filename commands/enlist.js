@@ -40,13 +40,6 @@ class Enlist {
             JOIN raid_role ON raid_squad_restriction.raid_role_id = raid_role.id
             WHERE raid_squad.raid_id = ${raidId}
             AND raid_role.title LIKE '${role}'`);
-        console.log(`SELECT raid_squad.id
-            FROM raid_squad 
-            JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
-            JOIN raid_role ON raid_squad_restriction.raid_role_id = raid_role.id
-            WHERE raid_squad.raid_id = ${raidId}
-            AND raid_role.title LIKE '${role}'`);
-        console.log(raidSquadId[0].id);
         await sql.execute(`UPDATE raid_squad SET user_id = '@${this.message.member.id}' WHERE raid_squad.id = ${raidSquadId[0].id}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
         this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}`);
@@ -294,7 +287,7 @@ class Enlist {
     }
 
     async updateSchedule(raid, channel) {
-        console.log(channel);
+
         // temporary cleanup of old messages.
         const fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
