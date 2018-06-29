@@ -352,7 +352,7 @@ class Enlist {
             JOIN raid_squad ON raid_squad.id = raid_squad_restriction.raid_squad_id
             WHERE raid_squad.raid_id = ${raid}`);
 
-        let (raidDescription, squadDescription) = "";
+        let raidDescription = "";
 
         for (let index in ranks)
         {
