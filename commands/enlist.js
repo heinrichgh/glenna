@@ -279,7 +279,7 @@ class Enlist {
     }
 
     async updateSchedule(raid, channel) {
-        const fetched = await channel.fetchMessages({limit: 99});
+        let fetched = await channel.fetchMessages({limit: 99});
         channel.bulkDelete(fetched);
 
         fetched = await channel.fetchMessages({limit: 99});
