@@ -208,9 +208,9 @@ class Enlist {
                             JOIN profession ON raid_squad_restriction.profession_id = profession.id 
                             JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id 
                             WHERE raid_squad.raid_id = ${raid.id}
-                            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id}) 
+                            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${message.member.id}) 
                             AND profession.title LIKE '${r.emoji.name}'`);
-                        
+                        console.log(4);
                         console.log(roles);
                         count = roles.length;
                         for (var i = 0; roles.length-1 >= i; i++) {
