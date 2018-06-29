@@ -420,7 +420,7 @@ class RaidSetup {
                         {
                             value += `${restriction.profession_icon}`;
                             if (restriction.role) {
-                                value += `${restriction.title || ""}`;
+                                value += `${restriction.role || ""}`;
                             }
                         }
                         return value;
