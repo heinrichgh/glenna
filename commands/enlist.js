@@ -39,7 +39,6 @@ class Enlist {
         await sql.execute(`UPDATE raid_squad SET user_id = NULL WHERE raid_id = ${raidId} AND user_id = '<@${this.message.member.id}>'`);
         await sql.execute(`UPDATE raid_squad SET user_id = '<@${this.message.member.id}>' WHERE raid_squad.id = ${raidSquadId[0].id}`);
         console.log(`Set ${this.message.member.id} role to ${role} for raid ${raidId}`);
-        this.message.reply(`Set @${this.message.member.id} role to ${role} for raid ${raidId}:${raidSquadId[0].id}`);
         let chan = this.message.guild.channels.find('id', config.raidChannelId);
         await this.updateSchedule(raidId, chan);
     }
