@@ -84,7 +84,7 @@ class Enlist {
 
         let [raidSquadRows] = await
             sql.execute(
-                `SELECT raid_squad.*, raid_squad_restriction.*
+                `SELECT *
                 FROM raid_squad
                 JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
                 JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
@@ -125,8 +125,8 @@ class Enlist {
 
         for (let index in raidSquadRows) {
             let row = raidSquadRows[index];
-            console.log(row.id);
-            raidSquadRows[index].restrictions = groupedRestrictionRows[row.id];
+            console.log(row.raid_squad_id);
+            raidSquadRows[index].restrictions = groupedRestrictionRows[row.raid_squad_id];
         }
         let fields = [];
         let reactions = [];
