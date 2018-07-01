@@ -63,10 +63,10 @@ class GuildSetup {
         let [sql_result_guild] = await sql.execute('SELECT id FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
         console.log(sql_result_guild);
         console.log(sql_result_guild[0].id);
-        if (sql_result_guild.id)
+        if (sql_result_guild[0].id)
         {
-            console.log('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild.id])
-            await sql.execute('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild.id]);
+            console.log('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild[0].id])
+            await sql.execute('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild[0].id]);
 
         }
         else
@@ -87,13 +87,13 @@ class GuildSetup {
 
             if (sql_count_ranks.length > 0) 
             {
-                console.log('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild.id, sql_count_ranks.id]);
-                await sql.execute('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild.id, sql_count_ranks.id]);   
+                console.log('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks.id]);
+                await sql.execute('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks.id]);   
             }
             else
             {
                 console.log('skipping rank create...');
-                //await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild.id]);
+                //await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id]);
             }
         }
         
@@ -104,7 +104,7 @@ class GuildSetup {
             {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
                 console.log('skipping member create...');
-                //let sql_result_member = await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild.id, members[i].name, "", rows[0].id, null]);
+                //let sql_result_member = await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
             }
         }
     }
