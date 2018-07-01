@@ -28,7 +28,7 @@ class AccountSetup {
                 this.message.reply(`Hi ${guild[0].guild_member_name} your rank has been set to '${guild[0].rank}'`);
             }
             else {
-                this.message.reply("User not found in <guildnamehere>, would you like to join as <friend>");
+                this.message.reply("User not found in <guildnamehere>, would you like to join as <friend>? (yes/no)");
                 const filter = m => m.member === this.message.member;
                 let collected = await this.message.channel.awaitMessages(filter, {max: 1, time: 30000});
 
