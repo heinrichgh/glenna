@@ -17,17 +17,15 @@ class AccountSetup {
             let gw2_api = new gwAPI(this.args);
             let account = await gw2_api.account_lookup();
             
-            let guild = await sql.execute('SELECT guild_member.guild_member_name, guild_rank.rank FROM `guild_member` JOIN guild ON guild_member.guild_id = guild.id JOIN guild_rank ON guild_member.rank_id = guild_rank.id WHERE guild_member.guild_member_name = ? ORDER BY `rank_id` ASC',[account.name]);
+            let [guild] = await sql.execute('SELECT guild_member.guild_member_name, guild_rank.rank FROM `guild_member` JOIN guild ON guild_member.guild_id = guild.id JOIN guild_rank ON guild_member.rank_id = guild_rank.id WHERE guild_member.guild_member_name = ? ORDER BY `rank_id` ASC',[account.name]);
             if (guild[0]) {
-                const role = this.message.guild.roles.find("name", guild[0][0].rank)
-            
-            
-                await sql.execute('UPDATE `guild_member` SET `discord_id` = ?, `api_key` = ? WHERE `guild_member`.`guild_member_name` = ?',[this.message.author.id, this.args[0], guild[0][0].guild_member_name]);
+                const role = this.message.guild.roles.find("name", guild[0].rank)
+                await sql.execute('UPDATE `guild_member` SET `discord_id` = ?, `api_key` = ? WHERE `guild_member`.`guild_member_name` = ?',[this.message.author.id, this.args[0], guild[0].guild_member_name]);
                 this.message.member.addRole(role);
-                this.message.member.setNickname(guild[0][0].guild_member_name)
+                this.message.member.setNickname(guild[0].guild_member_name)
                     .then(console.log)
                     .catch(console.error);
-                this.message.reply(`Hi ${guild[0][0].guild_member_name} your rank has been set to '${guild[0][0].rank}'`);
+                this.message.reply(`Hi ${guild[0].guild_member_name} your rank has been set to '${guild[0].rank}'`);
             }
             else {
                 this.message.reply("User not found in <guildnamehere>, would you like to join as <friend>");
