@@ -78,7 +78,7 @@ class GuildSetup {
             let startingRole = 0;
             if (ranks[i].permissions[0] == "StartingRole") { startingRole = 1}
             
-            let [sql_count_ranks] = await sql.execute('SELECT id FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) AND guild_rank.name LIKE ?',[guild.id, ranks[i].id]);
+            let [sql_count_ranks] = await sql.execute('SELECT id FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) AND guild_rank.rank LIKE ?',[guild.id, ranks[i].id]);
             console.log(sql_count_ranks);
 
             if (sql_count_ranks.length > 0) 
