@@ -76,7 +76,7 @@ class GuildSetup {
             
             let [sql_guild_ranks] = await sql.execute('SELECT id FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) AND guild_rank.rank LIKE ?',[guild.id, ranks[i].id]);
             console.log(sql_guild_ranks);
-            if (sql_guild_ranks[0].id)
+            if (sql_guild_ranks)
                 await sql.execute('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_guild_ranks[0].id]);   
             else
                 await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id]);
