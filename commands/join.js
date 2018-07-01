@@ -41,11 +41,17 @@ class AccountSetup {
                     const friendRole = this.message.guild.roles.find("name", "Friend Of FluX");
                     if (!friendRole) {
                         this.message.guild.createRole({
-                            name: "Friend Of Flux"
+                            name: "Friend Of FluX"
                         })
                         .then(role => console.log(`Created new role with name ${role.name}.`))
                         .catch(console.error)
                     }
+                    friendRole = this.message.guild.roles.find("name", "Friend Of FluX");
+                    this.message.member.addRole(friendRole);
+                    this.message.member.setNickname(account.name)
+                        .then(console.log)
+                        .catch(console.error);
+                    this.message.reply(`Hi ${account.name} your rank has been set to '${friendRole}'`);
                 }
             }
         } catch (e) {
