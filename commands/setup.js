@@ -62,14 +62,9 @@ class GuildSetup {
 
         let [sql_result_guild] = await sql.execute('SELECT id FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
         if (sql_result_guild[0].id)
-        {
             await sql.execute('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild[0].id]);
-        }
         else
-        {   
-            console.log('skipping guild create...');
-            //sql_result_guild = await sql.execute('INSERT INTO guild (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?)',[null, guild.id, guild.name, guild.tag, account.id]);
-        }
+            sql_result_guild = await sql.execute('INSERT INTO guild (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?)',[null, guild.id, guild.name, guild.tag, account.id]);
 
         // insert ranks
         let gw2_api = new gwAPI(this.args);
@@ -81,26 +76,28 @@ class GuildSetup {
             let [sql_count_ranks] = await sql.execute('SELECT id FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) AND guild_rank.rank LIKE ?',[guild.id, ranks[i].id]);
             console.log(sql_count_ranks);
 
-            if (sql_count_ranks.length > 0) 
-            {
-                console.log('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks[0].id]);
+            if (sql_count_ranks.length > 0)
                 await sql.execute('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks[0].id]);   
-            }
             else
-            {
-                console.log('skipping rank create...');
-                //await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id]);
-            }
+                await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id]);
         }
         
-        // insett members
+        // insert members
         let members = await gw2_api.guild_members_lookup(guild.id);
         for (var i = members.length - 1; i >= 0; i--) {
             if (members[i].rank.trim() != "invited")
             {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
-                console.log('skipping member create...');
-                //let sql_result_member = await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
+                //console.log('skipping member create...');
+
+                let sql_member_id = await sql.execute('SELECT * FROM `guild_member` WHERE guild_member_name LIKE ? AND guild_id = ?',[members[i].name, sql_result_guild[0].id]);
+                if (sql_member_id.length > 0) 
+                {
+                    console.log('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `discord_id` = ?, `rank_id` = ?, `api_key` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
+                    await sql.execute('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `discord_id` = ?, `rank_id` = ?, `api_key` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
+                }
+                else
+                    await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
             }
         }
     }
