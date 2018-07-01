@@ -60,12 +60,12 @@ class GuildSetup {
     async createGuild(account, guild) {
         // insert guild
 
-        let sql_result_guild = await sql.execute('SELECT * FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
+        let [sql_result_guild] = await sql.execute('SELECT * FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
         console.log(sql_result_guild);
         if (sql_result_guild.length > 0)
         {
-            console.log('UPDATE `guild` SET (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?) WHERE guild_api_id = ?',[null, guild.id, guild.name, guild.tag, account.id, guild.id])
-            sql_result_guild = await sql.execute('UPDATE `guild` SET (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?) WHERE guild_api_id = ?',[null, guild.id, guild.name, guild.tag, account.id, guild.id]);
+            console.log('UPDATE `guild` SET (guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?) WHERE guild_api_id = ?',[guild.id, guild.name, guild.tag, account.id, guild.id])
+            [sql_result_guild] = await sql.execute('UPDATE `guild` SET (guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?) WHERE guild_api_id = ?',[guild.id, guild.name, guild.tag, account.id, guild.id]);
 
         }
         else
@@ -81,7 +81,7 @@ class GuildSetup {
             let startingRole = 0;
             if (ranks[i].permissions[0] == "StartingRole") { startingRole = 1}
             
-            let sql_result_ranks = sql.execute('');
+            let [sql_count_ranks] = sql.execute('SELECT * FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) ORDER BY `rank_order` ASC',[guild.id]);
 
             if (sql_count_ranks.length > 0) 
             {
