@@ -61,7 +61,8 @@ class GuildSetup {
         // insert guild
 
         let [sql_result_guild] = await sql.execute('SELECT id FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
-        console.log(sql_result_guild.id);
+        console.log(sql_result_guild);
+        console.log([sql_result_guild].id);
         if (sql_result_guild.id)
         {
             console.log('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild.id])
