@@ -68,9 +68,6 @@ class GuildSetup {
             sql_result_guild[0].id = sql_result_guild[0].InsertId
         }
 
-        console.log(sql_result_guild);
-        
-
         // insert ranks
         let gw2_api = new gwAPI(this.args);
         let ranks = await gw2_api.guild_ranks_lookup(guild.id);
@@ -92,7 +89,6 @@ class GuildSetup {
             {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
                 let [sql_member_id] = await sql.execute('SELECT id FROM `guild_member` WHERE guild_member_name LIKE ? AND guild_id = ?',[members[i].name, sql_result_guild[0].id]);
-                console.log(sql_member_id);
                 if  (sql_member_id[0])
                     await sql.execute('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `rank_id` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, rows[0].id, sql_member_id[0].id, members[i].name]);
                 else
