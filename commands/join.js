@@ -38,7 +38,7 @@ class AccountSetup {
                 }
                 if (collected.first().content.trim() == "yes")
                 {
-                    const friendRole = this.message.guild.roles.find("name", "Friend Of FluX");
+                    let friendRole = this.message.guild.roles.find("name", "Friend Of FluX");
                     if (!friendRole) {
                         this.message.guild.createRole({
                             name: "Friend Of FluX"
