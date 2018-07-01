@@ -17,10 +17,10 @@ class AccountSetup {
             let gw2_api = new gwAPI(this.args);
             let account = await gw2_api.account_lookup();
             
+            console.log(account.name)
             let guild = await sql.execute('SELECT guild_member.guild_member_name, guild_rank.rank FROM `guild_member` JOIN guild ON guild_member.guild_id = guild.id JOIN guild_rank ON guild_member.rank_id = guild_rank.id WHERE guild_member.guild_member_name = ? ORDER BY `rank_id` ASC',[account.name]);
-            if (guild[0][0].rank) {
-                const role = this.message.guild.roles.find("name", guild[0][0].rank)
-            }
+            const role = this.message.guild.roles.find("name", guild[0][0].rank)
+            console.log(role);
             
             if (role) {
                 await sql.execute('UPDATE `guild_member` SET `discord_id` = ?, `api_key` = ? WHERE `guild_member`.`guild_member_name` = ?',[this.message.author.id, this.args[0], guild[0][0].guild_member_name]);
