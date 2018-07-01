@@ -21,14 +21,15 @@ class GuildSetup {
     }
 
     async getGuild(account, guild) {
+        await this.createGuild(account, guild);
         let [rows] = await sql.execute('SELECT id FROM guild WHERE guild_api_id = ?', [guild.id]);
         if (rows.length > 0) {
             let sql_count_ranks = await sql.execute('SELECT COUNT(`id`) as c FROM `guild_rank` WHERE `guild_id` = (SELECT id FROM guild WHERE guild_api_id = ?)',[guild.id]);
             let sql_count_members = await sql.execute('SELECT COUNT(`id`) as c FROM `guild_member` WHERE `guild_id` = (SELECT id FROM guild WHERE guild_api_id = ?)',[guild.id]);
             return `Created guild: ${guild.name} [${guild.tag}]\nRanks: ${sql_count_ranks[0][0].c}\nMembers: ${sql_count_members[0][0].c}`;
         }
-        await this.createGuild(account, guild);
-        return this.getGuild(account, guild);
+        
+        return 'failed..';
     }
 
     // async removeGuild(guild) {
