@@ -74,7 +74,6 @@ class GuildSetup {
             if (ranks[i].permissions[0] == "StartingRole") { startingRole = 1}
             
             let [sql_count_ranks] = await sql.execute('SELECT id FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) AND guild_rank.rank LIKE ?',[guild.id, ranks[i].id]);
-            console.log(sql_count_ranks);
 
             if (sql_count_ranks.length > 0)
                 await sql.execute('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks[0].id]);   
@@ -88,13 +87,12 @@ class GuildSetup {
             if (members[i].rank.trim() != "invited")
             {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
-                //console.log('skipping member create...');
-
                 let sql_member_id = await sql.execute('SELECT * FROM `guild_member` WHERE guild_member_name LIKE ? AND guild_id = ?',[members[i].name, sql_result_guild[0].id]);
+                console.log(sql_member_id[0].id)
                 if (sql_member_id.length > 0) 
                 {
-                    console.log('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `discord_id` = ?, `rank_id` = ?, `api_key` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
-                    await sql.execute('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `discord_id` = ?, `rank_id` = ?, `api_key` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
+                    console.log('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `discord_id` = ?, `rank_id` = ?, `api_key` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, "", rows[0].id, null, sql_member_id[0].id, members[i].name]);
+                    await sql.execute('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `discord_id` = ?, `rank_id` = ?, `api_key` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, "", rows[0].id, null, sql_member_id[0].id, members[i].name]);
                 }
                 else
                     await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
