@@ -31,15 +31,15 @@ class GuildSetup {
         return this.getGuild(account, guild);
     }
 
-    async removeGuild(guild) {
-        let [rows] = await sql.execute('SELECT id FROM guild WHERE guild_api_id = ?', [guild.id]);
-        for (var i = rows.length - 1; i >= 0; i--) {
-            console.log(`Removing guild with ID: ${rows[i].id}`);
-            await sql.execute('DELETE FROM guild WHERE id = ?', [rows[i].id]);
-            await sql.execute('DELETE FROM guild_rank WHERE guild_id = ?', [rows[i].id]);
-            await sql.execute('DELETE FROM guild_member WHERE guild_id = ?', [rows[i].id]);
-        }
-    }
+    // async removeGuild(guild) {
+    //     let [rows] = await sql.execute('SELECT id FROM guild WHERE guild_api_id = ?', [guild.id]);
+    //     for (var i = rows.length - 1; i >= 0; i--) {
+    //         console.log(`Removing guild with ID: ${rows[i].id}`);
+    //         await sql.execute('DELETE FROM guild WHERE id = ?', [rows[i].id]);
+    //         await sql.execute('DELETE FROM guild_rank WHERE guild_id = ?', [rows[i].id]);
+    //         await sql.execute('DELETE FROM guild_member WHERE guild_id = ?', [rows[i].id]);
+    //     }
+    // }
 
     async createRanks(guild)
     {
@@ -58,7 +58,20 @@ class GuildSetup {
 
     async createGuild(account, guild) {
         // insert guild
-        let sql_result_guild = await sql.execute('INSERT INTO guild (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?)',[null, guild.id, guild.name, guild.tag, account.id]);
+
+        let sql_result_guild = await sql.execute('SELECT * FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
+        console.log(sql_result_guild);
+        if (sql_result_guild.length > 0)
+        {
+            console.log('UPDATE `guild` SET (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?) WHERE guild_api_id = ?',[null, guild.id, guild.name, guild.tag, account.id, guild.id])
+            sql_result_guild = await sql.execute('UPDATE `guild` SET (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?) WHERE guild_api_id = ?',[null, guild.id, guild.name, guild.tag, account.id, guild.id]);
+
+        }
+        else
+        {   
+            console.log('skipping guild create...');
+            //sql_result_guild = await sql.execute('INSERT INTO guild (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?)',[null, guild.id, guild.name, guild.tag, account.id]);
+        }
 
         // insert ranks
         let gw2_api = new gwAPI(this.args);
@@ -66,7 +79,19 @@ class GuildSetup {
         for (var i = ranks.length - 1; i >= 0; i--) {
             let startingRole = 0;
             if (ranks[i].permissions[0] == "StartingRole") { startingRole = 1}
-            let sql_result_ranks = await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].insertId]);
+            
+            let sql_result_ranks = sql.execute('');
+
+            if (sql_count_ranks.length > 0) 
+            {
+                console.log('UPDATE guild_rank SET (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?) WHERE guild_id = ?',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].insertId, sql_result_guild[0].insertId]);
+                await sql.execute('UPDATE guild_rank SET (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?) WHERE guild_id = ?',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].insertId, sql_result_guild[0].insertId]);   
+            }
+            else
+            {
+                console.log('skipping rank create...');
+                //await sql.execute('INSERT INTO guild_rank (id, rank, rank_order, is_starting, guild_id) VALUES (?, ?, ?, ?, ?)',[null, ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].insertId]);
+            }
         }
         
         // insett members
@@ -75,7 +100,8 @@ class GuildSetup {
             if (members[i].rank.trim() != "invited")
             {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
-                let sql_result_member = await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].insertId, members[i].name, "", rows[0].id, null]);
+                console.log('skipping member create...');
+                //let sql_result_member = await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].insertId, members[i].name, "", rows[0].id, null]);
             }
         }
     }
@@ -115,7 +141,7 @@ class GuildSetup {
                 
                     let num = collected.first().content.trim();
                     if (num > 0 && num <=(guilds.length) ) {
-                        await this.removeGuild(guilds[num-1]);
+                        // await this.removeGuild(guilds[num-1]);
                         this.message.reply(await this.getGuild(account, guilds[num-1]));
                         await this.createRanks(guilds[num-1]);
                     }
