@@ -83,8 +83,8 @@ class GuildSetup {
 
             if (sql_count_ranks.length > 0) 
             {
-                console.log('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks.id]);
-                await sql.execute('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks.id]);   
+                console.log('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks[0].id]);
+                await sql.execute('UPDATE guild_rank SET rank = ?, rank_order = ?, is_starting = ?, guild_id = ? WHERE id = ?',[ranks[i].id, ranks[i].order, startingRole, sql_result_guild[0].id, sql_count_ranks[0].id]);   
             }
             else
             {
