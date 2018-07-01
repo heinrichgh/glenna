@@ -53,7 +53,7 @@ class AccountSetup {
                         if (sql_member_id[0])
                             await sql.execute('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `rank_id` = ? WHERE id = ? AND guild_member_name = ?',[sql_rank_id[0].guild_id, account.name, sql_rank_id[0].id, sql_member_id[0].id, account.name]);
                         else
-                            await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_rank_id[0].guild_id, account.name, "", sql_rank_id[0].id, this.args]);
+                            await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_rank_id[0].guild_id, account.name, "", sql_rank_id[0].id, this.args[0]]);
                     }
                     friendRole = this.message.guild.roles.find("name", "Friend Of FluX");
                     this.message.member.addRole(friendRole);
