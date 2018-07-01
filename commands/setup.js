@@ -61,13 +61,9 @@ class GuildSetup {
         // insert guild
 
         let [sql_result_guild] = await sql.execute('SELECT id FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
-        console.log(sql_result_guild);
-        console.log(sql_result_guild[0].id);
         if (sql_result_guild[0].id)
         {
-            console.log('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild[0].id])
             await sql.execute('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild[0].id]);
-
         }
         else
         {   
@@ -82,7 +78,7 @@ class GuildSetup {
             let startingRole = 0;
             if (ranks[i].permissions[0] == "StartingRole") { startingRole = 1}
             
-            let [sql_count_ranks] = sql.execute('SELECT id FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) AND guild_rank.name LIKE ?',[guild.id, ranks[i].id]);
+            let [sql_count_ranks] = await sql.execute('SELECT id FROM `guild_rank` WHERE guild_id IN (SELECT id FROM guild WHERE guild.guild_api_id = ?) AND guild_rank.name LIKE ?',[guild.id, ranks[i].id]);
             console.log(sql_count_ranks);
 
             if (sql_count_ranks.length > 0) 
