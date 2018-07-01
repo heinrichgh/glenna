@@ -62,10 +62,11 @@ class GuildSetup {
 
         let [sql_result_guild] = await sql.execute('SELECT id FROM `guild` WHERE `guild_api_id` = ?',[guild.id]);
         if ([sql_result_guild])
+            console.log(sql_result_guild);
             await sql.execute('UPDATE `guild` SET guild_api_id = ?, name = ?, tag = ?, leader = ? WHERE id = ?',[guild.id, guild.name, guild.tag, account.id, sql_result_guild[0].id]);
         else
             [sql_result_guild] = await sql.execute('INSERT INTO guild (id, guild_api_id, name, tag, leader) VALUES (?, ?, ?, ?, ?)',[null, guild.id, guild.name, guild.tag, account.id]);
-        console.log(sql_result_guild);
+        
 
         // insert ranks
         let gw2_api = new gwAPI(this.args);
