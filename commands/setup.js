@@ -89,7 +89,7 @@ class GuildSetup {
                 let [rows] = await sql.execute('SELECT * FROM `guild_rank` WHERE rank LIKE ?',[members[i].rank]);
                 let [sql_member_id] = await sql.execute('SELECT id FROM `guild_member` WHERE guild_member_name LIKE ? AND guild_id = ?',[members[i].name, sql_result_guild[0].id]);
                 if  (sql_member_id[0].id)
-                    await sql.execute('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `rank_id` = ?, WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, rows[0].id, sql_member_id[0].id, members[i].name]);
+                    await sql.execute('UPDATE `guild_member` SET `guild_id` = ?, `guild_member_name` = ?, `rank_id` = ? WHERE id = ? AND guild_member_name = ?',[sql_result_guild[0].id, members[i].name, rows[0].id, sql_member_id[0].id, members[i].name]);
                 else
                     await sql.execute('INSERT INTO `guild_member` (`id`, `guild_id`, `guild_member_name`, `discord_id`, `rank_id`, `api_key`) VALUES (?, ?, ?, ?, ?, ?)',[null, sql_result_guild[0].id, members[i].name, "", rows[0].id, null]);
             }
