@@ -18,6 +18,7 @@ class Enlist {
         this.client = client;
         this.message = message;
         this.args = args;
+        this.userRank = null;
     }
 
     hasRole() {
@@ -25,14 +26,26 @@ class Enlist {
         return true;
     }
 
+    async getRank() {
+        return 0;
+        if (this.userRank) {
+            return this.userRank;
+        }
+        let [rankRows] = await sql.execute(`SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id}`);
+        this.userRank = rankRows[0].rank_order;
+        return this.userRank;
+    }
+
     async setRole(raidId, role) {
+
+        let rank = await this.getRank();
         let [raidSquadId] = await sql.execute(`SELECT raid_squad.id
             FROM raid_squad 
             JOIN raid_squad_restriction ON raid_squad.id = raid_squad_restriction.raid_squad_id
             JOIN raid_role ON raid_squad_restriction.raid_role_id = raid_role.id
             JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
             WHERE raid_squad.raid_id = ${raidId}
-            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
+            AND guild_rank.rank_order >= ${rank}
             AND raid_squad.user_id IS NULL
             AND raid_role.title LIKE '${role}'
             LIMIT 1`);
@@ -78,6 +91,8 @@ class Enlist {
             });
         }
 
+        let rank = await this.getRank();
+
         let [raidSquadRows] = await
             sql.execute(
                 `SELECT *
@@ -86,7 +101,7 @@ class Enlist {
                 JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id
                 WHERE raid_squad.raid_id = ${raid.id}
                 AND user_id IS NULL
-                AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
+                AND guild_rank.rank_order >= ${rank}
                 ORDER BY spot`);
 
         let [restrictionRows] = await
@@ -106,7 +121,7 @@ class Enlist {
           JOIN guild_rank on guild_rank.id = rsr.guild_rank_id
         WHERE squad.raid_id = ${raid.id}
         AND squad.user_id IS NULL
-        AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${this.message.member.id})
+        AND guild_rank.rank_order >= ${rank}
         ORDER BY
             squad.spot`);
 
@@ -155,6 +170,8 @@ class Enlist {
             });
         }
 
+        let userReactedToRole = false;
+        let doneAddingReactions = false;
         channel.send({embed: {
                 color: 3447003,
                 author: {
@@ -171,15 +188,25 @@ class Enlist {
             }
         })
         .then((message) => {
-            if (reactions.length >0) {
+            if (reactions.length > 0) {
+                let uniqueCheck = [];
+                let reactionPromises = [];
                 for (var i = reactions.length - 1; i >= 0; i--) {
-                    var regex = /<:[a-z]*:([0-9]*)>/g;
+                    var regex = /<:([a-z]*):([0-9]*)>/g;
                     var emojiarray = regex.exec(reactions[i]);
-                    let emoji = message.guild.emojis.get(emojiarray[1]);
-                    (async function (){
-                        await message.react(emoji);
-                    })()
+                    let emoji = message.guild.emojis.find("name", emojiarray[1]);
+                    if (uniqueCheck.indexOf(emoji) === -1) {
+                        uniqueCheck.push(emoji);
+                        reactionPromises.push(message.react(emoji));
+                    }
                 }
+
+                Promise.all(reactionPromises).then(() => {
+                    doneAddingReactions = true;
+                    if (userReactedToRole) {
+                        message.delete();
+                    }
+                });
 
                 // wait for response
                 const filter = (reaction, user) => user.id === this.message.member.id;
@@ -188,8 +215,15 @@ class Enlist {
                 let count = 0;
                 let role = [];
                 const discord_id = this.message.member.id;
-                collector.on('collect', (r) => {
-                    (async function (){ 
+                // collector.on('collect', (r) => {
+                //     console.log("Collect");
+                //     console.log(r);
+                //
+                // });
+                collector.on('end', collected => {
+                    userReactedToRole = true;
+                    (async () => {
+                        let collect = collected.first();
                         let [roles] = await sql.execute(`
                             SELECT DISTINCT(raid_role.title) 
                             FROM raid_role 
@@ -198,27 +232,18 @@ class Enlist {
                             JOIN profession ON raid_squad_restriction.profession_id = profession.id 
                             JOIN guild_rank on raid_squad_restriction.guild_rank_id = guild_rank.id 
                             WHERE raid_squad.raid_id = ${raid.id}
-                            AND guild_rank.rank_order >= (SELECT guild_rank.rank_order FROM guild_rank JOIN guild_member ON guild_member.rank_id = guild_rank.id WHERE guild_member.discord_id = ${discord_id}) 
+                            AND guild_rank.rank_order >= ${rank} 
                             AND raid_squad.user_id IS NULL
-                            AND profession.title LIKE '${r.emoji.name}'`);
-                        
+                            AND profession.title LIKE '${collect.emoji.name}'`);
+
                         count = roles.length;
                         for (var i = 0; roles.length-1 >= i; i++) {
                             response += `${i+1} - ${roles[i].title}\n`;
                             role.push(roles[i].title);
                         }
-                    })()
-                });
-                collector.on('end', collected => {
-                    (async function (){
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    })()
-                    this.message.reply(response)
-                    .then((msg) => {
+                        this.message.reply(response).then((msg) => {
                             for (var i = 1; count >= i; i++) {
-                                (async function (){
-                                    await msg.react(reaction_numbers[i]);
-                                })()
+                                    msg.react(reaction_numbers[i]);
                             }
                             const filter = (reaction, user) => user.id === this.message.member.id;
                             const collector = msg.createReactionCollector(filter, { max: 1 });
@@ -267,20 +292,23 @@ class Enlist {
                                 }
                             });
                             collector.on('end', collected => msg.delete());
-                        }).catch(function() {});
-                    message.delete();
+                        }).catch(console.error);
+                    })();
+                    if (doneAddingReactions) {
+                        message.delete();
+                    }
                 });
             }
             else
             {
                 message.reply("No spots available for your rank. Have you set up your rank with !join?");
             }
-        }).catch(function() {});
+        }).catch(console.error);
     }
 
     async updateSchedule(raid, channel) {
         let fetched = await channel.fetchMessages({limit: 99});
-        channel.bulkDelete(fetched);
+        channel.bulkDelete(fetched, true);
 
         let [clearTypeRows] = await
             sql.execute(`
