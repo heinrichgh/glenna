@@ -197,16 +197,9 @@ class Enlist {
                     let emoji = message.guild.emojis.find("name", emojiarray[1]);
                     if (uniqueCheck.indexOf(emoji) === -1) {
                         uniqueCheck.push(emoji);
-                        reactionPromises.push(message.react(emoji));
+                        message.react(emoji).catch(() => { /* Having some fun here */ });
                     }
                 }
-
-                Promise.all(reactionPromises).then(() => {
-                    doneAddingReactions = true;
-                    if (userReactedToRole) {
-                        message.delete();
-                    }
-                });
 
                 // wait for response
                 const filter = (reaction, user) => user.id === this.message.member.id;
@@ -214,12 +207,7 @@ class Enlist {
                 let response = "Please select a role:\n";
                 let count = 0;
                 let role = [];
-                const discord_id = this.message.member.id;
-                // collector.on('collect', (r) => {
-                //     console.log("Collect");
-                //     console.log(r);
-                //
-                // });
+
                 collector.on('end', collected => {
                     userReactedToRole = true;
                     (async () => {
@@ -242,9 +230,11 @@ class Enlist {
                             role.push(roles[i].title);
                         }
                         this.message.reply(response).then((msg) => {
-                            for (var i = 1; count >= i; i++) {
-                                    msg.react(reaction_numbers[i]);
-                            }
+                            (async () => {
+                                for (var i = 1; count >= i; i++) {
+                                    await msg.react(reaction_numbers[i]);
+                                }
+                            })();
                             const filter = (reaction, user) => user.id === this.message.member.id;
                             const collector = msg.createReactionCollector(filter, { max: 1 });
                             collector.on('collect', (rr) => {
@@ -294,9 +284,7 @@ class Enlist {
                             collector.on('end', collected => msg.delete());
                         }).catch(console.error);
                     })();
-                    if (doneAddingReactions) {
-                        message.delete();
-                    }
+                    message.delete();
                 });
             }
             else
@@ -307,8 +295,10 @@ class Enlist {
     }
 
     async updateSchedule(raid, channel) {
-        let fetched = await channel.fetchMessages({limit: 99});
-        channel.bulkDelete(fetched, true);
+        if (channel) {
+            let fetched = await channel.fetchMessages({limit: 99});
+            channel.bulkDelete(fetched, true);
+        }
 
         let [clearTypeRows] = await
             sql.execute(`
