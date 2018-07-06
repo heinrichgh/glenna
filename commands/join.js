@@ -23,7 +23,6 @@ class AccountSetup {
                 await sql.execute('UPDATE `guild_member` SET `discord_id` = ?, `api_key` = ? WHERE `guild_member`.`guild_member_name` = ?',[this.message.author.id, this.args[0], guild[0].guild_member_name]);
                 this.message.member.addRole(role);
                 this.message.member.setNickname(guild[0].guild_member_name)
-                    .then(console.log)
                     .catch(console.error);
                 this.message.reply(`Hi ${guild[0].guild_member_name} your rank has been set to '${guild[0].rank}'`);
             }
