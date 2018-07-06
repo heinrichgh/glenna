@@ -57,7 +57,6 @@ class AccountSetup {
                     friendRole = this.message.guild.roles.find("name", "Friend Of FluX");
                     this.message.member.addRole(friendRole);
                     this.message.member.setNickname(account.name)
-                        .then(console.log)
                         .catch(console.error);
                     this.message.reply(`Hi ${account.name} your rank has been set to '${friendRole}'`);
                 }
