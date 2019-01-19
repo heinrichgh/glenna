@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,8 @@ namespace WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IRaidWingRepository, RaidWingRepository>();
+            services.AddScoped<IGuildWarsApi, GuildWarsApi>();
+            
             services.AddScoped<PostgresDatabaseInterface, PostgresDatabaseInterface>();
             
             services.AddSwaggerGen(c =>

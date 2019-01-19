@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Entities;
+using Core.Entities.GuildWars;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +11,25 @@ namespace WebApi.Controllers
     [ApiController]
     public class RaidWingController : ControllerBase
     {
-        private readonly IRaidWingRepository raidWingRepository;
+        private readonly IRaidWingRepository _raidWingRepository;
+        private readonly IGuildWarsApi _guildWarsApi;
 
-        public RaidWingController(IRaidWingRepository raidWingRepository)
+        public RaidWingController(IRaidWingRepository raidWingRepository, IGuildWarsApi guildWarsApi)
         {
-            this.raidWingRepository = raidWingRepository;
+            _raidWingRepository = raidWingRepository;
+            _guildWarsApi = guildWarsApi;
         }
 
         [HttpGet]
         public IEnumerable<RaidWing> Index()
         {
-            return raidWingRepository.LoadAll();
+            return _raidWingRepository.LoadAll();
+        }
+
+        [HttpGet("{apiKey}")]
+        public async Task<Account> Test(string apiKey)
+        {
+            return await _guildWarsApi.Fetch(apiKey);
         }
     }
 }
