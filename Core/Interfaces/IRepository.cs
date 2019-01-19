@@ -6,6 +6,7 @@ namespace Core.Interfaces
     public interface IRepository<T>
     {
         IEnumerable<T> LoadAll();
-        T Load(uint id);
+        T Load(int id);
+        T Save(T t);
     }
 }

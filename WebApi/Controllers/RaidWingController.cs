@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Entities;
 using Core.Entities.GuildWars;
 using Core.Interfaces;
+using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -13,11 +14,14 @@ namespace WebApi.Controllers
     {
         private readonly IGuildWarsApi _guildWarsApi;
         private readonly IRepository<RaidWing> _raidWingRepository;
+        private readonly SignUpNewUser _signUpNewUser;
+        private readonly IGuildWarsAccountRepository _guildWarsAccountRepository;
 
-        public RaidWingController(IRepository<RaidWing> raidWingRepository, IGuildWarsApi guildWarsApi)
+        public RaidWingController(IRepository<RaidWing> raidWingRepository, SignUpNewUser signUpNewUser, IGuildWarsAccountRepository guildWarsAccountRepository)
         {
             _raidWingRepository = raidWingRepository;
-            _guildWarsApi = guildWarsApi;
+            _signUpNewUser = signUpNewUser;
+            _guildWarsAccountRepository = guildWarsAccountRepository;
         }
 
         [HttpGet]
@@ -27,9 +31,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{apiKey}")]
-        public async Task<Account> Test(string apiKey)
+        public async Task<SignUpNewUser.SignUpNewUserResponse> Test(string apiKey)
         {
-            return await _guildWarsApi.Fetch(apiKey);
+            return await _signUpNewUser.SignUp(new SignUpNewUser.SignUpNewUserRequest { ApiKey = apiKey});
         }
     }
 }

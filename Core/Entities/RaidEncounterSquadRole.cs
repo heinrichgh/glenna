@@ -2,8 +2,8 @@ namespace Core.Entities
 {
     public class RaidEncounterSquadRole
     {
-        public uint Id { get; set; }
-        public uint RaidEncounterSquadId { get; set; }
-        public uint RaidRoleId { get; set; }
+        public int Id { get; set; }
+        public int RaidEncounterSquadId { get; set; }
+        public int RaidRoleId { get; set; }
     }
 }

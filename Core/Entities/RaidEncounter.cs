@@ -2,8 +2,8 @@ namespace Core.Entities
 {
     public class RaidEncounter
     {
-        public uint Id { get; set; }
-        public uint RaidId { get; set; }
-        public uint RaidBossId { get; set; }
+        public int Id { get; set; }
+        public int RaidId { get; set; }
+        public int RaidBossId { get; set; }
     }
 }

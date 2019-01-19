@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete]
-        public IEnumerable<RaidTemplate> Remove(uint RaidId)
+        public IEnumerable<RaidTemplate> Remove(int RaidId)
         {
             return null;
         }

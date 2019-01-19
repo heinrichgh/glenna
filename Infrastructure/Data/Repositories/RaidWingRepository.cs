@@ -24,12 +24,17 @@ namespace Infrastructure.Data
             }
         }
 
-        public RaidWing Load(uint id)
+        public RaidWing Load(int id)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
                 return dbConnection.Query<RaidWing>("SELECT id, name FROM raid_wing WHERE id = @Id", new {Id = id}).FirstOrDefault();
             }
+        }
+
+        public RaidWing Save(RaidWing t)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

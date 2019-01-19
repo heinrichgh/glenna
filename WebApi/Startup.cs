@@ -1,5 +1,6 @@
 using Core.Entities;
 using Core.Interfaces;
+using Core.UseCases;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -27,8 +28,11 @@ namespace WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             
+            services.AddScoped<IGuildWarsAccountRepository, GuildWarsAccountRepository>();
             services.AddScoped<IRepository<RaidWing>, RaidWingRepository>();
             services.AddScoped<IGuildWarsApi, GuildWarsApi>();
+            
+            services.AddScoped<SignUpNewUser, SignUpNewUser>();
             
             services.AddScoped<PostgresDatabaseInterface, PostgresDatabaseInterface>();
             

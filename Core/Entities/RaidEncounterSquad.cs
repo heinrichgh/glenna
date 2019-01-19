@@ -2,9 +2,9 @@ namespace Core.Entities
 {
     public class RaidEncounterSquad
     {
-        public uint Id { get; set; }
-        public uint RaidEncounterId { get; set; }
-        public uint Position { get; set; }
-        public uint GuildMemberId { get; set; }
+        public int Id { get; set; }
+        public int RaidEncounterId { get; set; }
+        public int Position { get; set; }
+        public int GuildMemberId { get; set; }
     }
 }
