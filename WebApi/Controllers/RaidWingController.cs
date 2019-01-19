@@ -11,10 +11,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class RaidWingController : ControllerBase
     {
-        private readonly IRaidWingRepository _raidWingRepository;
         private readonly IGuildWarsApi _guildWarsApi;
+        private readonly IRepository<RaidWing> _raidWingRepository;
 
-        public RaidWingController(IRaidWingRepository raidWingRepository, IGuildWarsApi guildWarsApi)
+        public RaidWingController(IRepository<RaidWing> raidWingRepository, IGuildWarsApi guildWarsApi)
         {
             _raidWingRepository = raidWingRepository;
             _guildWarsApi = guildWarsApi;

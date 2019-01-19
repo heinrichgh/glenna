@@ -4,7 +4,6 @@ namespace Core.Entities
     {
         public uint Id { get; set; }
         public string Name { get; set; }
-
         public bool IsVisible { get; set; }
     }
 }
