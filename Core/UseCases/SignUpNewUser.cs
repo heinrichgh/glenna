@@ -33,12 +33,12 @@ namespace Core.UseCases
         {
 //            var guildWarsAccount = _guildWarsAccountRepository.LoadByApiKey(request.ApiKey);
 
-            var account = await _guildWarsApi.Fetch(request.ApiKey);
+            var account = await _guildWarsApi.FetchAccount(request.ApiKey);
 
             var savedAccount =_guildWarsAccountRepository.Save(new GuildwarsAccount
             {
                 ApiKey = request.ApiKey,
-                GameGuid = account.Id.ToString(),
+                GameGuid = account.Id,
                 IsCommander = account.Commander
             });
             

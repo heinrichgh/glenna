@@ -5,6 +5,6 @@ namespace Core.Interfaces
 {
     public interface IGuildWarsApi
     {
-        Task<Account> Fetch(string apiKey);
+        Task<Account> FetchAccount(string apiKey);
     }
 }

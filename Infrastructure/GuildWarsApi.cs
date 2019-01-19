@@ -11,7 +11,7 @@ namespace Infrastructure
 {
     public class GuildWarsApi : IGuildWarsApi
     {
-        public async Task<Account> Fetch(string apiKey)
+        public async Task<Account> FetchAccount(string apiKey)
         {
             using (var client = new HttpClient())
             {
