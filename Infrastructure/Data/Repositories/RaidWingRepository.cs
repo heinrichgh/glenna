@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data
 {
-    public class RaidWingRepository : IRaidWingRepository
+    public class RaidWingRepository : IRepository<RaidWing>
     {
         private readonly PostgresDatabaseInterface _postgresDatabaseInterface;
 

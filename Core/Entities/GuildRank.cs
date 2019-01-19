@@ -4,9 +4,7 @@ namespace Core.Entities
     {
         public uint Id { get; set; }
         public uint GuildId { get; set; }
-
         public string Name { get; set; }
-
         public uint OrderBy { get; set; }
     }
 }

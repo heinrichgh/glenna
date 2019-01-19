@@ -9,9 +9,9 @@ namespace WebApi.Controllers
     [ApiController]
     public class RaidWingController : ControllerBase
     {
-        private readonly IRaidWingRepository raidWingRepository;
+        private readonly IRepository<RaidWing> raidWingRepository;
 
-        public RaidWingController(IRaidWingRepository raidWingRepository)
+        public RaidWingController(IRepository<RaidWing> raidWingRepository)
         {
             this.raidWingRepository = raidWingRepository;
         }

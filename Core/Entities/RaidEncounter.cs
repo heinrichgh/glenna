@@ -4,7 +4,6 @@ namespace Core.Entities
     {
         public uint Id { get; set; }
         public uint RaidId { get; set; }
-
         public uint RaidBossId { get; set; }
     }
 }

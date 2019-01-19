@@ -4,7 +4,6 @@ namespace Core.Entities
     {
         public uint Id { get; set; }
         public uint RaidEncounterSquadTemplateId { get; set; }
-
         public uint RaidRoleId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Entities;
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,7 +25,7 @@ namespace WebApi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped<IRaidWingRepository, RaidWingRepository>();
+            services.AddScoped<IRepository<RaidWing>, RaidWingRepository>();
             services.AddScoped<PostgresDatabaseInterface, PostgresDatabaseInterface>();
             
             services.AddSwaggerGen(c =>
