@@ -9,11 +9,13 @@ namespace Core.UseCases
     {
         private readonly IGuildWarsApi _guildWarsApi;
         private readonly IGuildRepository _guildRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CreateGuild(IGuildWarsApi guildWarsApi, IGuildRepository guildRepository)
+        public CreateGuild(IGuildWarsApi guildWarsApi, IGuildRepository guildRepository, IUserRepository userRepository)
         {
             _guildWarsApi = guildWarsApi;
             _guildRepository = guildRepository;
+            _userRepository = userRepository;
         }
 
         public class NewGuildRequest
@@ -30,16 +32,27 @@ namespace Core.UseCases
 
         public async Task<Guild> Create(NewGuildRequest request)
         {
-            var guild = await _guildWarsApi.FetchGuild(request.ApiKey, request.GuildGuid);
-
-            var savedGuild =_guildRepository.Save(new Guild
+            var user = await _guildWarsApi.FetchAccount(request.ApiKey);
+            if (user.GuildLeader.Contains(request.GuildGuid) && _guildRepository.Load(request.GuildGuid) == null)
             {
-                Name = guild.Name,
-                CreatedAt = System.DateTime.Now,
-                Tag = guild.Tag
-            });
+                var guild = await _guildWarsApi.FetchGuild(request.ApiKey, request.GuildGuid);
+                
+                var savedGuild =_guildRepository.Save(new Guild
+                {
+                    Name = guild.Name,
+                    Tag = guild.Tag,
+                    GuildLeader = _userRepository.Load(user.Id).Id,
+                    GuildGuid = guild.Id,
+                    CreatedAt = System.DateTime.Now,
+                });
+                
+                return savedGuild;
+            }
+            else
+            {
+                return null;    
+            }
             
-            return savedGuild;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Core.Entities;
 using Core.Entities.GuildWars;
@@ -36,16 +37,15 @@ namespace Core.UseCases
                 {
                     ApiKey = request.ApiKey,
                     GameGuid = user.Id,
-                    IsCommander = user.Commander
+                    DisplayName = user.name,
+                    IsCommander = user.Commander,
+                    CreatedAt = DateTime.Now
                 });
-                
+
                 return savedAccount;
             }
-            else
-            {
-                return null;
-            }
-           
+
+            return null;
         }
     }
 }

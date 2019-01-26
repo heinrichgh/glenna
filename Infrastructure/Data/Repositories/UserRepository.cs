@@ -20,7 +20,7 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                var value = dbConnection.Query<Member>("SELECT id, game_guid, is_commander, api_key, created_at FROM member");
+                var value = dbConnection.Query<Member>("SELECT id, display_name, game_guid, is_commander, api_key, created_at FROM member");
                 return value;
             }
         }
@@ -29,7 +29,7 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<Member>("SELECT id, game_guid, is_commander, api_key, created_at FROM member WHERE id = @Id", new {Id = id}).FirstOrDefault();
+                return dbConnection.Query<Member>("SELECT id, display_name, game_guid, is_commander, api_key, created_at FROM member WHERE id = @Id", new {Id = id}).FirstOrDefault();
             }
         }
 
@@ -37,7 +37,7 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                var value = dbConnection.Query<Member>("SELECT id, game_guid, is_commander, api_key, created_at FROM member WHERE game_guid = @GameGuid", new {GameGuid = gameGuid}).FirstOrDefault();
+                var value = dbConnection.Query<Member>("SELECT id, display_name, game_guid, is_commander, api_key, created_at FROM member WHERE game_guid = @GameGuid", new {GameGuid = gameGuid}).FirstOrDefault();
                 return value;
             }
         }
@@ -46,7 +46,7 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<Member>("SELECT id, game_guid, is_commander, api_key, created_at FROM member WHERE api_key = @ApiKey", new {ApiKey = apiKey}).FirstOrDefault();
+                return dbConnection.Query<Member>("SELECT id, display_name, game_guid, is_commander, api_key, created_at FROM member WHERE api_key = @ApiKey", new {ApiKey = apiKey}).FirstOrDefault();
             }
         }
 
@@ -63,6 +63,7 @@ namespace Infrastructure.Data
                     UPDATE member 
                     SET 
                         game_guid = @GameGuid,
+                        display_name = @DisplayName,
                         is_commander = @IsCommander,
                         api_key = @ApiKey
                     WHERE 
@@ -80,8 +81,8 @@ namespace Infrastructure.Data
                     guildwarsAccount.CreatedAt = DateTime.Now;
                     
                     var id = dbConnection.Query<int>(@"
-                    INSERT INTO member (game_guid, is_commander, api_key, created_at) 
-                    VALUES (@GameGuid, @IsCommander, @ApiKey, @CreatedAt)           
+                    INSERT INTO member (game_guid, display_name, is_commander, api_key, created_at) 
+                    VALUES (@GameGuid, @DisplayName, @IsCommander, @ApiKey, @CreatedAt)           
                     RETURNING id         
                     ", guildwarsAccount).Single();
 

@@ -32,9 +32,9 @@ namespace WebApi.Controllers
 
         [HttpPost]
 
-        public async Task<Guild> Create(string guildGuid, string apiKey)
+        public async Task<Guild> Create(Guid guildGuid, string apiKey)
         {
-            return await _createGuild.Create(new CreateGuild.NewGuildRequest { ApiKey = apiKey });
+            return await _createGuild.Create(new CreateGuild.NewGuildRequest { GuildGuid = guildGuid, ApiKey = apiKey });
         }
 
         [HttpDelete]

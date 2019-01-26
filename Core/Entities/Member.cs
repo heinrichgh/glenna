@@ -6,6 +6,7 @@ namespace Core.Entities
     {
         public int Id { get; set; }
         public Guid GameGuid { get; set; }
+        public string DisplayName { get; set; }
         public bool IsCommander { get; set; }
         public string ApiKey { get; set; }
         public DateTime CreatedAt { get; set; }
