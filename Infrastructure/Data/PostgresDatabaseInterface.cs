@@ -13,10 +13,11 @@ namespace Infrastructure.Data
             _configuration = configuration;
         }
         
-        public IDbConnection OpenConnection()  
+        public IDbConnection OpenConnection(bool matchNamesWithUnderscores = true)  
         {  
             var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresConnection"));  
             connection.Open();  
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = matchNamesWithUnderscores;
             return connection;  
         }  
     }

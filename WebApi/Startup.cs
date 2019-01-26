@@ -28,11 +28,15 @@ namespace WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             
-            services.AddScoped<IGuildWarsAccountRepository, GuildWarsAccountRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGuildRepository, GuildRepository>();
             services.AddScoped<IRepository<RaidWing>, RaidWingRepository>();
             services.AddScoped<IGuildWarsApi, GuildWarsApi>();
             
-            services.AddScoped<SignUpNewUser, SignUpNewUser>();
+            services.AddScoped<SignUpUser, SignUpUser>();
+            services.AddScoped<RemoveUser, RemoveUser>();
+            services.AddScoped<CreateGuild, CreateGuild>();
+            services.AddScoped<RemoveGuild, RemoveGuild>();
             
             services.AddScoped<PostgresDatabaseInterface, PostgresDatabaseInterface>();
             

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
+using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -9,29 +12,35 @@ namespace WebApi.Controllers
     [ApiController]
     public class GuildController : ControllerBase
     {
-        private readonly IRepository<Guild> guildRepository;
-
-        public GuildController(IRepository<Guild> guildRepository)
+        private readonly IGuildWarsApi _guildWarsApi;
+        private readonly IGuildRepository _guildRepository;
+        private readonly CreateGuild _createGuild;
+        private readonly RemoveGuild _removeGuild;
+        public GuildController(IGuildRepository guildRepository, IGuildWarsApi guildWarsApi, CreateGuild signUpGuild, RemoveGuild removeGuild)
         {
-            this.guildRepository = guildRepository;
+            _guildRepository = guildRepository;
+            _guildWarsApi = guildWarsApi;
+            _createGuild = signUpGuild;
+            _removeGuild = removeGuild;
         }
 
         [HttpGet]
         public IEnumerable<Guild> Index()
         {
-            return guildRepository.LoadAll();
+            return _guildRepository.LoadAll();
         }
 
-        [HttpPut]
-        public IEnumerable<Guild> Create(string GuildGuid, string ApiKey, string DisdcordIdentity)
+        [HttpPost]
+
+        public async Task<Guild> Create(string guildGuid, string apiKey)
         {
-            return null;
+            return await _createGuild.Create(new CreateGuild.NewGuildRequest { ApiKey = apiKey });
         }
 
         [HttpDelete]
-        public IEnumerable<Guild> Remove(string GuildGuid)
+        public Guild Remove(Guid guildGuid)
         {
-            return null;
+            return _removeGuild.Remove(new RemoveGuild.GuildRequest { GuildGuid = guildGuid });
         }
     }
 }

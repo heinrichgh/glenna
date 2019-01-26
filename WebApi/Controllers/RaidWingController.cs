@@ -14,26 +14,16 @@ namespace WebApi.Controllers
     {
         private readonly IGuildWarsApi _guildWarsApi;
         private readonly IRepository<RaidWing> _raidWingRepository;
-        private readonly SignUpNewUser _signUpNewUser;
-        private readonly IGuildWarsAccountRepository _guildWarsAccountRepository;
 
-        public RaidWingController(IRepository<RaidWing> raidWingRepository, SignUpNewUser signUpNewUser, IGuildWarsAccountRepository guildWarsAccountRepository)
+        public RaidWingController(IRepository<RaidWing> raidWingRepository)
         {
             _raidWingRepository = raidWingRepository;
-            _signUpNewUser = signUpNewUser;
-            _guildWarsAccountRepository = guildWarsAccountRepository;
         }
 
         [HttpGet]
         public IEnumerable<RaidWing> Index()
         {
             return _raidWingRepository.LoadAll();
-        }
-
-        [HttpGet("{apiKey}")]
-        public async Task<SignUpNewUser.SignUpNewUserResponse> Test(string apiKey)
-        {
-            return await _signUpNewUser.SignUp(new SignUpNewUser.SignUpNewUserRequest { ApiKey = apiKey});
         }
     }
 }

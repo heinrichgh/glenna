@@ -2,7 +2,7 @@ using System;
 
 namespace Core.Entities
 {
-    public class GuildwarsAccount
+    public class Member
     {
         public int Id { get; set; }
         public Guid GameGuid { get; set; }

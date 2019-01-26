@@ -34,5 +34,28 @@ namespace Infrastructure
                 });
             }
         }
+
+        public async Task<Guild> FetchGuild(string apiKey, Guid guildGuid)
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                var url = new Uri($"https://api.guildwars2.com/v2/guild/{guildGuid}");
+                
+                var response = await client.GetAsync(url);
+                string json;
+                using (var content = response.Content)
+                {
+                    json = await content.ReadAsStringAsync();
+                }
+                return JsonConvert.DeserializeObject<Guild>(json, new JsonSerializerSettings
+                {
+                    ContractResolver = new DefaultContractResolver
+                    {
+                        NamingStrategy = new SnakeCaseNamingStrategy()
+                    }
+                });
+            }
+        }
     }
 }
