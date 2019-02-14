@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
+using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -9,29 +11,44 @@ namespace WebApi.Controllers
     [ApiController]
     public class RaidTemplateController : ControllerBase
     {
-        private readonly IRepository<RaidTemplate> raidTemplateRepository;
+        private readonly IRaidTemplateRepository _raidTemplateRepository;
+        private readonly IGuildRepository _guildRepository;
+        private readonly CreateRaidTemplate _createRaidTemplate;
+        private readonly RemoveRaidTemplate _removeRaidTemplate;
 
-        public RaidTemplateController(IRepository<RaidTemplate> raidTemplateRepository)
+        public RaidTemplateController(IRaidTemplateRepository raidTemplateRepository, IGuildRepository guildRepository, CreateRaidTemplate createRaidTemplate, RemoveRaidTemplate removeRaidTemplate)
         {
-            this.raidTemplateRepository = raidTemplateRepository;
+            _raidTemplateRepository = raidTemplateRepository;
+            _guildRepository = guildRepository;
+            _createRaidTemplate = createRaidTemplate;
+            _removeRaidTemplate = removeRaidTemplate;
         }
 
         [HttpGet]
         public IEnumerable<RaidTemplate> Index()
         {
-            return raidTemplateRepository.LoadAll();
+            return _raidTemplateRepository.LoadAll();
         }
 
         [HttpPut]
-        public IEnumerable<RaidTemplate> Create(string name, string test)
+        public async Task<RaidTemplate> Create(string name, int guildId)
         {
-            return null;
+            if (_guildRepository.Load(guildId) == null)
+                {
+                    guildId = 0;
+                }
+
+            return await _createRaidTemplate.CreateTemplate(new CreateRaidTemplate.RaidRequest { 
+                GuildId = guildId,
+                TemplateName = name});
         }
 
         [HttpDelete]
-        public IEnumerable<RaidTemplate> Remove(int raidId)
+        public async Task<RaidTemplate> Remove(int raidId)
         {
-            return null;
+            return await _removeRaidTemplate.Remove(new RemoveRaidTemplate.RaidRequest {
+                RaidId = raidId
+            });
         }
     }
 }
