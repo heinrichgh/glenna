@@ -24,12 +24,6 @@ namespace Core.UseCases
             public Guid GuildGuid { get; set; }
         }
         
-        public class NewGuildResponse
-        {
-            public Guild Guild { get; set; }
-        }
-
-
         public async Task<Guild> Create(NewGuildRequest request)
         {
             var user = await _guildWarsApi.FetchAccount(request.ApiKey);
@@ -43,14 +37,14 @@ namespace Core.UseCases
                     Tag = guild.Tag,
                     GuildLeader = _userRepository.Load(user.Id).Id,
                     GuildGuid = guild.Id,
-                    CreatedAt = System.DateTime.Now,
+                    CreatedAt = DateTime.Now,
                 });
                 
                 return savedGuild;
             }
             else
             {
-                return null;    
+                return null;
             }
             
         }

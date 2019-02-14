@@ -19,12 +19,6 @@ namespace Core.UseCases
             public Guid GuildGuid { get; set; }
             public int Id { get; set; }
         }
-        
-        public class SignUpUserResponse
-        {
-            public Guild Guild { get; set; }
-        }
-
 
         public Guild Remove(GuildRequest request)
         {

@@ -6,12 +6,12 @@ using Core.Interfaces;
 
 namespace Core.UseCases
 {
-    public class SignUpUser
+    public class CreateUser
     {
         private readonly IGuildWarsApi _guildWarsApi;
         private readonly IUserRepository _userRepository;
 
-        public SignUpUser(IGuildWarsApi guildWarsApi, IUserRepository userRepository)
+        public CreateUser(IGuildWarsApi guildWarsApi, IUserRepository userRepository)
         {
             _guildWarsApi = guildWarsApi;
             _userRepository = userRepository;
@@ -20,11 +20,6 @@ namespace Core.UseCases
         public class UserRequest
         {
             public string ApiKey { get; set; }
-        }
-        
-        public class SignUpUserResponse
-        {
-            public Member User { get; set; }
         }
 
         public async Task<Member> SignUp(UserRequest request)

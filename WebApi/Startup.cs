@@ -27,13 +27,17 @@ namespace WebApi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            
+            // Repositories
+            services.AddScoped<IRaidRepository, RaidRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGuildRepository, GuildRepository>();
             services.AddScoped<IRepository<RaidWing>, RaidWingRepository>();
             services.AddScoped<IGuildWarsApi, GuildWarsApi>();
             
-            services.AddScoped<SignUpUser, SignUpUser>();
+            // UseCases
+            services.AddScoped<CreateRaid, CreateRaid>();
+            services.AddScoped<RemoveRaid, RemoveRaid>();
+            services.AddScoped<CreateUser, CreateUser>();
             services.AddScoped<RemoveUser, RemoveUser>();
             services.AddScoped<CreateGuild, CreateGuild>();
             services.AddScoped<RemoveGuild, RemoveGuild>();

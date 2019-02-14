@@ -20,12 +20,6 @@ namespace Core.UseCases
             public Guid GameGuid { get; set; }
             public int Id { get; set; }
         }
-        
-        public class SignUpUserResponse
-        {
-            public Member User { get; set; }
-        }
-
 
         public Member Remove(UserRequest request)
         {

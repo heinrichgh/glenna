@@ -23,13 +23,13 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        public IEnumerable<RaidTemplate> Create(string Name, string test)
+        public IEnumerable<RaidTemplate> Create(string name, string test)
         {
             return null;
         }
 
         [HttpDelete]
-        public IEnumerable<RaidTemplate> Remove(int RaidId)
+        public IEnumerable<RaidTemplate> Remove(int raidId)
         {
             return null;
         }

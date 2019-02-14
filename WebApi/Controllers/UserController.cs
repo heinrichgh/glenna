@@ -14,13 +14,13 @@ namespace WebApi.Controllers
     {
         private readonly IGuildWarsApi _guildWarsApi;
         private readonly IUserRepository _userRepository;
-        private readonly SignUpUser _signUpUser;
+        private readonly CreateUser _createUser;
         private readonly RemoveUser _removeUser;
-        public UserController(IUserRepository userRepository, IGuildWarsApi guildWarsApi, SignUpUser signUpUser, RemoveUser removeUser)
+        public UserController(IUserRepository userRepository, IGuildWarsApi guildWarsApi, CreateUser createUser, RemoveUser removeUser)
         {
             _userRepository = userRepository;
             _guildWarsApi = guildWarsApi;
-            _signUpUser = signUpUser;
+            _createUser = createUser;
             _removeUser = removeUser;
         }
 
@@ -34,7 +34,7 @@ namespace WebApi.Controllers
 
         public async Task<Member> Create(string apiKey)
         {
-            return await _signUpUser.SignUp(new SignUpUser.UserRequest { ApiKey = apiKey });
+            return await _createUser.SignUp(new CreateUser.UserRequest { ApiKey = apiKey });
         }
 
         [HttpDelete]
