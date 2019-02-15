@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -49,6 +50,52 @@ namespace Infrastructure
                     json = await content.ReadAsStringAsync();
                 }
                 return JsonConvert.DeserializeObject<Guild>(json, new JsonSerializerSettings
+                {
+                    ContractResolver = new DefaultContractResolver
+                    {
+                        NamingStrategy = new SnakeCaseNamingStrategy()
+                    }
+                });
+            }
+        }
+
+        public async Task<IEnumerable<Rank>> FetchGuildRanks(string apiKey, Guid guildGuid)
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                var url = new Uri($"https://api.guildwars2.com/v2/guild/{guildGuid}/ranks");
+                
+                var response = await client.GetAsync(url);
+                string json;
+                using (var content = response.Content)
+                {
+                    json = await content.ReadAsStringAsync();
+                }
+                return JsonConvert.DeserializeObject<IEnumerable<Rank>>(json, new JsonSerializerSettings
+                {
+                    ContractResolver = new DefaultContractResolver
+                    {
+                        NamingStrategy = new SnakeCaseNamingStrategy()
+                    }
+                });
+            }
+        }
+
+        public async Task<IEnumerable<Member>> FetchGuildMembers(string apiKey, Guid guildGuid)
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                var url = new Uri($"https://api.guildwars2.com/v2/guild/{guildGuid}/members");
+                
+                var response = await client.GetAsync(url);
+                string json;
+                using (var content = response.Content)
+                {
+                    json = await content.ReadAsStringAsync();
+                }
+                return JsonConvert.DeserializeObject<IEnumerable<Member>>(json, new JsonSerializerSettings
                 {
                     ContractResolver = new DefaultContractResolver
                     {

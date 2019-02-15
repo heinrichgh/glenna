@@ -1,0 +1,11 @@
+using System;
+using Core.Entities;
+
+namespace Core.Interfaces
+{
+    public interface IGuildMemberRepository : IRepository<GuildMember>
+    {
+        GuildMember Load(int member, int guildId);
+        GuildMember Delete(int id);
+    }
+}

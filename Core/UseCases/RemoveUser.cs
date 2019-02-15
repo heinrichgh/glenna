@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Core.Entities;
-using Core.Entities.GuildWars;
 using Core.Interfaces;
 
 namespace Core.UseCases

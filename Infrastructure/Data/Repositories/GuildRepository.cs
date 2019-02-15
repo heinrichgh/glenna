@@ -56,9 +56,10 @@ namespace Infrastructure.Data
                         tag = @Tag,
                         guild_guid = @GuildGuid,
                         guild_leader = @GuildLeader,
+                        created_at = @CreatedAt
                     WHERE 
                         id = @Id
-                    ", guild).Single();
+                    ", guild);
 
                     return guild;
                 }

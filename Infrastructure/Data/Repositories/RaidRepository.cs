@@ -51,7 +51,7 @@ namespace Infrastructure.Data
                         date_created = @DateCreated
                     WHERE 
                         id = @Id
-                    ", raid).Single();
+                    ", raid);
 
                     return raid;
                 }

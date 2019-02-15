@@ -8,56 +8,57 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data
 {
-    public class RaidTemplateRepository : IRaidTemplateRepository
+    public class GuildRankRepository : IGuildRankRepository
     {
         private readonly PostgresDatabaseInterface _postgresDatabaseInterface;
 
-        public RaidTemplateRepository(PostgresDatabaseInterface postgresDatabaseInterface)
+        public GuildRankRepository(PostgresDatabaseInterface postgresDatabaseInterface)
         {
             _postgresDatabaseInterface = postgresDatabaseInterface;
         }
 
-        public IEnumerable<RaidTemplate> LoadAll()
+        public IEnumerable<GuildRank> LoadAll()
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidTemplate>("SELECT id, guild_id, name FROM raid_template");
+                return dbConnection.Query<GuildRank>("SELECT id, guild_id, name, order_by FROM guild_rank");
             }
         }
 
-        public RaidTemplate Load(int id)
+        public GuildRank Load(int id)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidTemplate>("SELECT id, guild_id, name FROM raid_template WHERE id = @Id", new {Id = id}).FirstOrDefault();
+                return dbConnection.Query<GuildRank>("SELECT id, guild_id, name, order_by FROM guild_rank WHERE id = @Id", new {Id = id}).FirstOrDefault();
             }
         }
 
-        public RaidTemplate Load(string name)
+        public GuildRank Load(string name, int guildId)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidTemplate>("SELECT id, guild_id, name FROM raid_template WHERE name LIKE @Name", new {Name = name}).FirstOrDefault();
+                return dbConnection.Query<GuildRank>("SELECT id, guild_id, name, order_by FROM guild_rank WHERE name = @Name AND guild_id = @GuildId", new {Name = name, GuildId = guildId}).FirstOrDefault();
             }
         }
 
-        public RaidTemplate Save(RaidTemplate raidTemplate)
+        public GuildRank Save(GuildRank guildRank)
         {
-            if (raidTemplate.Id != 0)
+            if (guildRank.Id != 0)
             {
                 // Update
                 using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
                 {                    
                     var id = dbConnection.Query<int>(@"
-                    UPDATE raid_template 
+                    UPDATE guild_rank 
                     SET 
                         guild_id = @GuildId,
-                        name = @Name
+                        name = @Name,
+                        order_by = @OrderBy
                     WHERE 
                         id = @Id
-                    ", raidTemplate);
+                    ", guildRank);
 
-                    return raidTemplate;
+                    return guildRank;
                 }
             }
             else
@@ -66,29 +67,29 @@ namespace Infrastructure.Data
                 using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
                 {
                     var id = dbConnection.Query<int>(@"
-                    INSERT INTO raid_template (guild_id, name) 
-                    VALUES (@GuildId, @Name)           
+                    INSERT INTO guild_rank (guild_id, name, order_by) 
+                    VALUES (@GuildId, @Name, @OrderBy)           
                     RETURNING id         
-                    ", raidTemplate).Single();
+                    ", guildRank).Single();
 
-                    raidTemplate.Id = id;
-                    return raidTemplate;
+                    guildRank.Id = id;
+                    return guildRank;
                 }
             }
         }
 
-        public RaidTemplate Delete(int id)
+        public GuildRank Delete(int id)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                var raidTemplate = Load(id);
-                if (raidTemplate != null)
+                var guildRank = Load(id);
+                if (guildRank != null)
                 {
-                    dbConnection.Execute("DELETE FROM raid_template WHERE id = @id", new {id = id});
-                    raidTemplate.Id = 0;
+                    dbConnection.Execute("DELETE FROM guild_rank WHERE id = @id", new {id = id});
+                    guildRank.Id = 0;
                 }
 
-                return raidTemplate;
+                return guildRank;
             }
         }
     }

@@ -42,6 +42,15 @@ namespace Infrastructure.Data
             }
         }
 
+        public Member Load(string displayName)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                var value = dbConnection.Query<Member>("SELECT id, display_name, game_guid, is_commander, api_key, created_at FROM member WHERE display_name = @DisplayName", new {DisplayName = displayName}).FirstOrDefault();
+                return value;
+            }
+        }
+
         public Member LoadByApiKey(string apiKey)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
@@ -50,27 +59,25 @@ namespace Infrastructure.Data
             }
         }
 
-        public Member Save(Member guildwarsAccount)
+        public Member Save(Member member)
         {
-            if (guildwarsAccount.Id != 0)
+            if (member.Id != 0)
             {
                 // Update
                 using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
                 {
-                    guildwarsAccount.CreatedAt = DateTime.Now;
-                    
                     var id = dbConnection.Query<int>(@"
                     UPDATE member 
                     SET 
                         game_guid = @GameGuid,
                         display_name = @DisplayName,
                         is_commander = @IsCommander,
-                        api_key = @ApiKey
+                        api_key = @ApiKey,
+                        created_at = @CreatedAt
                     WHERE 
-                        id = @Id
-                    ", guildwarsAccount).Single();
+                        id = @Id", member);
 
-                    return guildwarsAccount;
+                    return member;
                 }
             }
             else
@@ -78,16 +85,14 @@ namespace Infrastructure.Data
                 // Insert
                 using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
                 {
-                    guildwarsAccount.CreatedAt = DateTime.Now;
-                    
                     var id = dbConnection.Query<int>(@"
                     INSERT INTO member (game_guid, display_name, is_commander, api_key, created_at) 
                     VALUES (@GameGuid, @DisplayName, @IsCommander, @ApiKey, @CreatedAt)           
                     RETURNING id         
-                    ", guildwarsAccount).Single();
+                    ", member).Single();
 
-                    guildwarsAccount.Id = id;
-                    return guildwarsAccount;
+                    member.Id = id;
+                    return member;
                 }
             }
         }
