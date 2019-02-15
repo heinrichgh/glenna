@@ -7,6 +7,5 @@ namespace Core.Interfaces
     {
         IEnumerable<T> LoadAll();
         T Load(int id);
-        T Save(T t);
     }
 }

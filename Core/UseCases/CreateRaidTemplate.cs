@@ -31,27 +31,43 @@ namespace Core.UseCases
 
         public async Task<CreateRaidTemplateResponse> CreateTemplate(RaidRequest request)
         {
-            var guild = _guildRepository.Load(request.GuildId);
-            if (guild != null)
+            CreateRaidTemplateResponse response = new CreateRaidTemplateResponse();
+            if (request.GuildId == 0 || request.TemplateName == null)
             {
-                if (_raidTemplateRepository.Load(request.TemplateName) != null)
-                {
-                    var saveRaidTemplate = _raidTemplateRepository.Save(new RaidTemplate
-                    {
-                        GuildId = request.GuildId,
-                        Name = request.TemplateName
-                    });
-                    return new CreateRaidTemplateResponse { Response = "Created", Success = true, SavedRaidTemplate = saveRaidTemplate };
-                }
-                else
-                {
-                    return new CreateRaidTemplateResponse { Response = "Failed: " + request.TemplateName + " already exists.", Success = false};
-                }
+                response.Response = "Invalid Guild or Name";
+                response.Success = false;
             }
             else
             {
-                return new CreateRaidTemplateResponse { Response = "Failed: " + request.GuildId + " not found.", Success = false};
+                var guild = _guildRepository.Load(request.GuildId);
+                if (guild == null)
+                {
+                    response.Response = "Incorrect Guild ID";
+                    response.Success = false;
+                }
+                else
+                {
+                    var existingTemplate = _raidTemplateRepository.Load(request.TemplateName);
+                    if (existingTemplate == null)
+                    {
+                        var saveRaidTemplate = _raidTemplateRepository.Save(new RaidTemplate
+                        {
+                            GuildId = request.GuildId,
+                            Name = request.TemplateName
+                        });
+                        response.Response = "Template Created";
+                        response.Success = true;
+                        response.SavedRaidTemplate = saveRaidTemplate;
+                        
+                    }
+                    else
+                    {
+                        response.Response = "Template Name already exists";
+                        response.Success = false;
+                    }
+                }
             }
+            return response;
         }
     }
 }

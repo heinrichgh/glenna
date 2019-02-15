@@ -29,6 +29,8 @@ namespace WebApi
 
             // Repositories
             services.AddScoped<IRaidRepository, RaidRepository>();
+            services.AddScoped<IRaidEncounterRepository, RaidEncounterRepository>();
+            services.AddScoped<IRaidBossRepository, RaidBossRepository>();
             services.AddScoped<IRaidTemplateRepository, RaidTemplateRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGuildRepository, GuildRepository>();
@@ -40,6 +42,7 @@ namespace WebApi
             // UseCases
             services.AddScoped<CreateRaid, CreateRaid>();
             services.AddScoped<RemoveRaid, RemoveRaid>();
+            services.AddScoped<AddRaidEncounter, AddRaidEncounter>();
             services.AddScoped<CreateRaidTemplate, CreateRaidTemplate>();
             services.AddScoped<RemoveRaidTemplate, RemoveRaidTemplate>();
             services.AddScoped<CreateUser, CreateUser>();

@@ -8,6 +8,7 @@ namespace Core.Interfaces
         Member LoadByApiKey(string apiKey);
         Member Load(Guid gameGuid);
         Member Load(string DisplayName);
+        Member Save(Member member);
         Member Delete(int id);
         Member Delete(Guid gameGuid);
     }

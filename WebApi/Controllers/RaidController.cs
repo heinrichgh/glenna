@@ -5,6 +5,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using static Core.UseCases.AddRaidEncounter;
 using static Core.UseCases.CreateRaid;
 using static Core.UseCases.RemoveRaid;
 
@@ -20,8 +21,9 @@ namespace WebApi.Controllers
         private readonly CreateUser _createUser;
         private readonly CreateRaid _createRaid;
         private readonly RemoveRaid _removeRaid;
+        private readonly AddRaidEncounter _addRaidEncounter;
 
-        public RaidController(CreateRaid createRaid, CreateUser createUser, RemoveRaid removeRaid, IGuildRepository guildRepository, IRaidRepository raidRepository, IUserRepository userRepository)
+        public RaidController(CreateRaid createRaid, CreateUser createUser, RemoveRaid removeRaid, AddRaidEncounter addRaidEncounter, IGuildRepository guildRepository, IRaidRepository raidRepository, IUserRepository userRepository)
         {
             _raidRepository = raidRepository;
             _userRepository = userRepository;
@@ -29,12 +31,24 @@ namespace WebApi.Controllers
             _createUser = createUser;
             _createRaid = createRaid;
             _removeRaid = removeRaid;
+            _addRaidEncounter = addRaidEncounter;
         }
 
         [HttpGet]
         public IEnumerable<Raid> Index()
         {
             return _raidRepository.LoadAll();
+        }
+
+        [HttpPut]
+        public async Task<AddRaidEncounterResponse> AddEncounter(int raidId, int raidBossId)
+        {
+            
+            return await _addRaidEncounter.AddEncounter(new AddRaidEncounter.RaidEncounterRequest 
+            {
+                RaidBossId = raidBossId,
+                RaidId = raidId
+            });
         }
 
         [HttpPost]
