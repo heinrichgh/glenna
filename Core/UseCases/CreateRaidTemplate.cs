@@ -22,22 +22,35 @@ namespace Core.UseCases
             public string TemplateName { get; set; }
         }
         
-        public async Task<RaidTemplate> CreateTemplate(RaidRequest request)
+        public class CreateRaidTemplateResponse
+        {
+            public string Response { get; set; }
+            public bool Success { get; set; }
+            public RaidTemplate SavedRaidTemplate { get; set; }
+        }
+
+        public async Task<CreateRaidTemplateResponse> CreateTemplate(RaidRequest request)
         {
             var guild = _guildRepository.Load(request.GuildId);
             if (guild != null)
-            {                
-                var saveRaidTemplate = _raidTemplateRepository.Save(new RaidTemplate
+            {
+                if (_raidTemplateRepository.Load(request.TemplateName) != null)
                 {
-                    GuildId = request.GuildId,
-                    Name = request.TemplateName
-                });
-
-                return saveRaidTemplate;
+                    var saveRaidTemplate = _raidTemplateRepository.Save(new RaidTemplate
+                    {
+                        GuildId = request.GuildId,
+                        Name = request.TemplateName
+                    });
+                    return new CreateRaidTemplateResponse { Response = "Created", Success = true, SavedRaidTemplate = saveRaidTemplate };
+                }
+                else
+                {
+                    return new CreateRaidTemplateResponse { Response = "Failed: " + request.TemplateName + " already exists.", Success = false};
+                }
             }
             else
             {
-                return null;
+                return new CreateRaidTemplateResponse { Response = "Failed: " + request.GuildId + " not found.", Success = false};
             }
         }
     }

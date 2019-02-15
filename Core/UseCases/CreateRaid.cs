@@ -28,9 +28,15 @@ namespace Core.UseCases
             public bool IsCompleted { get; set; }
         }
         
-        public async Task<Raid> Schedule(RaidRequest request)
+        public class CreateRaidResponse
         {
-            
+            public string Response { get; set; }
+            public bool Success { get; set; }
+            public Raid SavedRaid { get; set; }
+        }
+
+        public async Task<CreateRaidResponse> Schedule(RaidRequest request)
+        {
             var saveRaid = _raidRepository.Save(new Raid
             {
                 GuildId = request.GuildId,
@@ -46,7 +52,7 @@ namespace Core.UseCases
                 // do stuff
             }
 
-            return saveRaid;
+            return new CreateRaidResponse { Response = "Created", Success = true, SavedRaid = saveRaid };
         }
     }
 }

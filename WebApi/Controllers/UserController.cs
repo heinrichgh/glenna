@@ -5,6 +5,8 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using static Core.UseCases.CreateUser;
+using static Core.UseCases.RemoveUser;
 
 namespace WebApi.Controllers
 {
@@ -32,13 +34,13 @@ namespace WebApi.Controllers
 
         [HttpPost]
 
-        public async Task<Member> Create(string apiKey)
+        public async Task<CreateUserResponse> Create(string apiKey)
         {
             return await _createUser.SignUp(new CreateUser.UserRequest { ApiKey = apiKey });
         }
 
         [HttpDelete]
-        public Member Remove(Guid gameGuid)
+        public RemoveUserResponse Remove(Guid gameGuid)
         {
             return _removeUser.Remove(new RemoveUser.UserRequest { GameGuid = gameGuid });
         }

@@ -4,6 +4,8 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using static Core.UseCases.CreateRaidTemplate;
+using static Core.UseCases.RemoveRaidTemplate;
 
 namespace WebApi.Controllers
 {
@@ -31,7 +33,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<RaidTemplate> Create(string name, int guildId)
+        public async Task<CreateRaidTemplateResponse> Create(string name, int guildId)
         {
             if (_guildRepository.Load(guildId) == null)
                 {
@@ -44,10 +46,10 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<RaidTemplate> Remove(int raidId)
+        public async Task<RemoveRaidTemplateResponse> Remove(int raidId)
         {
             return await _removeRaidTemplate.Remove(new RemoveRaidTemplate.RaidRequest {
-                RaidId = raidId
+                RaidTemplateId = raidId
             });
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
@@ -8,26 +9,48 @@ namespace Core.UseCases
     public class RemoveGuild
     {
         private readonly IGuildRepository _guildRepository;
+        private readonly IRaidTemplateRepository _raidTemplateRepository;
 
-        public RemoveGuild(IGuildRepository userRepository)
+        public RemoveGuild(IGuildRepository guildRepository, IRaidTemplateRepository raidTemplateRepository)
         {
-            _guildRepository = userRepository;
+            _guildRepository = guildRepository;
+            _raidTemplateRepository = raidTemplateRepository;
         }
 
         public class GuildRequest
         {
             public Guid GuildGuid { get; set; }
-            public int Id { get; set; }
         }
 
-        public Guild Remove(GuildRequest request)
+        public class RemoveGuildResponse
         {
-            if (request.GuildGuid == null)
+            public string Response { get; set; }
+            public bool Success { get; set; }
+            public Guild RemovedGuild { get; set; }
+            public List<RaidTemplate> RemovedTemplates { get; set; }
+        }
+
+        public RemoveGuildResponse Remove(GuildRequest request)
+        {
+            if (_guildRepository.Load(request.GuildGuid) != null)
             {
-                return _guildRepository.Delete(request.Id);
+                RemoveGuildResponse response = new RemoveGuildResponse();
+                foreach (RaidTemplate raidTemplate in _raidTemplateRepository.LoadAll())
+                {
+                    if (raidTemplate.GuildId == _guildRepository.Load(request.GuildGuid).Id)
+                    {
+                        response.RemovedTemplates.Add(_raidTemplateRepository.Delete(raidTemplate.Id)); 
+                    }
+                }
+                response.Response = "Removed";
+                response.Success = true;
+                response.RemovedGuild = _guildRepository.Delete(request.GuildGuid);
+                return response;
             }
-            
-            return _guildRepository.Delete(request.GuildGuid);
+            else
+            {
+                return new RemoveGuildResponse { Response = "Failed: " + request.GuildGuid + " not found.", Success = false };
+            }
         }
     }
 }

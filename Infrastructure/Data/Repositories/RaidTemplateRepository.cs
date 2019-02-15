@@ -33,6 +33,14 @@ namespace Infrastructure.Data
             }
         }
 
+        public RaidTemplate Load(string name)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<RaidTemplate>("SELECT id, guild_id, name FROM raid_template WHERE name LIKE @Name", new {Name = name}).FirstOrDefault();
+            }
+        }
+
         public RaidTemplate Save(RaidTemplate raidTemplate)
         {
             if (raidTemplate.Id != 0)

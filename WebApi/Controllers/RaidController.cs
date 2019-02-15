@@ -5,6 +5,8 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using static Core.UseCases.CreateRaid;
+using static Core.UseCases.RemoveRaid;
 
 namespace WebApi.Controllers
 {
@@ -36,7 +38,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Raid> Create(string apiKey, string disdcordIdentity, DateTime raidTime, int raidTemplateId, int guildId)
+        public async Task<CreateRaidResponse> Create(string apiKey, string disdcordIdentity, DateTime raidTime, int raidTemplateId, int guildId)
         {
             var user = _userRepository.LoadByApiKey(apiKey);
             if (user != null)
@@ -62,7 +64,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete]
-        public async Task<Raid> Remove(int raidId)
+        public async Task<RemoveRaidResponse> Remove(int raidId)
         {
             return await _removeRaid.Remove(new RemoveRaid.RaidRequest {
                 RaidId = raidId

@@ -5,6 +5,8 @@ using Core.Entities;
 using Core.Interfaces;
 using Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using static Core.UseCases.CreateGuild;
+using static Core.UseCases.RemoveGuild;
 
 namespace WebApi.Controllers
 {
@@ -16,11 +18,11 @@ namespace WebApi.Controllers
         private readonly IGuildRepository _guildRepository;
         private readonly CreateGuild _createGuild;
         private readonly RemoveGuild _removeGuild;
-        public GuildController(IGuildRepository guildRepository, IGuildWarsApi guildWarsApi, CreateGuild signUpGuild, RemoveGuild removeGuild)
+        public GuildController(IGuildRepository guildRepository, IGuildWarsApi guildWarsApi, CreateGuild createGuild, RemoveGuild removeGuild)
         {
             _guildRepository = guildRepository;
             _guildWarsApi = guildWarsApi;
-            _createGuild = signUpGuild;
+            _createGuild = createGuild;
             _removeGuild = removeGuild;
         }
 
@@ -32,13 +34,13 @@ namespace WebApi.Controllers
 
         [HttpPost]
 
-        public async Task<Guild> Create(Guid guildGuid, string apiKey)
+        public async Task<CreateGuildResponse> Create(Guid guildGuid, string apiKey)
         {
             return await _createGuild.Create(new CreateGuild.NewGuildRequest { GuildGuid = guildGuid, ApiKey = apiKey });
         }
 
         [HttpDelete]
-        public Guild Remove(Guid guildGuid)
+        public RemoveGuildResponse Remove(Guid guildGuid)
         {
             return _removeGuild.Remove(new RemoveGuild.GuildRequest { GuildGuid = guildGuid });
         }
