@@ -9,12 +9,14 @@ namespace Core.UseCases
     {
         private readonly IRaidTemplateRepository _raidTemplateRepository;
         private readonly IRaidEncounterTemplateRepository _raidEncounterTemplateRepository;
+        private readonly IRaidEncounterSquadTemplateRepository _raidEncounterSquadTemplateRepository;
         private readonly IRaidBossRepository _raidBossRepository;
 
-        public AddRaidEncounterTemplate(IRaidTemplateRepository raidTemplateRepository, IRaidEncounterTemplateRepository raidEncounterTemplateRepository, IRaidBossRepository raidBossRepository)
+        public AddRaidEncounterTemplate(IRaidTemplateRepository raidTemplateRepository, IRaidEncounterSquadTemplateRepository raidEncounterSquadTemplateRepository, IRaidEncounterTemplateRepository raidEncounterTemplateRepository, IRaidBossRepository raidBossRepository)
         {
             _raidTemplateRepository = raidTemplateRepository;
             _raidEncounterTemplateRepository = raidEncounterTemplateRepository;
+            _raidEncounterSquadTemplateRepository = raidEncounterSquadTemplateRepository;
             _raidBossRepository = raidBossRepository;
         }
 
@@ -53,14 +55,24 @@ namespace Core.UseCases
                     var existingRaidEncounter = _raidEncounterTemplateRepository.Load(request.RaidTemplateId, request.RaidBossId);
                     if (existingRaidEncounter == null)
                     {
-                        var savedRaidEncounter = _raidEncounterTemplateRepository.Save(new RaidEncounterTemplate
+                        var savedRaidEncounterTemplate = _raidEncounterTemplateRepository.Save(new RaidEncounterTemplate
                         {
                             RaidBossId = request.RaidBossId,
                             RaidTemplateId = request.RaidTemplateId
                         });
+
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            var savedRaidEncounterSquadTemplate = _raidEncounterSquadTemplateRepository.Save(new RaidEncounterSquadTemplate
+                            {
+                                Position = i,
+                                RaidEncounterTemplateId = savedRaidEncounterTemplate.Id,
+                            });
+                        }
+
                         response.Response = "Added Encounter Template";
                         response.Success = true;
-                        response.SavedRaidEncounterTemplate = savedRaidEncounter;
+                        response.SavedRaidEncounterTemplate = savedRaidEncounterTemplate;
                     }
                     else
                     {

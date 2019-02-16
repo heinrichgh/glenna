@@ -29,11 +29,14 @@ namespace WebApi
 
             // Repositories
             services.AddScoped<IRaidRepository, RaidRepository>();
+            services.AddScoped<IRaidRoleRepository, RaidRoleRepository>();
             services.AddScoped<IRaidEncounterRepository, RaidEncounterRepository>();
             services.AddScoped<IRaidEncounterSquadRepository, RaidEncounterSquadRepository>();
             services.AddScoped<IRaidBossRepository, RaidBossRepository>();
             services.AddScoped<IRaidTemplateRepository, RaidTemplateRepository>();
             services.AddScoped<IRaidEncounterTemplateRepository, RaidEncounterTemplateRepository>();
+            services.AddScoped<IRaidEncounterSquadTemplateRepository, RaidEncounterSquadTemplateRepository>();
+            services.AddScoped<IRaidEncounterSquadRoleTemplateRepository, RaidEncounterSquadRoleTemplateRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGuildRepository, GuildRepository>();
             services.AddScoped<IGuildRankRepository, GuildRankRepository>();
@@ -50,6 +53,8 @@ namespace WebApi
             services.AddScoped<RemoveRaidTemplate, RemoveRaidTemplate>();
             services.AddScoped<AddRaidEncounterTemplate, AddRaidEncounterTemplate>();
             services.AddScoped<RemoveRaidEncounterTemplate, RemoveRaidEncounterTemplate>();
+            services.AddScoped<AddRaidEncounterSquadRoleTemplate, AddRaidEncounterSquadRoleTemplate>();
+            services.AddScoped<RemoveRaidEncounterSquadRoleTemplate, RemoveRaidEncounterSquadRoleTemplate>();
             services.AddScoped<CreateUser, CreateUser>();
             services.AddScoped<RemoveUser, RemoveUser>();
             services.AddScoped<CreateGuild, CreateGuild>();

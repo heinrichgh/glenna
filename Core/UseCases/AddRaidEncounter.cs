@@ -63,7 +63,7 @@ namespace Core.UseCases
 
                         for (int i = 1; i <= 10; i++)
                         {
-                            var savedRaidSquadEncounter = _raidEncounterSquadRepository.Save(new RaidEncounterSquad
+                            var savedRaidEncounterSquad = _raidEncounterSquadRepository.Save(new RaidEncounterSquad
                             {
                                 Position = i,
                                 RaidEncounterId = savedRaidEncounter.Id,
