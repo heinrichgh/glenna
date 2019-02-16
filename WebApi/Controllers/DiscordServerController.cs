@@ -34,7 +34,8 @@ namespace WebApi.Controllers
         {
             return await _addDiscordServer.Add(new AddDiscordServer.DiscordServerRequest
             {
-                DiscordServerIdentity = discordServerIdentity
+                DiscordServerIdentity = discordServerIdentity,
+                GuildId = guildId
             });
         }
 

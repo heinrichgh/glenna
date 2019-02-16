@@ -8,9 +8,11 @@ namespace Core.UseCases
     public class RemoveDiscordServer
     {
         private readonly IDiscordServerRepository _discordServerRepository;
-        public RemoveDiscordServer(IDiscordServerRepository discordServerRepository)
+        private readonly IGuildDiscordServerRepository _guildDiscordServerRepository;
+        public RemoveDiscordServer(IDiscordServerRepository discordServerRepository, IGuildDiscordServerRepository guildDiscordServerRepository)
         {
             _discordServerRepository = discordServerRepository;
+            _guildDiscordServerRepository = guildDiscordServerRepository;
         }
 
         public class DiscordServerRequest
@@ -35,6 +37,7 @@ namespace Core.UseCases
             }
             else
             {
+                _guildDiscordServerRepository.RemoveDiscordServer(request.DiscordServerId);
                 response.RemovedDiscordServer = _discordServerRepository.Delete(request.DiscordServerId);
                 response.Response = $"Removed ID: {request.DiscordServerId}";
                 response.Success = true;

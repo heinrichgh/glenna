@@ -72,14 +72,14 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                var raidRole = Load(id);
-                if (raidRole != null)
+                var discordServer = Load(id);
+                if (discordServer != null)
                 {
                     dbConnection.Execute("DELETE FROM discord_server WHERE id = @id", new {id = id});
-                    raidRole.Id = 0;
+                    discordServer.Id = 0;
                 }
 
-                return raidRole;
+                return discordServer;
             }
         }
     }

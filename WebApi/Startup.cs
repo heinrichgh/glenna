@@ -43,6 +43,7 @@ namespace WebApi
             services.AddScoped<IGuildRepository, GuildRepository>();
             services.AddScoped<IGuildRankRepository, GuildRankRepository>();
             services.AddScoped<IGuildMemberRepository, GuildMemberRepository>();
+            services.AddScoped<IGuildDiscordServerRepository, GuildDiscordServerRepository>();
             services.AddScoped<IRepository<RaidWing>, RaidWingRepository>();
             services.AddScoped<IGuildWarsApi, GuildWarsApi>();
             
