@@ -28,6 +28,8 @@ namespace WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Repositories
+            services.AddScoped<IDiscordAccountRepository, DiscordAccountRepository>();
+            services.AddScoped<IDiscordServerRepository, DiscordServerRepository>();
             services.AddScoped<IRaidRepository, RaidRepository>();
             services.AddScoped<IRaidRoleRepository, RaidRoleRepository>();
             services.AddScoped<IRaidEncounterRepository, RaidEncounterRepository>();
@@ -45,6 +47,10 @@ namespace WebApi
             services.AddScoped<IGuildWarsApi, GuildWarsApi>();
             
             // UseCases
+            services.AddScoped<AddDiscordAccount, AddDiscordAccount>();
+            services.AddScoped<RemoveDiscordAccount, RemoveDiscordAccount>();
+            services.AddScoped<AddDiscordServer, AddDiscordServer>();
+            services.AddScoped<RemoveDiscordServer, RemoveDiscordServer>();
             services.AddScoped<CreateRaid, CreateRaid>();
             services.AddScoped<RemoveRaid, RemoveRaid>();
             services.AddScoped<AddRaidEncounter, AddRaidEncounter>();
