@@ -86,11 +86,18 @@ namespace Infrastructure.Data
                 var guildRank = Load(id);
                 if (guildRank != null)
                 {
-                    dbConnection.Execute("DELETE FROM guild_rank WHERE id = @id", new {id = id});
+                    dbConnection.Execute("DELETE FROM guild_member WHERE id = @id", new {id = id});
                     guildRank.Id = 0;
                 }
 
                 return guildRank;
+            }
+        }
+        public void RemoveGuild(int guildId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                var response = dbConnection.Execute("DELETE FROM guild_member WHERE guild_id = @GuildId", new {GuildId = guildId});
             }
         }
     }

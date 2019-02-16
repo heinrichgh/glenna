@@ -8,10 +8,12 @@ namespace Core.UseCases
     public class RemoveRaidTemplate
     {
         private readonly IRaidTemplateRepository _raidTempalteRepository;
+        private readonly IRaidEncounterTemplateRepository _raidEncounterTemplateRepository;
 
-        public RemoveRaidTemplate(IRaidTemplateRepository raidTempalteRepository)
+        public RemoveRaidTemplate(IRaidTemplateRepository raidTempalteRepository, IRaidEncounterTemplateRepository raidEncounterTemplateRepository)
         {
             _raidTempalteRepository = raidTempalteRepository;
+            _raidEncounterTemplateRepository = raidEncounterTemplateRepository;
         }
 
         public class RaidRequest
@@ -28,13 +30,27 @@ namespace Core.UseCases
 
         public async Task<RemoveRaidTemplateResponse> Remove(RaidRequest request)
         {
-            if (_raidTempalteRepository.Load(request.RaidTemplateId) != null)
+            RemoveRaidTemplateResponse response = new RemoveRaidTemplateResponse();
+            if (_raidTempalteRepository.Load(request.RaidTemplateId) == null)
             {
-                return new RemoveRaidTemplateResponse { Response = "Removed", Success = true, RemovedRaidTemplate = _raidTempalteRepository.Delete(request.RaidTemplateId) };                
+                response.Response = $"Unable to remove ID: {request.RaidTemplateId}";
+                response.Success = false;
+                return response;                
             }
             else
             {
-                return new RemoveRaidTemplateResponse { Response = "Failed: " + request.RaidTemplateId + " not found", Success = false };
+                foreach (RaidEncounterTemplate raidEncounterTemplate in _raidEncounterTemplateRepository.LoadAll())
+                {
+                    if (raidEncounterTemplate.RaidTemplateId == request.RaidTemplateId)
+                    {
+                        _raidEncounterTemplateRepository.Delete(raidEncounterTemplate.Id);
+                    }
+                }
+                var removedRaidEncounter = _raidTempalteRepository.Delete(request.RaidTemplateId);
+                response.Response = $"Successfully remove ID: {request.RaidTemplateId}";
+                response.Success = true;
+                response.RemovedRaidTemplate = removedRaidEncounter;
+                return response;
             }
         }
     }

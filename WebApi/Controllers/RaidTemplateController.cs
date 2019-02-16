@@ -9,7 +9,7 @@ using static Core.UseCases.RemoveRaidTemplate;
 
 namespace WebApi.Controllers
 {
-    [Route("api/raidtemplate")]
+    [Route("api/template/raid")]
     [ApiController]
     public class RaidTemplateController : ControllerBase
     {

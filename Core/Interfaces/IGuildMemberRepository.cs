@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core.Entities;
 
 namespace Core.Interfaces
@@ -8,5 +9,6 @@ namespace Core.Interfaces
         GuildMember Load(int member, int guildId);
         GuildMember Save(GuildMember guildMember);
         GuildMember Delete(int id);
+        void RemoveGuild(int guildId);
     }
 }

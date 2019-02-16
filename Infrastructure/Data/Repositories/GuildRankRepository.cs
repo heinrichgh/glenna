@@ -92,5 +92,13 @@ namespace Infrastructure.Data
                 return guildRank;
             }
         }
+
+        public void RemoveGuild(int guildId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                var response = dbConnection.Execute("DELETE FROM guild_rank WHERE guild_id = @GuildId", new {GuildId = guildId});
+            }
+        }
     }
 }

@@ -30,8 +30,10 @@ namespace WebApi
             // Repositories
             services.AddScoped<IRaidRepository, RaidRepository>();
             services.AddScoped<IRaidEncounterRepository, RaidEncounterRepository>();
+            services.AddScoped<IRaidEncounterSquadRepository, RaidEncounterSquadRepository>();
             services.AddScoped<IRaidBossRepository, RaidBossRepository>();
             services.AddScoped<IRaidTemplateRepository, RaidTemplateRepository>();
+            services.AddScoped<IRaidEncounterTemplateRepository, RaidEncounterTemplateRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGuildRepository, GuildRepository>();
             services.AddScoped<IGuildRankRepository, GuildRankRepository>();
@@ -43,8 +45,11 @@ namespace WebApi
             services.AddScoped<CreateRaid, CreateRaid>();
             services.AddScoped<RemoveRaid, RemoveRaid>();
             services.AddScoped<AddRaidEncounter, AddRaidEncounter>();
+            services.AddScoped<RemoveRaidEncounter, RemoveRaidEncounter>();
             services.AddScoped<CreateRaidTemplate, CreateRaidTemplate>();
             services.AddScoped<RemoveRaidTemplate, RemoveRaidTemplate>();
+            services.AddScoped<AddRaidEncounterTemplate, AddRaidEncounterTemplate>();
+            services.AddScoped<RemoveRaidEncounterTemplate, RemoveRaidEncounterTemplate>();
             services.AddScoped<CreateUser, CreateUser>();
             services.AddScoped<RemoveUser, RemoveUser>();
             services.AddScoped<CreateGuild, CreateGuild>();

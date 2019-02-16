@@ -8,40 +8,40 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data
 {
-    public class RaidEncounterRepository : IRaidEncounterRepository
+    public class RaidEncounterSquadRepository : IRaidEncounterSquadRepository
     {
         private readonly PostgresDatabaseInterface _postgresDatabaseInterface;
 
-        public RaidEncounterRepository(PostgresDatabaseInterface postgresDatabaseInterface)
+        public RaidEncounterSquadRepository(PostgresDatabaseInterface postgresDatabaseInterface)
         {
             _postgresDatabaseInterface = postgresDatabaseInterface;
         }
 
-        public IEnumerable<RaidEncounter> LoadAll()
+        public IEnumerable<RaidEncounterSquad> LoadAll()
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidEncounter>("SELECT id, raid_id, raid_boss_id FROM raid_encounter");
+                return dbConnection.Query<RaidEncounterSquad>("SELECT id, raid_encounter_id, position, guild_member_id FROM raid_encounter_squad");
             }
         }
 
-        public RaidEncounter Load(int id)
+        public IEnumerable<RaidEncounterSquad> LoadSquad(int raidEncounterId)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidEncounter>("SELECT id, raid_id, raid_boss_id FROM raid_encounter WHERE id = @Id", new {Id = id}).FirstOrDefault();
+                return dbConnection.Query<RaidEncounterSquad>("SELECT id, raid_encounter_id, position, guild_member_id FROM raid_encounter_squad WHERE raid_encounter_id = @RaidEncounterId", new {RaidEncounterId = raidEncounterId});
             }
         }
 
-        public RaidEncounter Load(int raidId, int raidBossId)
+        public RaidEncounterSquad Load(int id)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidEncounter>("SELECT id, raid_id, raid_boss_id FROM raid_encounter WHERE raid_id = @RaidId AND raid_boss_id = @RaidBossId", new {RaidId = raidId, RaidBossId = raidBossId}).FirstOrDefault();
+                return dbConnection.Query<RaidEncounterSquad>("SELECT id, raid_encounter_id, position, guild_member_id FROM raid_encounter_squad WHERE id = @Id", new {Id = id}).FirstOrDefault();
             }
         }
-        
-        public RaidEncounter Save(RaidEncounter raidEncounter)
+
+        public RaidEncounterSquad Save(RaidEncounterSquad raidEncounter)
         {
             if (raidEncounter.Id != 0)
             {
@@ -49,10 +49,11 @@ namespace Infrastructure.Data
                 using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
                 {                    
                     var id = dbConnection.Query<int>(@"
-                    UPDATE raid_encounter 
+                    UPDATE raid_encounter_squad 
                     SET 
-                        raid_id = @RaidId,
-                        raid_boss_id = @RaidBossId
+                        raid_encounter_id = @RaidEncounterId,
+                        position = @Position,
+                        guild_member_id = @GuildMemberId
                     WHERE 
                         id = @Id
                     ", raidEncounter);
@@ -66,8 +67,8 @@ namespace Infrastructure.Data
                 using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
                 {
                     var id = dbConnection.Query<int>(@"
-                    INSERT INTO raid_encounter (raid_id, raid_boss_id) 
-                    VALUES (@RaidId, @RaidBossId)           
+                    INSERT INTO raid_encounter_squad (raid_encounter_id, position, guild_member_id) 
+                    VALUES (@RaidEncounterId, @Position, NULL)           
                     RETURNING id         
                     ", raidEncounter).Single();
 
@@ -77,26 +78,31 @@ namespace Infrastructure.Data
             }
         }
 
-        public RaidEncounter Delete(int id)
+        public RaidEncounterSquad Delete(int id)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
                 var raidEncounter = Load(id);
                 if (raidEncounter != null)
                 {
-                    dbConnection.Execute("DELETE FROM raid_encounter WHERE id = @id", new {id = id});
+                    dbConnection.Execute("DELETE FROM raid_encounter_squad WHERE id = @id", new {id = id});
                     raidEncounter.Id = 0;
                 }
 
                 return raidEncounter;
             }
         }
-
-        public void RemoveRaidEncounter(int raidId)
+        public IEnumerable<RaidEncounterSquad> RemoveSquad(int raidEncounterId)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                dbConnection.Execute("DELETE FROM raid_encounter WHERE raid_id = @RaidId", new {RaidId = raidId});
+                var raidEncounter = LoadSquad(raidEncounterId);
+                if (raidEncounter != null)
+                {
+                    dbConnection.Execute("DELETE FROM raid_encounter_squad WHERE raid_encounter_id = @RaidEncounterId", new {RaidEncounterId = raidEncounterId});
+                }
+
+                return raidEncounter;
             }
         }
     }

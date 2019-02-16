@@ -9,12 +9,14 @@ namespace Core.UseCases
     {
         private readonly IRaidRepository _raidRepository;
         private readonly IRaidEncounterRepository _raidEncounterRepository;
+        private readonly IRaidEncounterSquadRepository _raidEncounterSquadRepository;
         private readonly IRaidBossRepository _raidBossRepository;
 
-        public AddRaidEncounter( IRaidRepository raidRepository, IRaidEncounterRepository raidEncounterRepository, IRaidBossRepository raidBossRepository)
+        public AddRaidEncounter( IRaidRepository raidRepository, IRaidEncounterRepository raidEncounterRepository, IRaidEncounterSquadRepository raidEncounterSquadRepository, IRaidBossRepository raidBossRepository)
         {
             _raidRepository = raidRepository;
             _raidEncounterRepository = raidEncounterRepository;
+            _raidEncounterSquadRepository = raidEncounterSquadRepository;
             _raidBossRepository = raidBossRepository;
         }
 
@@ -58,8 +60,19 @@ namespace Core.UseCases
                             RaidBossId = request.RaidBossId,
                             RaidId = request.RaidId
                         });
+
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            var savedRaidSquadEncounter = _raidEncounterSquadRepository.Save(new RaidEncounterSquad
+                            {
+                                Position = i,
+                                RaidEncounterId = savedRaidEncounter.Id,
+                            });
+                        }
+
                         response.Response = "Added Encounter";
                         response.Success = true;
+                        response.SavedRaidEncounter = savedRaidEncounter;
                     }
                     else
                     {

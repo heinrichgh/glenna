@@ -8,5 +8,6 @@ namespace Core.Interfaces
         RaidEncounter Load(int raidId, int raidBossId);
         RaidEncounter Save(RaidEncounter raidEncounter);
         RaidEncounter Delete(int id);
+        void RemoveRaidEncounter(int raidId);
     }
 }

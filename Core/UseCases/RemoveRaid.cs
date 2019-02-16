@@ -8,10 +8,12 @@ namespace Core.UseCases
     public class RemoveRaid
     {
         private readonly IRaidRepository _raidRepository;
+        private readonly RemoveRaidEncounter _removeRaidEncounter;
 
-        public RemoveRaid(IRaidRepository raidRepository)
+        public RemoveRaid(IRaidRepository raidRepository, RemoveRaidEncounter removeRaidEncounter)
         {
             _raidRepository = raidRepository;
+            _removeRaidEncounter = removeRaidEncounter;
         }
 
         public class RaidRequest
@@ -28,13 +30,23 @@ namespace Core.UseCases
 
         public async Task<RemoveRaidResponse> Remove(RaidRequest request)
         {
-            if (_raidRepository.Load(request.RaidId) != null)
+            RemoveRaidResponse response = new RemoveRaidResponse();
+            if (_raidRepository.Load(request.RaidId) == null)
             {
-                return new RemoveRaidResponse { Response = "Removed", Success = true, RemovedRaid = _raidRepository.Delete(request.RaidId) };
+                response.Response = $"Unable to remove ID: {request.RaidId}";
+                response.Success = false;
+                return response;                
             }
             else
             {
-                return new RemoveRaidResponse { Response = "Failed: " + request.RaidId + " not found", Success = false };
+                var removedRaidEncounter = _removeRaidEncounter.RemoveRaid(new RemoveRaidEncounter.RemoveRaidRequest
+                {
+                    RaidId = request.RaidId
+                });
+                response.RemovedRaid = _raidRepository.Delete(request.RaidId);
+                response.Response = $"Successfully remove ID: {request.RaidId}";
+                response.Success = true;
+                return response;
             }
         }
     }

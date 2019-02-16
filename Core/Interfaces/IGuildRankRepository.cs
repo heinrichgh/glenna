@@ -8,5 +8,6 @@ namespace Core.Interfaces
         GuildRank Load(string name, int guildId);
         GuildRank Save(GuildRank guildRank);
         GuildRank Delete(int id);
+        void RemoveGuild(int guildId);
     }
 }
