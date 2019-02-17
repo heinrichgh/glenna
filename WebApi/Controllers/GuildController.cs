@@ -32,6 +32,20 @@ namespace WebApi.Controllers
             return _guildRepository.LoadAll();
         }
 
+        [Route("guid/{guildGuid}")]
+        [HttpGet]
+        public Guild GetDiscordServer(Guid guildGuid)
+        {
+            return  _guildRepository.Load(guildGuid);
+        }
+
+        [Route("discord/{discordServerIdentity}")]
+        [HttpGet]
+        public Guild GetDiscordServer(string discordServerIdentity)
+        {
+            return  _guildRepository.LoadDiscordServer(discordServerIdentity);
+        }
+
         [HttpPost]
 
         public async Task<CreateGuildResponse> Create(Guid guildGuid, string apiKey)

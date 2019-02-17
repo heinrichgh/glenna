@@ -41,6 +41,26 @@ namespace Infrastructure.Data
             }
         }
 
+        public GuildRank LoadMember(int memberId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<GuildRank>(@"
+                SELECT guild_rank.id, guild_rank.guild_id, guild_rank.name, order_by 
+                FROM guild_rank
+                JOIN guild_member ON guild_rank.id = guild_member.guild_rank_id
+                WHERE guild_member.guildwars_account_id = @GuildwarsAccountId", new {GuildwarsAccountId = memberId}).FirstOrDefault();
+            }
+        }
+
+        public IEnumerable<GuildRank> LoadGuild(int guildId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<GuildRank>("SELECT id, guild_id, name, order_by FROM guild_rank WHERE guild_id = @GuildId", new {GuildId = guildId});
+            }
+        }
+
         public GuildRank Save(GuildRank guildRank)
         {
             if (guildRank.Id != 0)

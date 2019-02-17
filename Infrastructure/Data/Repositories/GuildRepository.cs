@@ -39,6 +39,19 @@ namespace Infrastructure.Data
                 return dbConnection.Query<Guild>("SELECT id, name, tag, guild_guid, guild_leader, created_at FROM guild WHERE guild_guid = @GameGuid", new {GameGuid = gameGuildGuid}).FirstOrDefault();
             }
         }
+
+        public Guild LoadDiscordServer(string discordServerIdentity)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<Guild>(@"
+                SELECT guild.id, guild.name, tag, guild_guid, guild_leader, created_at 
+                FROM guild
+                JOIN guild_discord_server ON guild.id = guild_discord_server.guild_id
+                JOIN discord_server ON guild_discord_server.discord_server_id = discord_server.id
+                WHERE discord_server.discord_server_identity = @DiscordServerIdentity", new {DiscordServerIdentity = discordServerIdentity}).FirstOrDefault();
+            }
+        }
         
         public Guild Save(Guild guild)
         {
