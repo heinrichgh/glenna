@@ -8,15 +8,18 @@ namespace Core.UseCases
     public class AddDiscordAccount
     {
         private readonly IDiscordAccountRepository _discordAccountRepository;
+        private readonly IMemberDiscordAccountRepository _memberDiscordAccountRepository;
 
-        public AddDiscordAccount(IDiscordAccountRepository discordAccountRepository)
+        public AddDiscordAccount(IDiscordAccountRepository discordAccountRepository, IMemberDiscordAccountRepository memberDiscordAccountRepository)
         {
             _discordAccountRepository = discordAccountRepository;
+            _memberDiscordAccountRepository = memberDiscordAccountRepository;
         }
 
         public class DiscordAccountRequest
         {
             public string DiscordIdentity { get; set; }
+            public int MemberId { get; set; }
             public string Status { get; set; }
         }
         
@@ -30,15 +33,29 @@ namespace Core.UseCases
         public async Task<AddDiscordAccountResponse> Add(DiscordAccountRequest request)
         {
             AddDiscordAccountResponse response = new AddDiscordAccountResponse();
-            var savedDiscordAccount = _discordAccountRepository.Save(new DiscordAccount
+            if (_discordAccountRepository.Load(request.DiscordIdentity) == null)
             {
-                DiscordIdentity = request.DiscordIdentity,
-                Status = request.Status,
-                CreatedAt = DateTime.Now
-            });
-            response.Response = "Created";
-            response.Success = true;
-            response.SavedDiscordAccount = savedDiscordAccount;
+                var savedDiscordAccount = _discordAccountRepository.Save(new DiscordAccount
+                {
+                    DiscordIdentity = request.DiscordIdentity,
+                    Status = request.Status,
+                    CreatedAt = DateTime.Now
+                });
+                var savedMemberDiscordAccount = _memberDiscordAccountRepository.Save(new MemberDiscordAccount
+                {
+                    DiscordAccountId = savedDiscordAccount.Id,
+                    MemberId = request.MemberId
+                });
+                response.Response = "Created";
+                response.Success = true;
+                response.SavedDiscordAccount = savedDiscordAccount;
+            }
+            else
+            {
+                response.Response = "Account Exists";
+                response.Success = false;
+            }
+           
 
             return response;
         }

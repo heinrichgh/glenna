@@ -33,6 +33,14 @@ namespace Infrastructure.Data
             }
         }
 
+        public IEnumerable<Raid> LoadGuildRaids(int guildId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<Raid>("SELECT id, guild_id, raid_time, is_completed, created_by, state, date_created FROM raid WHERE guild_id = @GuildId", new {GuildId = guildId});
+            }
+        }
+
         public Raid Save(Raid raid)
         {
             if (raid.Id != 0)

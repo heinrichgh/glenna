@@ -40,6 +40,7 @@ namespace WebApi
             services.AddScoped<IRaidEncounterSquadTemplateRepository, RaidEncounterSquadTemplateRepository>();
             services.AddScoped<IRaidEncounterSquadRoleTemplateRepository, RaidEncounterSquadRoleTemplateRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IMemberDiscordAccountRepository, MemberDiscordAccountRepository>();
             services.AddScoped<IGuildRepository, GuildRepository>();
             services.AddScoped<IGuildRankRepository, GuildRankRepository>();
             services.AddScoped<IGuildMemberRepository, GuildMemberRepository>();

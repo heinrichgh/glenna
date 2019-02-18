@@ -8,9 +8,11 @@ namespace Core.UseCases
     public class RemoveDiscordAccount
     {
         private readonly IDiscordAccountRepository _discordAccountRepository;
-        public RemoveDiscordAccount(IDiscordAccountRepository discordAccountRepository)
+        private readonly IMemberDiscordAccountRepository _memberDiscordAccountRepository;
+        public RemoveDiscordAccount(IDiscordAccountRepository discordAccountRepository, IMemberDiscordAccountRepository memberDiscordAccountRepository)
         {
             _discordAccountRepository = discordAccountRepository;
+            _memberDiscordAccountRepository = memberDiscordAccountRepository;
         }
 
         public class DiscordAccountRequest
@@ -35,6 +37,7 @@ namespace Core.UseCases
             }
             else
             {
+                // var removedMemberDiscordAccount = _memberDiscordAccountRepository.RemoveMember();
                 response.RemovedDiscordAccount = _discordAccountRepository.Delete(request.DiscordAccountId);
                 response.Response = $"Removed ID: {request.DiscordAccountId}";
                 response.Success = true;

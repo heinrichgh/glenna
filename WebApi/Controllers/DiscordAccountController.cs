@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
@@ -29,12 +31,21 @@ namespace WebApi.Controllers
             return _discordAccountRepository.LoadAll();
         }
 
-        [HttpPut]
-        public async Task<AddDiscordAccountResponse> Create(string discordAccountIdentity, string status)
+        [Route("user/{userId}")]
+        [HttpGet]
+        public DiscordAccount GetUser(int userId)
         {
+            return _discordAccountRepository.LoadUser(userId);
+        }
+
+        [HttpPut]
+        public async Task<AddDiscordAccountResponse> Create(string discordAccountIdentity, int userId, string status)
+        {
+            Regex.Replace(discordAccountIdentity, "[!]", string.Empty);
             return await _addDiscordAccount.Add(new AddDiscordAccount.DiscordAccountRequest
             {
                 DiscordIdentity = discordAccountIdentity,
+                MemberId = userId,
                 Status = status
             });
         }

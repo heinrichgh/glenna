@@ -33,6 +33,25 @@ namespace Infrastructure.Data
             }
         }
 
+        public DiscordAccount Load(string discordAccountIdentity)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<DiscordAccount>("SELECT id, discord_identity, status, created_at FROM discord_account WHERE discord_identity = @DiscordAccountIdentity", new {DiscordAccountIdentity = discordAccountIdentity}).FirstOrDefault();
+            }
+        }
+
+        public DiscordAccount LoadUser(int userId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<DiscordAccount>(@"
+                SELECT discord_account.id, discord_identity, status, created_at FROM discord_account
+                JOIN member_discord_account ON discord_account.id = member_discord_account.discord_account_id
+                WHERE member_discord_account.member_id =  @UserId", new {UserId = userId}).FirstOrDefault();
+            }
+        }
+
         public DiscordAccount Save(DiscordAccount discordAccount)
         {
             if (discordAccount.Id != 0)
