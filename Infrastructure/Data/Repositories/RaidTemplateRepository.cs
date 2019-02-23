@@ -33,6 +33,14 @@ namespace Infrastructure.Data
             }
         }
 
+        public IEnumerable<RaidTemplate> LoadGuildTemplates(int guildId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<RaidTemplate>("SELECT id, guild_id, raid_template.name FROM raid_template WHERE guild_id = @GuildId OR guild_id IS NULL", new {GuildId = guildId});
+            }
+        }
+
         public RaidTemplate Load(string name)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())

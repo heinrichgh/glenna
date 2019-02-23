@@ -41,6 +41,14 @@ namespace Infrastructure.Data
             }
         }
         
+        public IEnumerable<RaidEncounter> LoadByRaidId(int raidId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<RaidEncounter>("SELECT id, raid_id, raid_boss_id FROM raid_encounter WHERE raid_id = @RaidId", new {RaidId = raidId});
+            }
+        }
+
         public RaidEncounter Save(RaidEncounter raidEncounter)
         {
             if (raidEncounter.Id != 0)

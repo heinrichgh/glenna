@@ -28,5 +28,12 @@ namespace WebApi.Controllers
         {
             return _raidEncounterSquadRepository.LoadAll();
         }
+
+        [Route("encounter/{encounterId}")]
+        [HttpGet]
+        public IEnumerable<RaidEncounterSquad> GetGuildRaidEncounters(int encounterId)
+        {
+            return _raidEncounterSquadRepository.LoadSquad(encounterId);
+        }
     }
 }

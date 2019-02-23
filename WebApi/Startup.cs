@@ -30,15 +30,19 @@ namespace WebApi
             // Repositories
             services.AddScoped<IDiscordAccountRepository, DiscordAccountRepository>();
             services.AddScoped<IDiscordServerRepository, DiscordServerRepository>();
+            services.AddScoped<IProfessionRepository, ProfessionRepository>();
             services.AddScoped<IRaidRepository, RaidRepository>();
             services.AddScoped<IRaidRoleRepository, RaidRoleRepository>();
             services.AddScoped<IRaidEncounterRepository, RaidEncounterRepository>();
             services.AddScoped<IRaidEncounterSquadRepository, RaidEncounterSquadRepository>();
+            services.AddScoped<IRaidEncounterSquadRoleRepository, RaidEncounterSquadRoleRepository>();
+            services.AddScoped<IRaidEncounterSquadRoleRestrictionRepository, RaidEncounterSquadRoleRestrictionRepository>();
             services.AddScoped<IRaidBossRepository, RaidBossRepository>();
             services.AddScoped<IRaidTemplateRepository, RaidTemplateRepository>();
             services.AddScoped<IRaidEncounterTemplateRepository, RaidEncounterTemplateRepository>();
             services.AddScoped<IRaidEncounterSquadTemplateRepository, RaidEncounterSquadTemplateRepository>();
             services.AddScoped<IRaidEncounterSquadRoleTemplateRepository, RaidEncounterSquadRoleTemplateRepository>();
+            services.AddScoped<IRaidEncounterSquadRoleRestrictionTemplateRepository, RaidEncounterSquadRoleRestrictionTemplateRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMemberDiscordAccountRepository, MemberDiscordAccountRepository>();
             services.AddScoped<IGuildRepository, GuildRepository>();
@@ -63,6 +67,10 @@ namespace WebApi
             services.AddScoped<RemoveRaidEncounterTemplate, RemoveRaidEncounterTemplate>();
             services.AddScoped<AddRaidEncounterSquadRoleTemplate, AddRaidEncounterSquadRoleTemplate>();
             services.AddScoped<RemoveRaidEncounterSquadRoleTemplate, RemoveRaidEncounterSquadRoleTemplate>();
+            services.AddScoped<AddRaidEncounterSquadRoleRestriction, AddRaidEncounterSquadRoleRestriction>();
+            services.AddScoped<AddRaidEncounterSquadRole, AddRaidEncounterSquadRole>();
+            services.AddScoped<AddRaidEncounterSquadRoleRestrictionTemplate, AddRaidEncounterSquadRoleRestrictionTemplate>();
+            //todo remove
             services.AddScoped<CreateUser, CreateUser>();
             services.AddScoped<RemoveUser, RemoveUser>();
             services.AddScoped<CreateGuild, CreateGuild>();

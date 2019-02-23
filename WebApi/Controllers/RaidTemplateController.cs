@@ -32,6 +32,13 @@ namespace WebApi.Controllers
             return _raidTemplateRepository.LoadAll();
         }
 
+        [Route("guild/{guildId}")]
+        [HttpGet]
+        public IEnumerable<RaidTemplate> GetGuildRaids(int guildId)
+        {
+            return _raidTemplateRepository.LoadGuildTemplates(guildId);
+        }
+
         [HttpPut]
         public async Task<CreateRaidTemplateResponse> Create(string name, int guildId)
         {

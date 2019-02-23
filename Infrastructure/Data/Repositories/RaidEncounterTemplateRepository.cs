@@ -33,6 +33,14 @@ namespace Infrastructure.Data
             }
         }
 
+        public IEnumerable<RaidEncounterTemplate> LoadByTemplate(int raidTemplateId)
+        {
+            using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
+            {
+                return dbConnection.Query<RaidEncounterTemplate>("SELECT id, raid_template_id, raid_boss_id FROM raid_encounter_template WHERE raid_template_id = @RaidTemplateId ", new {RaidTemplateId = raidTemplateId});
+            }
+        }
+
         public RaidEncounterTemplate Load(int raidTemplateId, int raidBossId)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())

@@ -33,6 +33,13 @@ namespace WebApi.Controllers
             return _raidEncounterRepository.LoadAll();
         }
 
+        [Route("raid/{raidId}")]
+        [HttpGet]
+        public IEnumerable<RaidEncounter> GetGuildRaidEncounters(int raidId)
+        {
+            return _raidEncounterRepository.LoadByRaidId(raidId);
+        }
+
         [HttpPut]
         public async Task<AddRaidEncounterResponse> AddEncounter(int raidId, int raidBossId)
         {

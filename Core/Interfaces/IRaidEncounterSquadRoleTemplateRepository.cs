@@ -6,7 +6,7 @@ namespace Core.Interfaces
 {
     public interface IRaidEncounterSquadRoleTemplateRepository : IRepository<RaidEncounterSquadRoleTemplate>
     {
-        IEnumerable<RaidEncounterSquadRoleTemplate> LoadSquadRole(int raidEncounterSquadTemplateId);
+        RaidEncounterSquadRoleTemplate LoadSquadRole(int raidEncounterSquadTemplateId, int position);
         RaidEncounterSquadRoleTemplate Save(RaidEncounterSquadRoleTemplate raidEncounterSquadTemplate);
         RaidEncounterSquadRoleTemplate Delete(int id);
         IEnumerable<RaidEncounterSquadRoleTemplate> RemoveSquadRole(int raidEncounterSquadTemplateId);

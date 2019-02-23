@@ -25,11 +25,16 @@ namespace Infrastructure.Data
             }
         }
 
-        public IEnumerable<RaidEncounterSquadRoleTemplate> LoadSquadRole(int raidEncounterId)
+        public RaidEncounterSquadRoleTemplate LoadSquadRole(int raidEncounterTemplateId, int position)
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidEncounterSquadRoleTemplate>("SELECT id, raid_encounter_squad_template_id, raid_role_id FROM raid_encounter_squad_role_template WHERE raid_encounter_id = @RaidEncounterId", new {RaidEncounterId = raidEncounterId});
+                return dbConnection.Query<RaidEncounterSquadRoleTemplate>(@"
+                SELECT raid_encounter_squad_role_template.id, raid_encounter_squad_template_id, raid_role_id 
+                FROM raid_encounter_squad_role_template 
+                JOIN raid_encounter_squad_template ON raid_encounter_squad_role_template.raid_encounter_squad_template_id = raid_encounter_squad_template.id
+                WHERE raid_encounter_squad_template.raid_encounter_template_id = @RaidEncounterTemplateId
+				AND raid_encounter_squad_template.position = @Position", new {RaidEncounterTemplateId = raidEncounterTemplateId, Position = position}).FirstOrDefault();
             }
         }
 
@@ -95,13 +100,10 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                var raidEncounterSquadRoleTemplate = LoadSquadRole(raidEncounterSquadTemplateId);
-                if (raidEncounterSquadRoleTemplate != null)
-                {
-                    dbConnection.Execute("DELETE FROM raid_encounter_squad_role_template WHERE raid_encounter_squad_template_id = @RaidEncounterSquadTemplateId", new {RaidEncounterSquadTemplateId = raidEncounterSquadTemplateId});
-                }
+                dbConnection.Execute("DELETE FROM raid_encounter_squad_role_template WHERE raid_encounter_squad_template_id = @RaidEncounterSquadTemplateId", new {RaidEncounterSquadTemplateId = raidEncounterSquadTemplateId});
+            
 
-                return raidEncounterSquadRoleTemplate;
+                return null;
             }
         }
     }
