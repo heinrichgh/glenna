@@ -21,7 +21,7 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidBoss>("SELECT id, name, raid_boss.order, raid_wing_id, has_cm FROM raid_boss");
+                return dbConnection.Query<RaidBoss>("SELECT id, name, raid_boss.order, raid_wing_id, has_cm, short_name, emoji FROM raid_boss");
             }
         }
 
@@ -29,7 +29,7 @@ namespace Infrastructure.Data
         {
             using (var dbConnection = _postgresDatabaseInterface.OpenConnection())
             {
-                return dbConnection.Query<RaidBoss>("SELECT id, name, raid_boss.order, raid_wing_id, has_cm FROM raid_boss WHERE id = @Id", new {Id = id}).FirstOrDefault();
+                return dbConnection.Query<RaidBoss>("SELECT id, name, raid_boss.order, raid_wing_id, has_cm, short_name, emoji FROM raid_boss WHERE id = @Id", new {Id = id}).FirstOrDefault();
             }
         }
 
