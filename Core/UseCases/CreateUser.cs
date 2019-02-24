@@ -12,17 +12,22 @@ namespace Core.UseCases
         private readonly IGuildWarsApi _guildWarsApi;
         private readonly IUserRepository _userRepository;
         private readonly CreateGuild _createGuild;
+        private readonly IDiscordAccountRepository _discordAccountRepository;
+        private readonly IMemberDiscordAccountRepository _memberDiscordAccountRepository;
 
-        public CreateUser(IGuildWarsApi guildWarsApi, CreateGuild createGuild, IUserRepository userRepository)
+        public CreateUser(IMemberDiscordAccountRepository memberDiscordAccountRepository, IDiscordAccountRepository discordAccountRepository, IGuildWarsApi guildWarsApi, CreateGuild createGuild, IUserRepository userRepository)
         {
             _guildWarsApi = guildWarsApi;
             _userRepository = userRepository;
             _createGuild = createGuild;
+            _discordAccountRepository = discordAccountRepository;
+            _memberDiscordAccountRepository = memberDiscordAccountRepository;
         }
 
         public class UserRequest
         {
             public string ApiKey { get; set; }
+            public string DiscordIdentity { get; set; }
         }
 
         public class CreateUserResponse
@@ -65,6 +70,25 @@ namespace Core.UseCases
                             CreatedAt = DateTime.Now
                         });
                         myresponse.Response = "Inserted Account";
+
+                        if (request.DiscordIdentity != null)
+                        {
+                            var discord = _discordAccountRepository.LoadUser(savedAccount.Id);
+                            if (discord == null)
+                            {
+                                var savedDiscordAccount = _discordAccountRepository.Save(new DiscordAccount
+                                {
+                                    CreatedAt = DateTime.Now,
+                                    DiscordIdentity = request.DiscordIdentity
+                                });
+
+                                var savedMemberDiscordAccount = _memberDiscordAccountRepository.Save(new MemberDiscordAccount
+                                {
+                                    DiscordAccountId = savedDiscordAccount.Id,
+                                    MemberId = savedAccount.Id
+                                });
+                            }
+                        }
                     }
                     else
                     {

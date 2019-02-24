@@ -34,9 +34,9 @@ namespace WebApi.Controllers
 
         [HttpPost]
 
-        public async Task<CreateUserResponse> Create(string apiKey)
+        public async Task<CreateUserResponse> Create(string apiKey, string discordIdentity)
         {
-            return await _createUser.SignUp(new CreateUser.UserRequest { ApiKey = apiKey });
+            return await _createUser.SignUp(new CreateUser.UserRequest { ApiKey = apiKey, DiscordIdentity = discordIdentity });
         }
 
         [HttpDelete]

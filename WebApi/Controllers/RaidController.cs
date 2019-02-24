@@ -88,11 +88,11 @@ namespace WebApi.Controllers
             {
                 var raid = _raidRepository.Load(raidId);
                 DiscordRaidRespose response = new DiscordRaidRespose();
-
+                var creator = _discordAccountRepository.LoadUser(raid.CreatedBy);
                 response.Title = "Raid Schedule";
                 response.Url = "http://www.glenna.co.za";
                 response.Description = $"\n- Unique ID:\t {raidId}";
-                response.Description += $"\n- Scheduled by:\t {_discordAccountRepository.LoadUser(raid.CreatedBy).DiscordIdentity} ";
+                response.Description += $"\n- Scheduled by:\t {creator.DiscordIdentity} ";
                 response.Description += $"\n- Start time:\t {raid.RaidTime.ToShortDateString()} at {raid.RaidTime.ToShortTimeString()} server time";
                 response.Description += $"\n- Restrictions:\t None, anyone can join";
      
